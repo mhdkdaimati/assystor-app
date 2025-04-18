@@ -1,21 +1,35 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
+
+import axios from '../api/axios'
 
 const Login =()=>{
 
 
 const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
+const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (event) => {
+    event.preventDefault()
     console.log('Logging in with:', { email, password })
+    try{
+      await axios.post('/login',{email,password})
+      setEmail("")
+      setPassword("")
+      navigate("/")
+
+    }catch(e){
+
+      console.log(e)
+
+    }
     // هنا تقدر تضيف منطق تسجيل الدخول (API call مثلًا)
   }
 
   return (
     <div className="d-flex justify-content-center align-items-center vh-100">
-<div className="card p-4 shadow" style={{ minWidth: '300px' }}>
+        <div className="card p-4 shadow" style={{ minWidth: '300px' }}>
         <h2 className="text-center mb-4">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">

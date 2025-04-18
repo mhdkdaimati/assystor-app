@@ -1,8 +1,7 @@
 import React from "react";
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import Login from "./Login";
-
+import axios from "../api/axios";
+import { Link,useNavigate } from 'react-router-dom'
 
 const Register =()=>{
     
@@ -10,11 +9,25 @@ const Register =()=>{
     
 const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
+const [passwordConfirmation, setPassowrdConfirmation] = useState('')
 const [username, setUsername] =useState('')
+const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log('Logging in with:', { email, password, username })
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    console.log('register with:', { email, password,username,passwordConfirmation })
+    try{
+      await axios.post('/register',{email,password,username,passwordConfirmation})
+      setEmail("")
+      setPassword("")
+      navigate("/")
+
+    }catch(e){
+
+      console.log(e)
+
+    }
     // هنا تقدر تضيف منطق تسجيل الدخول (API call مثلًا)
   }
 
@@ -59,7 +72,18 @@ const [username, setUsername] =useState('')
                 required 
                 />
             </div>
-            <button type="submit" className="btn btn-primary w-100">Login</button>
+            <div className="mb-3">
+                <label htmlFor="password" className="form-label">Password Confirmation</label>
+                <input 
+                type="password" 
+                className="form-control" 
+                id="passwordConfirmation"
+                value={passwordConfirmation}
+                onChange={(e) => setPassowrdConfirmation(e.target.value)}
+                required 
+                />
+            </div>
+            <button type="submit" className="btn btn-primary w-100">Register</button>
             </form>
             <p className="mt-3 text-center">
             Do you have an account? <Link to="/login">Login</Link>
