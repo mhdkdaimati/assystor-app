@@ -1,14 +1,24 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import { Link,useNavigate } from 'react-router-dom'
+import Header from './Header'
 
 import axios from '../api/axios'
 
 const Login =()=>{
 
+  const navigate = useNavigate();
+
+
+  useEffect(()=>{
+    if(localStorage.getItem('user-info')){
+      navigate("/")
+    }
+
+  },[])
+
 
 const [email, setEmail] = useState('')
 const [password, setPassword] = useState('')
-const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -28,6 +38,9 @@ const navigate = useNavigate();
   }
 
   return (
+    <>
+                    <Header />
+
     <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="card p-4 shadow" style={{ minWidth: '300px' }}>
         <h2 className="text-center mb-4">Login</h2>
@@ -61,6 +74,7 @@ const navigate = useNavigate();
         </p>
       </div>
     </div>
+    </>
   )
 }
 

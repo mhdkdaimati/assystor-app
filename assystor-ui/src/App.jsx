@@ -3,21 +3,28 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './components/Home'
 import Login from './components/Login'
 import Register from './components/Register'
-import Header from './components/Header'
-
+import AddProduct from './components/AddProduct'
+import UpdateProduct from './components/UpdateProduct'
+import Protected from './components/Protected'
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </BrowserRouter>
+
+      <div className="App">
+        <BrowserRouter>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/add-product' element={<Protected Cmp={AddProduct} />} />
+            <Route path='/update-product' element={<UpdateProduct />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+
+
     </div>
   )
 }
