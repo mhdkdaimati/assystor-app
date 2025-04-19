@@ -1,13 +1,12 @@
 import React from "react";
 
-const Home = () => {
-    return (
+const AddProduct =()=>{
+    return(
         <>
             <div className="d-flex justify-content-center align-items-center vh-100">
-                ==
-                
-            </div>
+            AddProduct
+            </div>        
         </>
     )
 }
-export default Home;
+export default AddProduct;
