@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import swal from 'sweetalert';
-import {useHistory, Link} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 
 function Register(){
-    const history = useHistory();
+    const navigate = useNavigate();
     const [registerInput, setRegister] = useState({
         name:'',
         email:'',
@@ -30,7 +30,7 @@ function Register(){
                     // localStorage.setItem('auth_token',res.data.token);
                     // localStorage.setItem('auth_name',res.data.username);
                     swal("Operation is completed, Please login", res.data.message, "success");
-                    history.push('/login')
+                    navigate('/login')
                     }else{
                         setRegister({...registerInput, error_list: res.data.validator_errors});
                         swal("Operation is inompleted", "Your registration couldn't be completed, please check the errors.", "error");

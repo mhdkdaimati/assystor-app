@@ -65,7 +65,7 @@ const AddCategory = () => {
 
 
     return (
-        <div className="container">
+        <>
             <br />
             <div className="shadow">
                 <div className="alert alert-success" role="alert">
@@ -114,7 +114,7 @@ const AddCategory = () => {
                 <br />
                 <button className="w-100 btn btn-lg btn-outline-primary" type="submit">Add Category</button>
             </form>
-        </div>
+        </>
     );
 }
 export default AddCategory;

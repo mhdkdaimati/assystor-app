@@ -1,10 +1,10 @@
 import axios from 'axios';
 import swal from 'sweetalert';
-import {useHistory, Link} from 'react-router-dom';
+import {useNavigate, Link} from 'react-router-dom';
 import React, { useState } from 'react';
 
 function Login(){
-    const history = useHistory();
+    const navigate = useNavigate();
     const [loginInput, setLogin] = useState({
         email:'',
         password:'',
@@ -28,9 +28,9 @@ function Login(){
                     localStorage.setItem('auth_name',res.data.username);
                     swal("Operation is completed", res.data.message, "success");
                     if(res.data.role === 'admin'){
-                        history.push('/admin/dashboard');
+                        navigate('/admin/dashboard');
                     }else{
-                        history.push('/');
+                        navigate('/');
                     }
 
 
