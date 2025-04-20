@@ -4,7 +4,13 @@ import Dashboard from './components/Dashboard';
 import AddCategory from './components/category/AddCategory';
 import Login from './components/Login';
 import Register from './components/Register';
-// import Home from './components/Home'; // إن وجدت
+import axios from 'axios';
+
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://127.0.0.1:8000/";
+axios.defaults.headers.post['Accept'] = 'application/json';
+axios.defaults.headers.post['Content-Type'] = 'application/json';
+
 
 function App() {
   return (

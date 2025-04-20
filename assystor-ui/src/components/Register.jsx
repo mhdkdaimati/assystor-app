@@ -4,6 +4,7 @@ import swal from 'sweetalert';
 import { useNavigate, Link } from 'react-router-dom';
 
 function Register() {
+
     const navigate = useNavigate();
     const [registerInput, setRegister] = useState({
         name: '',
@@ -12,10 +13,12 @@ function Register() {
         // confirm_password:'',
         error_list: [],
     });
+
     const handleInput = (e) => {
         e.persist();
         setRegister({ ...registerInput, [e.target.name]: e.target.value });
     }
+
     const registerSubmit = (e) => {
         // if(registerInput.password === registerInput.confirm_password){
         e.preventDefault();
@@ -24,13 +27,14 @@ function Register() {
             email: registerInput.email,
             password: registerInput.password,
         }
+
         axios.get('/sanctum/csrf-cookie').then(response => {
-            axios.post(`/api/register`, data).then(res => {
+            axios.post(`api/register`, data).then(res => {
                 if (res.data.status === 200) {
                     // localStorage.setItem('auth_token',res.data.token);
                     // localStorage.setItem('auth_name',res.data.username);
                     swal("Operation is completed, Please login", res.data.message, "success");
-                    navigate('/login')
+                    //navigate('/login')
                 } else {
                     setRegister({ ...registerInput, error_list: res.data.validator_errors });
                     swal("Operation is inompleted", "Your registration couldn't be completed, please check the errors.", "error");
