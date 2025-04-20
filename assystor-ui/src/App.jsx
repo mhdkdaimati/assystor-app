@@ -1,30 +1,21 @@
-import { useState } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './components/Home'
-import Login from './components/Login'
-import Register from './components/Register'
-import AddProduct from './components/AddProduct'
-import UpdateProduct from './components/UpdateProduct'
-import Protected from './components/Protected'
+import React from 'react'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import MasterLayout from './layout/admin/MasterLayout'
+import Dashboard from './components/admin/Dashboard'
+
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <div className="App">
+      <Router>
+        <Routes>
+        <Route path="/q" element={<h1>Welcome Home</h1>} />
 
-      <div className="App">
-        <BrowserRouter>
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/add-product' element={<Protected Cmp={AddProduct} />} />
-            <Route path='/update-product' element={<UpdateProduct />} />
-          </Routes>
-        </BrowserRouter>
-      </div>
+        <Route path="/admin/dashboard" element={<Dashboard />} />
 
-
+        <Route path='/' element={<MasterLayout/>}/>
+        </Routes>
+      </Router>
     </div>
   )
 }
