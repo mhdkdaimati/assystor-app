@@ -15,18 +15,23 @@ function Login() {
         setLogin({ ...loginInput, [e.target.name]: e.target.value });
     }
     const loginSubmit = (e) => {
+
+
         e.preventDefault();
         const data = {
             email: loginInput.email,
             password: loginInput.password,
         }
+
         axios.get('/sanctum/csrf-cookie').then(response => {
             axios.post(`/api/login`, data).then(res => {
+                console.log(res)
                 if (res.data.status === 200) {
 
                     localStorage.setItem('auth_token', res.data.token);
                     localStorage.setItem('auth_name', res.data.username);
                     swal("Operation is completed", res.data.message, "success");
+
                     if (res.data.role === 'admin') {
                         navigate('/admin/dashboard');
                     } else {
@@ -70,7 +75,6 @@ function Login() {
                             <br />
                             <button className="w-100 btn btn-lg btn-primary" type="submit">Login</button>
                         </form>
-
                         <br />
                         <div className="text-center">
                             <p>don't have an account?</p>
