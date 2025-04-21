@@ -45,6 +45,20 @@ const Sidebar = () => (
           <FaPlusCircle style={{ marginRight: '8px' }} />
           Add Category
         </NavLink>
+        <NavLink 
+          to="/admin/add-user" 
+          style={({ isActive }) => ({
+            display: 'flex',
+            alignItems: 'center',
+            textDecoration: 'none',
+            color: isActive ? '#1abc9c' : '#ecf0f1',
+            fontWeight: isActive ? 'bold' : 'normal'
+          })}
+        >
+          <FaPlusCircle style={{ marginRight: '8px' }} />
+          Add User
+        </NavLink>
+
       </li>
     </ul>
   </aside>

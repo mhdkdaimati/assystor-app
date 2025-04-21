@@ -3,7 +3,7 @@ import axios from 'axios';
 import swal from 'sweetalert';
 import { useNavigate, Link } from 'react-router-dom';
 
-function Register() {
+function AddUser() {
 
     const navigate = useNavigate();
     const [registerInput, setRegister] = useState({
@@ -33,7 +33,7 @@ function Register() {
                 if (res.data.status === 200) {
                     // localStorage.setItem('auth_token',res.data.token);
                     // localStorage.setItem('auth_name',res.data.username);
-                    swal("Operation is completed, Please login", res.data.message, "success");
+                    swal("Operation is completed", res.data.message, "success");
                     //navigate('/login')
                 } else {
                     setRegister({ ...registerInput, error_list: res.data.validator_errors });
@@ -82,10 +82,6 @@ function Register() {
                             <button className="w-100 btn btn-lg btn-primary" type="submit">Register</button>
                         </form>
                         <br />
-                        <div className="text-center">
-                            <p>already have an account?</p>
-                            <Link className="w-100 btn btn-sm btn-outline-success" to="/login">Login</Link>
-                        </div>
                     </main>
                 </div>
                 <div className="col-4">
@@ -97,4 +93,4 @@ function Register() {
         </div>
     );
 }
-export default Register;
+export default AddUser;

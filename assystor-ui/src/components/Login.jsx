@@ -2,6 +2,7 @@ import axios from 'axios';
 import swal from 'sweetalert';
 import { useNavigate, Link } from 'react-router-dom';
 import React, { useState } from 'react';
+import Navbar from '../layout/Navbar'
 
 function Login() {
     const navigate = useNavigate();
@@ -30,13 +31,15 @@ function Login() {
 
                     localStorage.setItem('auth_token', res.data.token);
                     localStorage.setItem('auth_name', res.data.username);
-                    swal("Operation is completed", res.data.message, "success");
 
                     if (res.data.role === 'admin') {
                         navigate('/admin/dashboard');
                     } else {
                         navigate('/');
                     }
+
+                    window.location.reload();
+                    swal("Operation is completed", res.data.message, "success");
 
 
                 } else if (res.data.status === 401) {
@@ -50,6 +53,8 @@ function Login() {
     }
 
     return (
+        <>
+        <Navbar/>
         <div className="container">
             <br />
             <div className="row">
@@ -76,10 +81,6 @@ function Login() {
                             <button className="w-100 btn btn-lg btn-primary" type="submit">Login</button>
                         </form>
                         <br />
-                        <div className="text-center">
-                            <p>don't have an account?</p>
-                            <Link className="w-100 btn btn-sm btn-outline-success" to="/register">Register</Link>
-                        </div>
                     </main>
                 </div>
                 <div className="col-4">
@@ -88,6 +89,7 @@ function Login() {
 
             </div>
         </div>
+        </>
     );
 }
 export default Login;
