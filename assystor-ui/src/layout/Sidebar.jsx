@@ -18,7 +18,7 @@ const Sidebar = () => (
     <ul style={{ listStyle: 'none', padding: 0 }}>
       <li style={{ marginBottom: '1rem' }}>
         <NavLink 
-          to="/admin/dashboard" 
+          to="/dashboard" 
           style={({ isActive }) => ({
             display: 'flex',
             alignItems: 'center',
@@ -33,7 +33,7 @@ const Sidebar = () => (
       </li>
       <li style={{ marginBottom: '1rem' }}>
         <NavLink 
-          to="/admin/add-category" 
+          to="/add-category" 
           style={({ isActive }) => ({
             display: 'flex',
             alignItems: 'center',
@@ -46,7 +46,7 @@ const Sidebar = () => (
           Add Category
         </NavLink>
         <NavLink 
-          to="/admin/add-user" 
+          to="/add-user" 
           style={({ isActive }) => ({
             display: 'flex',
             alignItems: 'center',

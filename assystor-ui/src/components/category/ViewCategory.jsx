@@ -107,7 +107,7 @@ const deleteCategory = (e, id) =>{
         <div className="alert alert-success" role="alert">
         <h4 className="alert-heading text-center">View Category</h4>
         <hr/>
-    <Link to="/admin/add-category" className="card-link">Add Category</Link>
+    <Link to="/add-category" className="card-link">Add Category</Link>
 
     </div>
     </div>

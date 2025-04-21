@@ -4,7 +4,6 @@ import Sidebar from './Sidebar';
 import Footer from './Footer';
 import '../assets/admin/css/styles.css';
 import '../assets/admin/js/scripts';
-import routes from '../routes/routes';
 import { BrowserRouter as Router, Routes, Route, Navigate,Outlet } from 'react-router-dom';
 import AddCategory from '../components/category/AddCategory';
 

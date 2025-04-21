@@ -24,7 +24,7 @@ function Login() {
             password: loginInput.password,
         }
 
-        axios.get('/sanctum/csrf-cookie').then(response => {
+        axios.get('/sanctum/csrf-cookie').then(respresonse => {
             axios.post(`/api/login`, data).then(res => {
                 console.log(res)
                 if (res.data.status === 200) {
@@ -33,7 +33,7 @@ function Login() {
                     localStorage.setItem('auth_name', res.data.username);
 
                     if (res.data.role === 'admin') {
-                        navigate('/admin/dashboard');
+                        navigate('/dashboard');
                     } else {
                         navigate('/');
                     }
