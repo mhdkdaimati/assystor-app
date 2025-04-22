@@ -1,95 +1,81 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import swal from 'sweetalert';
-import { useNavigate, Link } from 'react-router-dom';
-import React, { useState } from 'react';
-import Navbar from '../layout/Navbar'
+import './Login.css'; // استيراد ملف CSS
 
 function Login() {
-    const navigate = useNavigate();
-    const [loginInput, setLogin] = useState({
-        email: '',
-        password: '',
-        error_list: [],
-    });
-    const handleInput = (e) => {
-        e.persist();
-        setLogin({ ...loginInput, [e.target.name]: e.target.value });
+  const navigate = useNavigate();
+  const [loginInput, setLoginInput] = useState({ email: '', password: '' });
+
+  // منع الدخول لصفحة تسجيل الدخول إذا كان المستخدم مسجل دخول
+  useEffect(() => {
+    const authName = localStorage.getItem('auth_name');
+    const authToken = localStorage.getItem('auth_token');
+
+    if (authName && authToken) {
+      navigate('/', { replace: true });
     }
-    const loginSubmit = (e) => {
+  }, [navigate]);
 
+  const handleInput = (e) => {
+    setLoginInput({ ...loginInput, [e.target.name]: e.target.value });
+  };
 
-        e.preventDefault();
-        const data = {
-            email: loginInput.email,
-            password: loginInput.password,
-        }
+  const loginSubmit = async (e) => {
+    e.preventDefault();
+    const data = { email: loginInput.email, password: loginInput.password };
 
-        axios.get('/sanctum/csrf-cookie').then(respresonse => {
-            axios.post(`/api/login`, data).then(res => {
-                console.log(res)
-                if (res.data.status === 200) {
+    try {
+      const res = await axios.post('/api/login', data);
+      if (res.data.status === 200) {
+        localStorage.setItem('auth_token', res.data.token);
+        localStorage.setItem('auth_name', res.data.username);
 
-                    localStorage.setItem('auth_token', res.data.token);
-                    localStorage.setItem('auth_name', res.data.username);
-
-                    if (res.data.role === 'admin') {
-                        navigate('/dashboard');
-                    } else {
-                        navigate('/');
-                    }
-
-                    window.location.reload();
-                    swal("Operation is completed", res.data.message, "success");
-
-
-                } else if (res.data.status === 401) {
-                    swal("Operation is incompleted", res.data.message, "error");
-                } else {
-                    setLogin({ ...loginInput, error_list: res.data.validator_errors });
-                    swal("Operation is incompleted", "Your loggin couldn't be completed, please check the errors.", "error");
-                }
-            });
-        });
+        swal("Success", res.data.message, "success");
+        navigate('/');
+      } else {
+        swal("Error", res.data.message, "error");
+      }
+    } catch (error) {
+      swal("Error", "Something went wrong. Please try again.", "error");
     }
+  };
 
-    return (
-        <>
-        <Navbar/>
-        <div className="container">
-            <br />
-            <div className="row">
-                <div className="col-4">
-
-                </div>
-
-                <div className="col-4">
-                    <main className="form-signin">
-                        <form onSubmit={loginSubmit}>
-                            <h1 className="h3 mb-3 fw-normal text-center">Login</h1>
-                            <div className="form-floating">
-                                <input type="text" name="email" onChange={handleInput} value={loginInput.email} className="form-control" id="floatingEmail" placeholder="name@example.com" />
-                                <label htmlFor="floatingEmail">Email address</label>
-                                <span style={{ color: "red" }}>{loginInput.error_list.email}</span>
-                            </div>
-                            <br />
-                            <div className="form-floating">
-                                <input type="password" name="password" onChange={handleInput} value={loginInput.password} className="form-control" id="floatingPassword" placeholder="Password" />
-                                <label htmlFor="floatingPassword">Password</label>
-                                <span style={{ color: "red" }}>{loginInput.error_list.password}</span>
-                            </div>
-                            <br />
-                            <button className="w-100 btn btn-lg btn-primary" type="submit">Login</button>
-                        </form>
-                        <br />
-                    </main>
-                </div>
-                <div className="col-4">
-
-                </div>
-
-            </div>
-        </div>
-        </>
-    );
+  return (
+    <div className="login-container">
+      <div className="login-form">
+        <h1>Login</h1>
+        <form onSubmit={loginSubmit}>
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              value={loginInput.email}
+              onChange={handleInput}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              value={loginInput.password}
+              onChange={handleInput}
+              required
+            />
+          </div>
+          <button type="submit" className="login-button">Login</button>
+        </form>
+      </div>
+    </div>
+  );
 }
+
 export default Login;

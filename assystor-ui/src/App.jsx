@@ -1,12 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import MasterLayout from './layout/MasterLayout';
-import Dashboard from './components/Dashboard';
-import AddCategory from './components/category/AddCategory';
 import Login from './components/Login';
-import AddUser from './components/user/AddUser';
+import MasterLayout from './layout/MasterLayout';
+import Home from './components/Home';
+import Dashboard from './components/Dashboard';
 import axios from 'axios';
-import PrivateRoute from './PrivateRoute';
-import { AuthProvider } from './AuthContext';
+import ProtectedRoute from './ProtectedRoute';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8000/";
@@ -16,20 +14,20 @@ axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem(
 
 function App() {
   return (
-    
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<PrivateRoute> <MasterLayout /> </PrivateRoute>}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="add-category" element={<AddCategory />} />
-            <Route path="add-user" element={<AddUser />} />
-          </Route>
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/dashboard" />} />
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Routes>
+        {/* صفحة تسجيل الدخول */}
+        <Route path="/login" element={<Login />} />
+
+        {/* الصفحات المحمية */}
+        <Route path="/" element={ <ProtectedRoute> <MasterLayout /> </ProtectedRoute> }>
+          <Route index element={<Home />} />
+          <Route path="dashboard" element={<Dashboard />} />
+        </Route>
+        {/* إعادة توجيه جميع المسارات الأخرى */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   );
 }
 

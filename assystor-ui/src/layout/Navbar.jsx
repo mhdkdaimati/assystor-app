@@ -1,53 +1,66 @@
 import { useNavigate, Link } from 'react-router-dom';
 import React from 'react';
 import axios from 'axios';
+import swal from 'sweetalert';
 
 const Navbar = () => {
     const navigate = useNavigate();
 
-    const logoutSubmit = (e) => {
+    const logoutSubmit = async (e) => {
         e.preventDefault();
 
+        try {
+            const res = await axios.post(`/api/logout`, {}, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
+                },
+            });
 
-
-        axios.post(`/api/logout`).then(res =>{
-            if(res.data.status === 200){
+            if (res.data.status === 200) {
+                // إزالة القيم من localStorage
                 localStorage.removeItem('auth_token');
                 localStorage.removeItem('auth_name');
-                swal("Operation Completed", res.data.message, "success",{button: false,});
-                navigate('/login')
 
+                // عرض رسالة نجاح
+                swal("Operation Completed", res.data.message, "success", { button: false });
+
+                // التوجيه إلى صفحة تسجيل الدخول
+                navigate('/login');
+            } else {
+                // عرض رسالة خطأ إذا لم يكن status 200
+                swal("Error", res.data.message || "Logout failed", "error");
             }
-        });
-
+        } catch (error) {
+            // معالجة الأخطاء
+            swal("Error", "Something went wrong. Please try again.", "error");
+        }
     };
-
     const authButtons = !localStorage.getItem('auth_token') ? (
         <>
-            <Link className="btn nav-link" to="/login">Login</Link>
+            <Link className="nav-link" to="/login">Login</Link>
         </>
     ) : (
         <>
-            <button className="btn nav-link" onClick={logoutSubmit}>Logout</button>
+            <button className="nav-link logout-btn" onClick={logoutSubmit}>Logout</button>
         </>
     );
 
     return (
-        <header style={headerStyle}>
+        <nav style={navbarStyle}>
             <div style={logoStyle}>
                 <Link to="/" style={linkStyle}>MyApp</Link>
             </div>
-            <nav style={navStyle}>
+            <div style={navLinksStyle}>
                 {authButtons}
-            </nav>
-        </header>
+            </div>
+        </nav>
     );
 };
 
-// Styling
-const headerStyle = {
+// CSS Styles
+const navbarStyle = {
     background: '#2c3e50',
-    color: '#fff',
+    color: '#ecf0f1',
     padding: '1rem 2rem',
     display: 'flex',
     justifyContent: 'space-between',
@@ -60,7 +73,7 @@ const logoStyle = {
     fontWeight: 'bold',
 };
 
-const navStyle = {
+const navLinksStyle = {
     display: 'flex',
     gap: '1rem',
 };

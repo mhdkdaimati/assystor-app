@@ -1,43 +1,29 @@
 import { FaFacebookF, FaTwitter, FaLinkedinIn } from 'react-icons/fa';
 
 const Footer = () => (
-  <footer style={{
-    background: '#2c3e50',
-    color: '#ecf0f1',
-    padding: '1rem 1rem',
-    textAlign: 'center',
-    borderTop: '4px solid #1abc9c',
-  }}>
-    {/* <div style={{ marginBottom: '1rem' }}> */}
-      {/* <strong>Assystor</strong> &copy; {new Date().getFullYear()} - All rights reserved */}
-    {/* </div> */}
-    
-    {/* <div style={{ marginBottom: '1rem' }}>
-      <a href="/about" style={linkStyle}>About</a>
-      <a href="/contact" style={linkStyle}>Contact</a>
-      <a href="/privacy" style={linkStyle}>Privacy</a>
-    </div>
-
+  <footer style={footerStyle}>
     <div>
-      <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={iconStyle}><FaFacebookF /></a>
-      <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={iconStyle}><FaTwitter /></a>
-      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconStyle}><FaLinkedinIn /></a>
-    </div> */}
+    </div>
   </footer>
 );
 
-const linkStyle = {
-  margin: '0 10px',
+const footerStyle = {
+  background: '#2c3e50',
   color: '#ecf0f1',
-  textDecoration: 'none',
-  fontWeight: 'bold'
+  padding: '1rem 1rem',
+  textAlign: 'center',
+  borderTop: '4px solid #1abc9c',
+  position: 'fixed', // يجعل الفوتر ثابتًا
+  bottom: 0, // يضع الفوتر في أسفل الصفحة
+  left: 0,
+  width: '100%', // يجعل الفوتر يمتد بعرض الصفحة بالكامل
 };
 
 const iconStyle = {
   margin: '0 8px',
   color: '#ecf0f1',
   fontSize: '18px',
-  textDecoration: 'none'
+  textDecoration: 'none',
 };
 
 export default Footer;

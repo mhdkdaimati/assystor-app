@@ -1,67 +1,42 @@
-import { NavLink } from 'react-router-dom';
-import { FaTachometerAlt, FaPlusCircle } from 'react-icons/fa'; // icons
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Sidebar = () => (
-  <aside style={{
-    width: '220px',
-    background: '#2c3e50',
-    color: '#ecf0f1',
-    padding: '1rem',
-    height: '100vh',
-    position: 'fixed',
-    top: 0,
-    left: 0
-  }}>
-    <h2 style={{ color: '#ecf0f1', textAlign: 'center', marginBottom: '2rem' }}>
-      Admin Panel
-    </h2>
-    <ul style={{ listStyle: 'none', padding: 0 }}>
-      <li style={{ marginBottom: '1rem' }}>
-        <NavLink 
-          to="/dashboard" 
-          style={({ isActive }) => ({
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: isActive ? '#1abc9c' : '#ecf0f1',
-            fontWeight: isActive ? 'bold' : 'normal'
-          })}
-        >
-          <FaTachometerAlt style={{ marginRight: '8px' }} />
-          Dashboard
-        </NavLink>
-      </li>
-      <li style={{ marginBottom: '1rem' }}>
-        <NavLink 
-          to="/add-category" 
-          style={({ isActive }) => ({
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: isActive ? '#1abc9c' : '#ecf0f1',
-            fontWeight: isActive ? 'bold' : 'normal'
-          })}
-        >
-          <FaPlusCircle style={{ marginRight: '8px' }} />
-          Add Category
-        </NavLink>
-        <NavLink 
-          to="/add-user" 
-          style={({ isActive }) => ({
-            display: 'flex',
-            alignItems: 'center',
-            textDecoration: 'none',
-            color: isActive ? '#1abc9c' : '#ecf0f1',
-            fontWeight: isActive ? 'bold' : 'normal'
-          })}
-        >
-          <FaPlusCircle style={{ marginRight: '8px' }} />
-          Add User
-        </NavLink>
+const Sidebar = () => {
+  return (
+    <aside style={sidebarStyle}>
+      <ul style={listStyle}>
+        <li>
+          <Link to="/" style={linkStyle}>Home</Link>
+        </li>
+        <li>
+          <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
+        </li>
+      </ul>
+    </aside>
+  );
+};
 
-      </li>
-    </ul>
-  </aside>
-);
+// CSS Styles
+const sidebarStyle = {
+  width: '200px',
+  background: '#2c3e50',
+  color: '#ecf0f1',
+  height: '100vh',
+  padding: '1rem',
+  position: 'fixed',
+};
+
+const listStyle = {
+  listStyle: 'none',
+  padding: 0,
+};
+
+const linkStyle = {
+  color: '#ecf0f1',
+  textDecoration: 'none',
+  display: 'block',
+  padding: '0.5rem 0',
+  transition: 'color 0.3s',
+};
 
 export default Sidebar;

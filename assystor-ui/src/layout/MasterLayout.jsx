@@ -1,27 +1,20 @@
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
-import Footer from './Footer';
-import '../assets/admin/css/styles.css';
-import '../assets/admin/js/scripts';
-import { BrowserRouter as Router, Routes, Route, Navigate,Outlet } from 'react-router-dom';
-import AddCategory from '../components/category/AddCategory';
-
 
 const MasterLayout = () => {
-    return (
-        <div className="app-layout" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Navbar />
+  return (
+    <div style={{ display: 'flex' }}>
+      <Sidebar /> {/* Sidebar يظهر في جميع الصفحات المحمية */}
+      <div style={{ flex: 1 }}>
+        <Navbar /> {/* Navbar يظهر في جميع الصفحات المحمية */}
+        <main style={{ padding: '1rem' }}>
+          <Outlet /> {/* عرض المحتوى الفرعي هنا */}
+        </main>
+      </div>
+    </div>
+  );
+};
 
-            <div style={{ display: 'flex', flex: 1 }}>
-                <Sidebar />
-
-                <main style={{ flex: 1, padding: '1rem' }}>
-                    <Outlet />
-                </main>
-            </div>
-
-            <Footer />
-        </div>);
-}
 export default MasterLayout;
