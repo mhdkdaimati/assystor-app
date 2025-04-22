@@ -10,7 +10,7 @@ function AddUser() {
         name: '',
         email: '',
         password: '',
-        // confirm_password:'',
+        role: '',
         error_list: [],
     });
 
@@ -20,30 +20,36 @@ function AddUser() {
     }
 
     const registerSubmit = (e) => {
-        // if(registerInput.password === registerInput.confirm_password){
         e.preventDefault();
         const data = {
             name: registerInput.name,
             email: registerInput.email,
             password: registerInput.password,
+            role: registerInput.role || 'operator'
         }
 
         axios.get('/sanctum/csrf-cookie').then(response => {
             axios.post(`api/register`, data).then(res => {
-                if (res.data.status === 200) {
-                    // localStorage.setItem('auth_token',res.data.token);
-                    // localStorage.setItem('auth_name',res.data.username);
+                if (res.data.status === 201) {
+
+                    setRegister({
+                        name: '',
+                        email: '',
+                        password: '',
+                        role: '',
+                        error_list: [],
+                
+                    })
                     swal("Operation is completed", res.data.message, "success");
-                    //navigate('/login')
+                    document.getElementById('REGISTER_FORM').reset();
+
                 } else {
                     setRegister({ ...registerInput, error_list: res.data.validator_errors });
                     swal("Operation is inompleted", "Your registration couldn't be completed, please check the errors.", "error");
                 }
             });
         });
-        // }else{
-        //     swal("Operation Incompletion", "Your registration couldn't be deu to password mismatched, please try again.", "error");
-        // }
+
     }
     return (
         <div className="container ">
@@ -54,7 +60,7 @@ function AddUser() {
                 </div>
                 <div className="col-4">
                     <main className="form-signin">
-                        <form onSubmit={registerSubmit}>
+                        <form onSubmit={registerSubmit} id="REGISTER_FORM" encType="multipart/form-data">
                             <h1 className="h3 mb-3 fw-normal text-center">Register</h1>
                             <div className="form-floating">
                                 <input type="text" name="name" onChange={handleInput} value={registerInput.name} className="form-control" id="floatingName" placeholder="Full Name" />
@@ -74,10 +80,20 @@ function AddUser() {
                                 <span style={{ color: "red" }}>{registerInput.error_list.password}</span>
                             </div>
                             <br />
-                            {/* <div className="form-floating">
-                        <input type="password" name="confirm_password" onChange={handleInput} value={registerInput.confirm_password} className="form-control" id="floatingConfirmPassword" placeholder="Confirm Password"/>
-                        <label htmlFor="floatingConfirmPassword">Confirm Password</label>
-                    </div> */}
+                            <div className="form-floating">
+                                <select
+                                    className="form-select" name="role" onChange={handleInput} value={registerInput.role || 'operator'} id="floatingRole">
+                                    <option value="operator">Operator</option>
+                                    <option value="manager">Manager</option>
+                                    <option value="admin">Admin</option>
+                                </select>
+                                <label htmlFor="floatingRole">Role</label>
+                                <span style={{ color: "red" }}>{registerInput.error_list.role}</span>
+                            </div>
+
+
+
+                            <br />
                             <br />
                             <button className="w-100 btn btn-lg btn-primary" type="submit">Register</button>
                         </form>

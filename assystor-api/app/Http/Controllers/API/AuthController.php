@@ -28,15 +28,16 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'role' =>$request->role,
                 'password' => Hash::make($request->password),
             ]);
-            $token = $user->createToken($user->email . '_Token')->plainTextToken;
             return response()->json([
-                'status' => 200,
+                'status' => 201,
                 'username' => $user->name,
-                'token' => $token,
                 'message' => 'Registered successfully',
             ]);
+
+            return $user;
         }
     }
 
@@ -64,7 +65,7 @@ class AuthController extends Controller
                 ]);
 
             } else {
-                if ($user->role_as == 1)/*1 = admin*/ {
+                if ($user->role == 'admin')/*1 = admin*/ {
                     $role = 'admin';
 
                     $token = $user->createToken($user->email . '_AdminToken', ['server:admin'])->plainTextToken;

@@ -4,15 +4,15 @@ const Footer = () => (
   <footer style={{
     background: '#2c3e50',
     color: '#ecf0f1',
-    padding: '2rem 1rem',
+    padding: '1rem 1rem',
     textAlign: 'center',
     borderTop: '4px solid #1abc9c',
   }}>
-    <div style={{ marginBottom: '1rem' }}>
-      <strong>MyCompany</strong> &copy; {new Date().getFullYear()} - All rights reserved
-    </div>
+    {/* <div style={{ marginBottom: '1rem' }}> */}
+      {/* <strong>Assystor</strong> &copy; {new Date().getFullYear()} - All rights reserved */}
+    {/* </div> */}
     
-    <div style={{ marginBottom: '1rem' }}>
+    {/* <div style={{ marginBottom: '1rem' }}>
       <a href="/about" style={linkStyle}>About</a>
       <a href="/contact" style={linkStyle}>Contact</a>
       <a href="/privacy" style={linkStyle}>Privacy</a>
@@ -22,7 +22,7 @@ const Footer = () => (
       <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" style={iconStyle}><FaFacebookF /></a>
       <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" style={iconStyle}><FaTwitter /></a>
       <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" style={iconStyle}><FaLinkedinIn /></a>
-    </div>
+    </div> */}
   </footer>
 );
 
