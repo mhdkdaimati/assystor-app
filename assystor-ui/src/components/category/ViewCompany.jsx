@@ -3,21 +3,21 @@ import axios from 'axios';
 // import swal from 'sweetalert';
 import {useNavigate, Link} from 'react-router-dom';
 
-const ViewCategory = () =>{
+const ViewCompany = () =>{
 
     const [loading, setLoading] = useState(true);
-    const [categoryList, setCategoryList] = useState([
+    const [companyList, setCompanyList] = useState([
 
     ]);
 
     useEffect (()=>{
 
-        axios.get(`/api/view-category`).then(res =>{
+        axios.get(`/api/all-companies`).then(res =>{
 
 
             if(res.status === 200){
 
-                setCategoryList(res.data.category)
+                setCompanyList(res.data.companies)
             }
             setLoading(false);
 
@@ -31,16 +31,16 @@ const deleteCategory = (e, id) =>{
     const thisClicked = e.currentTarget;
     thisClicked.innerText = "Deletting";
 
-    axios.delete(`/api/delete-category/${id}`).then(res =>{
+    axios.delete(`/api/delete-company/${id}`).then(res =>{
 
 
         if(res.status === 200){
 
-            alert("Operation is completed", res.data.message, "success");
+            swal("Operation is completed", res.data.message, "success");
             thisClicked.closest("tr").remove();
 
         }else if(res.status === 404){
-            alert("Operation is incompleted", res.data.message, "error");
+            swal("Operation is incompleted", res.data.message, "error");
             thisClicked.innerText = "Delete";
 
 
@@ -64,50 +64,35 @@ const deleteCategory = (e, id) =>{
             )
         }else{
 
-        ViewCategory_HTML_table = categoryList.map((item)=>{
-            let visibilityStatus = '';
-
-            if(item.status == 0){
-
-                visibilityStatus = 'Visible'
-
-            }else{
-                visibilityStatus = 'Hidden'
-
-
-            }
+        ViewCategory_HTML_table = companyList.map((item)=>{
 
             return(
 
                 <tr key={item.id}>
                     <td>{item.id}</td>
                     <td>{item.name}</td>
-                    <td>{visibilityStatus}</td>
+                    <td>{item.responsible_person}</td>
+                    <td>{item.tel_number}</td>
+                    <td>{item.status}</td>
                     <td>
-                    <Link to={`edit-category/${item.id}`} className="btn btn-outline-success btn-sm">Edit</Link>
+                    <Link to={`/edit-company/${item.id}`} className="btn btn-outline-success btn-sm">Edit</Link>
                     </td>
-
                     <td>
-
                     <button type="button" onClick={(e)=> deleteCategory(e, item.id)} className="btn btn-outline-danger btn-sm">Delete</button>
-
                     </td>
                 </tr>
             )
         })
-
     }
-
-    
     return (
 <div className="container">
     {/* card */}
     <br/>
     <div className="shadow">
         <div className="alert alert-success" role="alert">
-        <h4 className="alert-heading text-center">View Category</h4>
+        <h4 className="alert-heading text-center">View Company</h4>
         <hr/>
-    <Link to="/add-category" className="card-link">Add Category</Link>
+    <Link to="/add-company" className="card-link">Add company</Link>
 
     </div>
     </div>
@@ -115,8 +100,10 @@ const deleteCategory = (e, id) =>{
         <thead>
             <tr>
             <th scope="col">#</th>
-            <th scope="col">name</th>
-            <th scope="col">status</th>
+            <th scope="col">Name</th>
+            <th scope="col">Responsible person</th>
+            <th scope="col">Tel number</th>
+            <th scope="col">Status</th>
             <th scope="col" colSpan="2">Action</th>
             </tr>
         </thead>
@@ -127,6 +114,6 @@ const deleteCategory = (e, id) =>{
 </div>
         );
 }
-export default ViewCategory;
+export default ViewCompany;
 
 

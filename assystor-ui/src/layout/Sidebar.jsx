@@ -2,6 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
+
+  const authRole = localStorage.getItem('auth_role'); // تخزين دور المستخدم
+
   return (
     <aside style={sidebarStyle}>
       <ul style={listStyle}>
@@ -11,6 +14,19 @@ const Sidebar = () => {
         <li>
           <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
         </li>
+          {authRole === 'admin' && (
+            <>
+            <li>
+            <Link to="/add-user" style={linkStyle}>Add User</Link>
+          </li>
+          <li>
+            <Link to="/add-company" style={linkStyle}>Add Company</Link>
+          </li>
+          <li>
+            <Link to="/view-company" style={linkStyle}>View Company</Link>
+          </li>
+          </>
+        )}
       </ul>
     </aside>
   );
@@ -23,7 +39,9 @@ const sidebarStyle = {
   color: '#ecf0f1',
   height: '100vh',
   padding: '1rem',
-  position: 'fixed',
+  position: 'fixed', // تثبيت Sidebar
+  top: 0,
+  left: 0,
 };
 
 const listStyle = {

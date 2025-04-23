@@ -29,8 +29,10 @@ function Login() {
     try {
       const res = await axios.post('/api/login', data);
       if (res.data.status === 200) {
+        // تخزين 
         localStorage.setItem('auth_token', res.data.token);
         localStorage.setItem('auth_name', res.data.username);
+        localStorage.setItem('auth_role', res.data.role); // تخزين دور المستخدم
 
         swal("Success", res.data.message, "success");
         navigate('/');

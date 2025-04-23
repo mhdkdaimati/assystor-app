@@ -20,6 +20,7 @@ const Navbar = () => {
                 // إزالة القيم من localStorage
                 localStorage.removeItem('auth_token');
                 localStorage.removeItem('auth_name');
+                localStorage.removeItem('auth_role');
 
                 // عرض رسالة نجاح
                 swal("Operation Completed", res.data.message, "success", { button: false });
