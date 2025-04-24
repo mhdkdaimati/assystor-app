@@ -6,9 +6,12 @@ import Dashboard from './components/Dashboard';
 import axios from 'axios';
 import ProtectedRoute from './ProtectedRoute';
 import AddUser from './components/user/AddUser';
-import AddCompany from './components/category/AddCompany';
-import ViewCompany from './components/category/ViewCompany';
-import EditCompany from './components/category/EditCompany';
+import AddCompany from './components/company/AddCompany';
+import ViewCompany from './components/company/ViewCompany';
+import EditCompany from './components/company/EditCompany';
+import AddCustomer from './components/customer/AddCustomer';
+import ViewCustomer from './components/customer/ViewCustomer';
+import EditCustomer from './components/customer/EditCustomer';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8000/";
@@ -32,9 +35,14 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
 
           <Route path="add-user" element={authRole === 'admin' ? <AddUser /> : <Navigate to="/" />}/>
+
           <Route path="add-company" element={authRole === 'admin' ? <AddCompany /> : <Navigate to="/" />}/>
           <Route path="view-company" element={authRole === 'admin' ? <ViewCompany /> : <Navigate to="/" />}/>
           <Route path="edit-company/:id" element={authRole === 'admin' ? <EditCompany /> : <Navigate to="/" />}/>
+
+          <Route path="add-customer" element={authRole === 'admin' ? <AddCustomer /> : <Navigate to="/" />}/>
+          <Route path="view-customer" element={authRole === 'admin' ? <ViewCustomer /> : <Navigate to="/" />}/>
+          <Route path="edit-customer/:id" element={authRole === 'admin' ? <EditCustomer /> : <Navigate to="/" />}/>
 
         </Route>
         {/* إعادة توجيه جميع المسارات الأخرى */}

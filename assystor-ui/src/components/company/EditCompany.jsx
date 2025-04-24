@@ -3,15 +3,6 @@ import axios from 'axios';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 
 
-
-/*
-
-                    <td>{item.name}</td>
-                    <td>{item.responsible_person}</td>
-                    <td>{item.tel_number}</td>
-                    <td>{item.status}</td>
-
-*/
 const EditCompany = () => {
 
     const navigate = useNavigate();

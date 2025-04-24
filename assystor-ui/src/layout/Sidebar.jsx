@@ -25,6 +25,12 @@ const Sidebar = () => {
           <li>
             <Link to="/view-company" style={linkStyle}>View Company</Link>
           </li>
+          <li>
+            <Link to="/add-customer" style={linkStyle}>Add Customer</Link>
+          </li>
+          <li>
+            <Link to="/view-customer" style={linkStyle}>View Customer</Link>
+          </li>
           </>
         )}
       </ul>
