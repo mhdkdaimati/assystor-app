@@ -103,14 +103,14 @@ const EditCompany = () => {
                 </div>
                 <br />
                 <div className="form-floating">
-                    <textarea
+                    <input
                         name="responsible_person"
                         onChange={handleInput}
                         value={companyInput.responsible_person}
                         className="form-control"
                         id="floatingresponsible_person"
                         placeholder="Responsible person"
-                    ></textarea>
+                    />
                     <label htmlFor="floatingresponsible_person">Responsible person</label>
                     <span style={{ color: "red" }}>{error.responsible_person}</span>
                 </div>

@@ -2,21 +2,21 @@ import React, {useEffect, useState } from 'react';
 import axios from 'axios';
 import {useNavigate, Link} from 'react-router-dom';
 
-const ViewCompany = () =>{
+const ViewCustomerGroup = () =>{
 
     const [loading, setLoading] = useState(true);
-    const [companyList, setCompanyList] = useState([
+    const [customerGroupList, setCustomerGroup] = useState([
 
     ]);
 
     useEffect (()=>{
 
-        axios.get(`/api/all-companies`).then(res =>{
+        axios.get(`/api/all-customer-groups`).then(res =>{
 
 
             if(res.status === 200){
 
-                setCompanyList(res.data.companies)
+                setCustomerGroup(res.data.customer_group)
             }
             setLoading(false);
 
@@ -25,12 +25,12 @@ const ViewCompany = () =>{
 
     },[]);
     
-const deleteCompany = (e, id) =>{
+const deleteCustomerGroup = (e, id) =>{
     e.preventDefault()
     const thisClicked = e.currentTarget;
     thisClicked.innerText = "Deletting";
 
-    axios.delete(`/api/delete-company/${id}`).then(res =>{
+    axios.delete(`/api/delete-customer-group/${id}`).then(res =>{
 
 
         if(res.status === 200){
@@ -50,7 +50,7 @@ const deleteCompany = (e, id) =>{
     })
 
 }
-    var view_company_HTML_table = "";
+    var view_customer_group_HTML_table = "";
 
     if(loading){
         return(
@@ -63,21 +63,18 @@ const deleteCompany = (e, id) =>{
             )
         }else{
 
-        view_company_HTML_table = companyList.map((item)=>{
+        view_customer_group_HTML_table = customerGroupList.map((item)=>{
 
             return(
 
                 <tr key={item.id}>
                     <td>{item.id}</td>
                     <td>{item.name}</td>
-                    <td>{item.responsible_person}</td>
-                    <td>{item.tel_number}</td>
-                    <td>{item.status}</td>
                     <td>
-                    <Link to={`/edit-company/${item.id}`} className="btn btn-outline-success btn-sm">Edit</Link>
+                    <Link to={`/edit-customer-group/${item.id}`} className="btn btn-outline-success btn-sm">Edit</Link>
                     </td>
                     <td>
-                    <button type="button" onClick={(e)=> deleteCompany(e, item.id)} className="btn btn-outline-danger btn-sm">Delete</button>
+                    <button type="button" onClick={(e)=> deleteCustomerGroup(e, item.id)} className="btn btn-outline-danger btn-sm">Delete</button>
                     </td>
                 </tr>
             )
@@ -89,9 +86,9 @@ const deleteCompany = (e, id) =>{
     <br/>
     <div className="shadow">
         <div className="alert alert-success" role="alert">
-        <h4 className="alert-heading text-center">View Company</h4>
+        <h4 className="alert-heading text-center">View Customer Group</h4>
         <hr/>
-    <Link to="/add-company" className="card-link">Add company</Link>
+    <Link to="/add-customer-group" className="card-link">Add Customer Group</Link>
 
     </div>
     </div>
@@ -100,19 +97,16 @@ const deleteCompany = (e, id) =>{
             <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
-            <th scope="col">Responsible person</th>
-            <th scope="col">Tel number</th>
-            <th scope="col">Status</th>
             <th scope="col" colSpan="2">Action</th>
             </tr>
         </thead>
         <tbody>
-            {view_company_HTML_table}
+            {view_customer_group_HTML_table}
         </tbody>
 </table>
 </div>
         );
 }
-export default ViewCompany;
+export default ViewCustomerGroup;
 
 

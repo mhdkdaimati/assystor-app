@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-// import swal from 'sweetalert';
 import { useNavigate, Link } from 'react-router-dom';
 
 
@@ -54,7 +53,7 @@ const AddCompany = () => {
 
                 swal("Operation is completed", res.data.message, "success");
                 document.getElementById('COMPANY_FORM').reset();
-                //navigate('/admin/view-category');
+                navigate('/view-company');
 
 
             } else if (res.data.status === 400) {
@@ -63,7 +62,7 @@ const AddCompany = () => {
 
             } else {
                 setCompany({ ...companyInput, error_list: res.data.errors });
-                swal("Operation is incompleted", "Adding new Category couldn't be completed, please check the errors.", "error");
+                swal("Operation is incompleted", "Adding new company couldn't be completed, please check the errors.", "error");
                 console.log(res.data.errors);
             }
         });

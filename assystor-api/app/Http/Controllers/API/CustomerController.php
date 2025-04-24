@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Validator;
 class CustomerController extends Controller
 {
     //
-    public function index(){
+    public function index()
+    {
         $customer = Customer::all();
 
         return response()->json([
-            'status'=>200,
-            'customer'=>$customer,
+            'status' => 200,
+            'customer' => $customer,
         ]);
-
     }
 
     public function store(Request $request)
@@ -37,6 +37,9 @@ class CustomerController extends Controller
             'iban' => 'nullable|string|max:34', // حسب تنسيق الـ IBAN الأوروبي
             'contact_number' => 'nullable|string|max:20',
             'pkk' => 'nullable|string|max:50',
+            'customer_groups' => 'nullable|array',
+            'customer_groups.*' => 'exists:customer_groups,id',
+
         ]);
 
         if ($validator->fails()) {
@@ -58,9 +61,13 @@ class CustomerController extends Controller
             $customer->iban = $request->input('iban');
             $customer->contact_number = $request->input('contact_number');
             $customer->pkk = $request->input('pkk');
-            
+
 
             $customer->save();
+
+            if ($request->has('customer_groups')) {
+                $customer->customerGroups()->sync($request->input('customer_groups'));
+            }
 
             return response()->json([
                 'status' => 200,
@@ -69,50 +76,49 @@ class CustomerController extends Controller
         }
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         $customer = Customer::find($id);
-        if($customer){
+        if ($customer) {
 
             $customer->delete();
 
             return response()->json([
-                'status'=>200,
-                'message'=>'Customer deleted successfully',
+                'status' => 200,
+                'message' => 'Customer deleted successfully',
             ]);
-
-        }else{
+        } else {
 
             return response()->json([
-                'status'=>404,
-                'message'=>'No customer found',
+                'status' => 404,
+                'message' => 'No customer found',
             ]);
-
         }
-
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $customer = Customer::find($id);
-        if($customer){
+        if ($customer) {
 
             return response()->json([
-                'status'=>200,
-                'customer'=>$customer,
+                'status' => 200,
+                'customer' => $customer,
             ]);
-
-        }else{
+        } else {
 
             return response()->json([
-                'status'=>404,
-                'message'=>'Invalid customer',
+                'status' => 404,
+                'message' => 'Invalid customer',
             ]);
         }
     }
 
-    public function update(Request $request, $id){
+    public function update(Request $request, $id)
+    {
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:customers,email,'.$id.',id',
+            'email' => 'required|email|unique:customers,email,' . $id . ',id',
             'company_id' => 'nullable|exists:companies,id',
             'gender' => 'nullable|in:male,female',
             'first_name' => 'required|string|max:255',
@@ -121,21 +127,24 @@ class CustomerController extends Controller
             'street' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
             'place' => 'nullable|string|max:255',
-            'iban' => 'nullable|string|max:34', // حسب تنسيق الـ IBAN الأوروبي
+            'iban' => 'nullable|string|max:34', 
             'contact_number' => 'nullable|string|max:20',
             'pkk' => 'nullable|string|max:50',
+            'customer_groups' => 'nullable|array',
+            'customer_groups.*' => 'exists:customer_groups,id',
+
 
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
 
             return response()->json([
-                'status'=>422,
-                'errors'=>$validator->messages(),
+                'status' => 422,
+                'errors' => $validator->messages(),
             ]);
-        }else{
+        } else {
 
             $customer = Customer::find($id);
-            if($customer){
+            if ($customer) {
 
 
                 $customer->email = $request->input('email');
@@ -150,24 +159,25 @@ class CustomerController extends Controller
                 $customer->iban = $request->input('iban');
                 $customer->contact_number = $request->input('contact_number');
                 $customer->pkk = $request->input('pkk');
+
+                $customer->update();
+                
+                if ($request->has('customer_groups')) {
+                    $customer->customerGroups()->sync($request->input('customer_groups'));
+                }
     
-            $customer->update();
 
-            return response()->json([
-                'status'=>200,
-                'message'=>'Customer updated successfully',
-            ]);
-        }else{
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Customer updated successfully',
+                ]);
+            } else {
 
-            return response()->json([
-                'status'=>404,
-                'message'=>'No customer found',
-            ]);
-
+                return response()->json([
+                    'status' => 404,
+                    'message' => 'No customer found',
+                ]);
+            }
         }
     }
-
-}
-
-
 }

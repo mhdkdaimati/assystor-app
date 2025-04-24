@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CompanyController;
 use App\Http\Controllers\API\CustomerController;
+use App\Http\Controllers\API\CustomerGroupController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -38,3 +39,10 @@ Route::get('all-customers', [CustomerController::class, 'index']);
 Route::delete('delete-customer/{id}', [CustomerController::class,'destroy']);
 Route::get('show-customer/{id}', [CustomerController::class,'show']);
 Route::put('update-customer/{id}', [CustomerController::class,'update']);
+
+
+Route::post('store-customer-group', [CustomerGroupController::class, 'store']);
+Route::get('all-customer-groups', [CustomerGroupController::class, 'index']);
+Route::get('show-customer-group/{id}', [CustomerGroupController::class,'show']);
+Route::put('update-customer-group/{id}', [CustomerGroupController::class,'update']);
+Route::delete('delete-customer-group/{id}', [CustomerGroupController::class,'destroy']);

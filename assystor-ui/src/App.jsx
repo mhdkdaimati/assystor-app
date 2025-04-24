@@ -12,6 +12,9 @@ import EditCompany from './components/company/EditCompany';
 import AddCustomer from './components/customer/AddCustomer';
 import ViewCustomer from './components/customer/ViewCustomer';
 import EditCustomer from './components/customer/EditCustomer';
+import AddCustomerGroup from './components/customerGroup/AddCustomerGroup';
+import ViewCustomerGroup from './components/customerGroup/ViewCustomerGroup';
+import EditCustomerGroup from './components/customerGroup/EditCustomerGroup';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8000/";
@@ -43,6 +46,12 @@ function App() {
           <Route path="add-customer" element={authRole === 'admin' ? <AddCustomer /> : <Navigate to="/" />}/>
           <Route path="view-customer" element={authRole === 'admin' ? <ViewCustomer /> : <Navigate to="/" />}/>
           <Route path="edit-customer/:id" element={authRole === 'admin' ? <EditCustomer /> : <Navigate to="/" />}/>
+
+
+          <Route path="add-customer-group" element={authRole === 'admin' ? <AddCustomerGroup /> : <Navigate to="/" />}/>
+          <Route path="view-customer-group" element={authRole === 'admin' ? <ViewCustomerGroup /> : <Navigate to="/" />}/>
+          <Route path="edit-customer-group/:id" element={authRole === 'admin' ? <EditCustomerGroup /> : <Navigate to="/" />}/>
+
 
         </Route>
         {/* إعادة توجيه جميع المسارات الأخرى */}

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-// import swal from 'sweetalert';
 import { useNavigate, Link } from 'react-router-dom';
 
 
@@ -36,17 +35,17 @@ const ViewCustomer = () => {
 
             if (res.status === 200) {
 
-                alert("Operation is completed", res.data.message, "success");
+                swal("Operation is completed", res.data.message, "success");
                 thisClicked.closest("tr").remove();
 
             } else if (res.status === 404) {
-                alert("Operation is incompleted", res.data.message, "error");
+                swal("Operation is incompleted", res.data.message, "error");
                 thisClicked.innerText = "Delete";
             }
         })
 
     }
-    var ViewProduct_HTML_table = "";
+    var view_customer_HTML_table = "";
 
     if (loading) {
         return (
@@ -60,7 +59,7 @@ const ViewCustomer = () => {
     } else {
 
 
-        ViewProduct_HTML_table = customerList.map((item) => {
+        view_customer_HTML_table = customerList.map((item) => {
 
             return (
 
@@ -94,16 +93,17 @@ const ViewCustomer = () => {
     return (
         <div className="container">
             {/* card */}
-            <br />
-            <div className="shadow">
+            {/* <div className="shadow">
                 <div className="alert alert-success" role="alert">
                     <h4 className="alert-heading text-center">View Customer</h4>
-                    <hr />
-                    <Link to="/admin/add-product" className="card-link">Add Customer</Link>
+                    <hr /> */}
+                    <Link to="/add-customer" className="card-link">Add Customer</Link>
+                {/* </div>
+            </div> */}
 
-                </div>
-            </div>
+            <br />
             <table className="table table-striped table-hover shadow text-center">
+
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -123,7 +123,7 @@ const ViewCustomer = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {ViewProduct_HTML_table}
+                    {view_customer_HTML_table}
                 </tbody>
             </table>
         </div>

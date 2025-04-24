@@ -8,17 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Model
 {
     protected $fillable = [
-        'email', 
-        'company_id', 
-        'gender', 
-        'first_name', 
+        'email',
+        'company_id',
+        'gender',
+        'first_name',
         'last_name',
-        'birth_day', 
-        'street', 
-        'zip_code', 
+        'birth_day',
+        'street',
+        'zip_code',
         'place',
-        'iban', 
-        'contact_number', 
+        'iban',
+        'contact_number',
         'pkk'
     ];
 
@@ -31,5 +31,10 @@ class Customer extends Model
     // {
     //     return $this->belongsToMany(Group::class, 'customer_group');
     // }
+
+    public function customerGroups()
+    {
+        return $this->belongsToMany(CustomerGroup::class, 'customer_customer_group');
+    }
 }
 //

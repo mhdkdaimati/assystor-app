@@ -145,7 +145,7 @@ const EditCustomer = () => {
             </div>
             {/* card end */}
 
-            <form onSubmit={customerUpdate} id="CATEGORY_FORM" encType="multipart/form-data">
+            <form onSubmit={customerUpdate} id="CUSTOMER_FORM" encType="multipart/form-data">
 
                 <div className="form-floating">
                     <input type="email" name="email" onChange={handleInput} value={customerInput.email ||''} className="form-control" id="floatingName" placeholder="email" />
@@ -154,7 +154,7 @@ const EditCustomer = () => {
                 </div>
                 <br />
                 <div>
-                    <select className="form-select" name="category_id" onChange={handleInput} value={customerInput.company_id || ''}>
+                    <select className="form-select" name="company_id" onChange={handleInput} value={customerInput.company_id || ''}>
                         <option>Select company</option>
                         {
                             companyList.map((item) => {
@@ -170,6 +170,7 @@ const EditCustomer = () => {
                 <select name="gender" onChange={handleInput} value={customerInput.gender ||''} className="form-select" aria-label="Default select example">
                     <option value="male">male</option>
                     <option value="female">female</option>
+                    {/* male,female */}
                 </select>
                 <br />
 
