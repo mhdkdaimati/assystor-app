@@ -97,7 +97,7 @@ const EditCustomerGroup = () => {
                 </div>
                 <br />
                 <button className="w-100 btn btn-lg btn-outline-success" type="submit">
-                    Save
+                    Update
                 </button>
             </form>
         </div>

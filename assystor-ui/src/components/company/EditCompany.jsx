@@ -136,7 +136,7 @@ const EditCompany = () => {
 
                 <br />
                 <button className="w-100 btn btn-lg btn-outline-success" type="submit">
-                    Update Company
+                    Update
                 </button>
             </form>
         </div>

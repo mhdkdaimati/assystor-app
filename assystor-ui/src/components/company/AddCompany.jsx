@@ -104,7 +104,7 @@ const AddCompany = () => {
                 </select>
                 <br />
 
-                <button className="w-100 btn btn-lg btn-outline-primary" type="submit">Add Company</button>
+                <button className="w-100 btn btn-lg btn-outline-primary" type="submit">Save</button>
             </form>
         </>
     );

@@ -244,7 +244,7 @@ const EditCustomer = () => {
                     <span style={{ color: "red" }}>{error.pkk}</span>
                 </div>
                 <br />
-                <button className="w-100 btn btn-lg btn-outline-success" type="submit">Update Customer</button>
+                <button className="w-100 btn btn-lg btn-outline-success" type="submit">Update</button>
             </form>
 
         </div>

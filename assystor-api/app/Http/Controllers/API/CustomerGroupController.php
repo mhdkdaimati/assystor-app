@@ -7,6 +7,7 @@ use App\Models\CustomerGroup;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
+
 class CustomerGroupController extends Controller
 {
     //
@@ -110,5 +111,25 @@ class CustomerGroupController extends Controller
         ]);
     }
 
+    public function customers($id)
+    {
+        $group = CustomerGroup::with('customers')->findOrFail($id);
 
+        return response()->json($group->customers);
+    }
+
+
+    public function assignCustomers(Request $request, $id)
+    {
+        $request->validate([
+            'customer_ids' => 'required|array',
+            'customer_ids.*' => 'exists:customers,id',
+        ]);
+
+        $group = CustomerGroup::findOrFail($id);
+
+        $group->customers()->sync($request->input('customer_ids'));
+
+        return response()->json(['message' => 'تم تعيين الزبائن للمجموعة بنجاح']);
+    }
 }

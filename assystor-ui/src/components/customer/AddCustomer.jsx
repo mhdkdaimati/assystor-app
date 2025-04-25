@@ -204,7 +204,7 @@ const AddCustomer = () => {
                     <span style={{ color: "red" }}>{customerInput.error_list.pkk}</span>
                 </div>
                 <br />
-                <button className="w-100 btn btn-lg btn-outline-primary" type="submit">Add customer</button>
+                <button className="w-100 btn btn-lg btn-outline-primary" type="submit">Save</button>
             </form>
 
         </div>
