@@ -2,7 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
-
   const authRole = localStorage.getItem('auth_role'); // تخزين دور المستخدم
 
   return (
@@ -14,38 +13,30 @@ const Sidebar = () => {
         <li>
           <Link to="/dashboard" style={linkStyle}>Dashboard</Link>
         </li>
-          {authRole === 'admin' && (
-            <>
+        {authRole === 'admin' && (
+          <>
             <li>
-            <Link to="/add-user" style={linkStyle}>Add User</Link>
-          </li>
-          <hr />
-          <li>
-            <Link to="/add-company" style={linkStyle}>Add Company</Link>
-          </li>
-          <li>
-            <Link to="/view-company" style={linkStyle}>View Company</Link>
-          </li>
-          <hr />
-          <li>
-            <Link to="/add-customer" style={linkStyle}>Add Customer</Link>
-          </li>
-          <li>
-            <Link to="/view-customer" style={linkStyle}>View Customer</Link>
-          </li>
-          <hr />
-          <li>
-            <Link to="/add-customer-group" style={linkStyle}>Add Customer Group</Link>
-          </li>
-          <li>
-            <Link to="/view-customer-group" style={linkStyle}>View Customer Group</Link>
-          </li>
-          <hr />
-          <li>
-            <Link to="/customer-group-manager" style={linkStyle}>Customer Group manager</Link>
-          </li>
-
-
+              <Link to="/add-user" style={linkStyle}>Add User</Link>
+            </li>
+            <hr />
+            <li>
+              <Link to="/view-company" style={linkStyle}>View Company</Link>
+            </li>
+            <hr />
+            <li>
+              <Link to="/view-customer" style={linkStyle}>View Customer</Link>
+            </li>
+            <hr />
+            <li>
+              <Link to="/view-customer-group" style={linkStyle}>View Customer Group</Link>
+            </li>
+            <hr />
+            <li>
+              <Link to="/customer-group-manager" style={linkStyle}>Customer Group Manager</Link>
+            </li>
+            <li>
+              <Link to="/customer-group-cards" style={linkStyle}>Customer Group Cards</Link>
+            </li>
           </>
         )}
       </ul>
@@ -63,11 +54,13 @@ const sidebarStyle = {
   position: 'fixed', // تثبيت Sidebar
   top: 0,
   left: 0,
+  overflowY: 'auto', // تفعيل التمرير العمودي
 };
 
 const listStyle = {
   listStyle: 'none',
   padding: 0,
+  margin: 0, // إزالة الهوامش
 };
 
 const linkStyle = {

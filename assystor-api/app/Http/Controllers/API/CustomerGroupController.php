@@ -13,8 +13,13 @@ class CustomerGroupController extends Controller
     //
     public function index()
     {
-        $customerGroup = CustomerGroup::all();
-
+        $customerGroup = CustomerGroup::withCount('customers')->get(); // 🔥 هون ضفنا withCount
+        if ($customerGroup->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No customer groups found',
+            ]);
+        }
         return response()->json([
             'status' => 200,
             'customer_group' => $customerGroup,

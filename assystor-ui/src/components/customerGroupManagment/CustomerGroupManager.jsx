@@ -11,13 +11,13 @@ const CustomerGroupManager = () => {
   // جلب الزبائن والمجموعات
   useEffect(() => {
     axios.get('/api/all-customers').then(res => setCustomers(res.data.customer));
-    axios.get('/api/all-customer-groups').then(res => setGroups(res.data.customer_group));
+    axios.get('/api/customer-groups').then(res => setGroups(res.data.customer_group));
   }, []);
 
   // جلب الزبائن المرتبطين بالمجموعة المحددة
   useEffect(() => {
     if (selectedGroupId) {
-      axios.get(`/api/all-customer-groups/${selectedGroupId}/customers`)
+      axios.get(`/api/customer-groups/${selectedGroupId}/customers`)
         .then(res => setAssignedCustomers(res.data));
     }
   }, [selectedGroupId]);
