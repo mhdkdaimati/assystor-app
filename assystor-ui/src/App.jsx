@@ -15,8 +15,10 @@ import EditCustomer from './components/customer/EditCustomer';
 import AddCustomerGroup from './components/customerGroup/AddCustomerGroup';
 import ViewCustomerGroup from './components/customerGroup/ViewCustomerGroup';
 import EditCustomerGroup from './components/customerGroup/EditCustomerGroup';
-
 import CustomerGroupsPage from './components/customerGroupManagment/CustomerGroupsPage';
+
+import IncompletedCustomerGroups from './components/handleCustomerGroups/IncompletedCustomerGroups';
+
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8000/";
@@ -55,7 +57,7 @@ function App() {
           <Route path="edit-customer-group/:id" element={authRole === 'admin' ? <EditCustomerGroup /> : <Navigate to="/" />}/>
 
           <Route path="customer-group-page" element={authRole === 'admin' ? <CustomerGroupsPage /> : <Navigate to="/" />}/>
-
+          <Route path="incompleted-customer-groups" element={authRole === 'admin' ? <IncompletedCustomerGroups /> : <Navigate to="/" />}/>
           {/* إضافة المزيد من الصفحات هنا حسب الحاجة */}
 
 

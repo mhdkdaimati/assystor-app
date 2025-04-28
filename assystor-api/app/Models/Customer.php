@@ -34,7 +34,8 @@ class Customer extends Model
 
     public function customerGroups()
     {
-        return $this->belongsToMany(CustomerGroup::class, 'customer_customer_group');
+        return $this->belongsToMany(CustomerGroup::class, 'customer_customer_group')
+                    ->withPivot('status');
     }
-}
+        }
 //

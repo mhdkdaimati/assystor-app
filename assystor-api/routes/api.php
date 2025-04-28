@@ -50,3 +50,5 @@ Route::delete('delete-customer-group/{id}', [CustomerGroupController::class,'des
 Route::get('customer-groups/{id}/customers', [CustomerGroupController::class, 'customers']);
 //set customers in the group
 Route::post('customer-groups/{id}/assign-customers', [CustomerGroupController::class, 'assignCustomers']);
+Route::get('customer-groups/incomplete', [CustomerGroupController::class, 'getIncompleteGroups']);
+Route::put('customer-groups/{groupId}/customers/{customerId}/update-status', [CustomerGroupController::class, 'updateCustomerStatusInGroup']);

@@ -34,6 +34,9 @@ const Sidebar = () => {
             <li>
               <Link to="/customer-group-page" style={linkStyle}>Customer Group page</Link>
             </li>
+            <li>
+              <Link to="/incompleted-customer-groups" style={linkStyle}>Incompleted customer groups</Link>
+            </li>
           </>
         )}
       </ul>

@@ -19,7 +19,7 @@ const CustomerGroupsPage = () => {
         try {
             const res = await axios.get('/api/customer-groups');
             if (res.status === 200) {
-                setGroups(res.data.customer_group);
+                setGroups(res.data.customer_groups);
             }
         } catch (error) {
             console.error(error);
@@ -28,7 +28,7 @@ const CustomerGroupsPage = () => {
 
     const fetchAllCustomers = async () => {
         try {
-            const res = await axios.get('/api/all-customers'); // ⚡ تحتاج تعمل اندبوينت لجميع الزبائن
+            const res = await axios.get('/api/all-customers'); // ⚡ 
             setAllCustomers(res.data.customer);
         } catch (error) {
             console.error(error);

@@ -11,31 +11,47 @@ use Illuminate\Support\Facades\Validator;
 class CustomerGroupController extends Controller
 {
     //
+    // public function index()
+    // {
+    //     $customerGroup = CustomerGroup::withCount('customers')->get(); // 🔥 هون ضفنا withCount
+    //     if ($customerGroup->isEmpty()) {
+    //         return response()->json([
+    //             'status' => 404,
+    //             'message' => 'No customer groups found',
+    //         ]);
+    //     }
+    
+    //     return response()->json([
+    //         'status' => 200,
+    //         'customer_group' => $customerGroup,
+    //     ]);
+    // }
+    
     public function index()
     {
-        $customerGroup = CustomerGroup::withCount('customers')->get(); // 🔥 هون ضفنا withCount
-        if ($customerGroup->isEmpty()) {
+        $customerGroups = CustomerGroup::withCount('customers')->get();
+    
+        if ($customerGroups->isEmpty()) {
             return response()->json([
                 'status' => 404,
                 'message' => 'No customer groups found',
             ]);
         }
+    
+        // نضيف عدد العملاء الغير مكتملين لكل مجموعة
+        $customerGroups->each(function ($group) {
+            $group->incomplete_customers_count = $group->customers()
+                ->wherePivot('status', 'incomplete')
+                ->count();
+        });
+    
         return response()->json([
             'status' => 200,
-            'customer_group' => $customerGroup,
+            'customer_groups' => $customerGroups, // 🔥 هون صححناها إلى customer_groups بالجمع
         ]);
-
-
-
-        // $customerGroup = CustomerGroup::all();
-
-        // return response()->json([
-        //     'status' => 200,
-        //     'customer' => $customer,
-        // ]);
-
     }
-
+        
+    
 
 
 
@@ -143,11 +159,80 @@ class CustomerGroupController extends Controller
             'customer_ids' => 'nullable|array',
             'customer_ids.*' => 'exists:customers,id',
         ]);
-    
+
         $group = CustomerGroup::findOrFail($id);
-    
+
         $group->customers()->sync($request->input('customer_ids', []));
-    
+
         return response()->json(['message' => 'Customers assigned to group successfully.']);
+    }
+
+
+    public function getIncompleteGroups()
+    {
+        // جلب المجموعات الغير مكتملة
+        $incompleteGroups = CustomerGroup::withCount('customers')
+            ->where('status', 'incomplete')
+            ->having('customers_count', '>=', 1)
+            ->get();
+    
+        if ($incompleteGroups->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'No incomplete customer groups with more than one customer found',
+            ]);
+        }
+    
+        // نضيف عدد العملاء الغير مكتملين لكل مجموعة
+        $incompleteGroups->each(function ($group) {
+            $group->incomplete_customers_count = $group->customers()
+                ->wherePivot('status', 'incomplete')
+                ->count();
+        });
+    
+        return response()->json([
+            'status' => 200,
+            'customer_groups' => $incompleteGroups,
+        ]);
+    }
+    
+
+    
+
+    public function updateCustomerStatusInGroup(Request $request, $groupId, $customerId)
+    {
+        $request->validate([
+            'status' => 'required|string|max:191',
+        ]);
+    
+        $group = CustomerGroup::findOrFail($groupId);
+    
+        // تأكد أن الزبون موجود في المجموعة
+        if (!$group->customers()->where('customers.id', $customerId)->exists()) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Customer not found in this group.',
+            ]);
+        }
+    
+        // تحديث حالة الزبون ضمن العلاقة (Pivot table)
+        $group->customers()->updateExistingPivot($customerId, ['status' => $request->status]);
+    
+        // التحقق بعد التحديث كم عميل لا يزال حالته "incomplete" داخل نفس المجموعة
+        $incompleteCount = $group->customers()
+                                ->wherePivot('status', 'incomplete')
+                                ->count();
+    
+        if ($incompleteCount == 0) {
+            // إذا ما في عملاء بحالة incomplete، حدث حالة المجموعة إلى complete
+            $group->update([
+                'status' => 'complete',
+            ]);
+        }
+    
+        return response()->json([
+            'status' => 200,
+            'message' => 'Customer status updated successfully in the group.',
+        ]);
     }
     }
