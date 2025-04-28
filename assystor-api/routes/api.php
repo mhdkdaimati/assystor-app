@@ -46,5 +46,7 @@ Route::get('customer-groups', [CustomerGroupController::class, 'index']);
 Route::get('show-customer-group/{id}', [CustomerGroupController::class,'show']);
 Route::put('update-customer-group/{id}', [CustomerGroupController::class,'update']);
 Route::delete('delete-customer-group/{id}', [CustomerGroupController::class,'destroy']);
+//customers in the group
 Route::get('customer-groups/{id}/customers', [CustomerGroupController::class, 'customers']);
+//set customers in the group
 Route::post('customer-groups/{id}/assign-customers', [CustomerGroupController::class, 'assignCustomers']);

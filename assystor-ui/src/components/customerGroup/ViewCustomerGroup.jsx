@@ -5,20 +5,21 @@ import {useNavigate, Link} from 'react-router-dom';
 const ViewCustomerGroup = () =>{
 
     const [loading, setLoading] = useState(true);
-    const [customerGroupList, setCustomerGroup] = useState([
-
-    ]);
+    const [customerGroupList, setCustomerGroup] = useState([]);
 
     useEffect (()=>{
 
-        axios.get(`/api/all-customer-groups`).then(res =>{
+        axios.get(`/api/customer-groups`).then(res =>{
 
 
-            if(res.status === 200){
+            if(res.data.customer_group){
+                //console.log(res.data.customer_group.length);
+                setCustomerGroup(res.data.customer_group);
 
-                setCustomerGroup(res.data.customer_group)
             }
+
             setLoading(false);
+
 
 
         })

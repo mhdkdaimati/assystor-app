@@ -24,7 +24,20 @@ class CustomerGroupController extends Controller
             'status' => 200,
             'customer_group' => $customerGroup,
         ]);
+
+
+
+        // $customerGroup = CustomerGroup::all();
+
+        // return response()->json([
+        //     'status' => 200,
+        //     'customer' => $customer,
+        // ]);
+
     }
+
+
+
 
     public function store(Request $request)
     {
@@ -127,14 +140,14 @@ class CustomerGroupController extends Controller
     public function assignCustomers(Request $request, $id)
     {
         $request->validate([
-            'customer_ids' => 'required|array',
+            'customer_ids' => 'nullable|array',
             'customer_ids.*' => 'exists:customers,id',
         ]);
-
+    
         $group = CustomerGroup::findOrFail($id);
-
-        $group->customers()->sync($request->input('customer_ids'));
-
-        return response()->json(['message' => 'تم تعيين الزبائن للمجموعة بنجاح']);
+    
+        $group->customers()->sync($request->input('customer_ids', []));
+    
+        return response()->json(['message' => 'Customers assigned to group successfully.']);
     }
-}
+    }

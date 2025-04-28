@@ -1,20 +1,20 @@
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {useNavigate, Link} from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
-const ViewCompany = () =>{
+const ViewCompany = () => {
 
     const [loading, setLoading] = useState(true);
     const [companyList, setCompanyList] = useState([
 
     ]);
 
-    useEffect (()=>{
+    useEffect(() => {
 
-        axios.get(`/api/all-companies`).then(res =>{
+        axios.get(`/api/all-companies`).then(res => {
 
 
-            if(res.status === 200){
+            if (res.status === 200) {
 
                 setCompanyList(res.data.companies)
             }
@@ -23,49 +23,49 @@ const ViewCompany = () =>{
 
         })
 
-    },[]);
-    
-const deleteCompany = (e, id) =>{
-    e.preventDefault()
-    const thisClicked = e.currentTarget;
-    thisClicked.innerText = "Deletting";
+    }, []);
 
-    axios.delete(`/api/delete-company/${id}`).then(res =>{
+    const deleteCompany = (e, id) => {
+        e.preventDefault()
+        const thisClicked = e.currentTarget;
+        thisClicked.innerText = "Deletting";
 
-
-        if(res.status === 200){
-
-            swal("Operation is completed", res.data.message, "success");
-            thisClicked.closest("tr").remove();
-
-        }else if(res.status === 404){
-            swal("Operation is incompleted", res.data.message, "error");
-            thisClicked.innerText = "Delete";
+        axios.delete(`/api/delete-company/${id}`).then(res => {
 
 
+            if (res.status === 200) {
 
-        }
+                swal("Operation is completed", res.data.message, "success");
+                thisClicked.closest("tr").remove();
+
+            } else if (res.status === 404) {
+                swal("Operation is incompleted", res.data.message, "error");
+                thisClicked.innerText = "Delete";
 
 
-    })
 
-}
+            }
+
+
+        })
+
+    }
     var view_company_HTML_table = "";
 
-    if(loading){
-        return(
-            <div className="d-flex justify-content-center" style={{margin:"200px"}}>
-                    
-            <div className="spinner-grow" role="status">
-                <span className="sr-only"></span>
+    if (loading) {
+        return (
+            <div className="d-flex justify-content-center" style={{ margin: "200px" }}>
+
+                <div className="spinner-grow" role="status">
+                    <span className="sr-only"></span>
+                </div>
             </div>
-        </div>
-            )
-        }else{
+        )
+    } else {
 
-        view_company_HTML_table = companyList.map((item)=>{
+        view_company_HTML_table = companyList.map((item) => {
 
-            return(
+            return (
 
                 <tr key={item.id}>
                     <td>{item.id}</td>
@@ -74,44 +74,44 @@ const deleteCompany = (e, id) =>{
                     <td>{item.tel_number}</td>
                     <td>{item.status}</td>
                     <td>
-                    <Link to={`/edit-company/${item.id}`} className="btn btn-outline-success btn-sm">Edit</Link>
+                        <Link to={`/edit-company/${item.id}`} className="btn btn-outline-success btn-sm">Edit</Link>
                     </td>
                     <td>
-                    <button type="button" onClick={(e)=> deleteCompany(e, item.id)} className="btn btn-outline-danger btn-sm">Delete</button>
+                        <button type="button" onClick={(e) => deleteCompany(e, item.id)} className="btn btn-outline-danger btn-sm">Delete</button>
                     </td>
                 </tr>
             )
         })
     }
     return (
-<div className="container">
-    {/* card */}
-    <br/>
-    <div className="shadow">
-        <div className="alert alert-success" role="alert">
-        <h4 className="alert-heading text-center">View Company</h4>
-        <hr/>
-    <Link to="/add-company" className="card-link">Add company</Link>
+        <div className="container">
+            {/* card */}
+            <br />
+            <div className="shadow">
+                <div className="alert alert-success" role="alert">
+                    <h4 className="alert-heading text-center">View Company</h4>
+                    <hr />
+                    <Link to="/add-company" className="card-link">Add company</Link>
 
-    </div>
-    </div>
-    <table className="table table-striped table-hover shadow text-center">
-        <thead>
-            <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Responsible person</th>
-            <th scope="col">Tel number</th>
-            <th scope="col">Status</th>
-            <th scope="col" colSpan="2">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {view_company_HTML_table}
-        </tbody>
-</table>
-</div>
-        );
+                </div>
+            </div>
+            <table className="table table-striped table-hover shadow text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Responsible person</th>
+                        <th scope="col">Tel number</th>
+                        <th scope="col">Status</th>
+                        <th scope="col" colSpan="2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {view_company_HTML_table}
+                </tbody>
+            </table>
+        </div>
+    );
 }
 export default ViewCompany;
 

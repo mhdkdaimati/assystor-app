@@ -32,10 +32,7 @@ const Sidebar = () => {
             </li>
             <hr />
             <li>
-              <Link to="/customer-group-manager" style={linkStyle}>Customer Group Manager</Link>
-            </li>
-            <li>
-              <Link to="/customer-group-cards" style={linkStyle}>Customer Group Cards</Link>
+              <Link to="/customer-group-page" style={linkStyle}>Customer Group page</Link>
             </li>
           </>
         )}

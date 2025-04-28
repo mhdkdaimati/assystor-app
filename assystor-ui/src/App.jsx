@@ -15,9 +15,8 @@ import EditCustomer from './components/customer/EditCustomer';
 import AddCustomerGroup from './components/customerGroup/AddCustomerGroup';
 import ViewCustomerGroup from './components/customerGroup/ViewCustomerGroup';
 import EditCustomerGroup from './components/customerGroup/EditCustomerGroup';
-import CustomerGroupManager from './components/customerGroupManagment/CustomerGroupManager';
 
-import CustomerGroupCards from './components/customerGroupManagment/CustomerGroupCards';
+import CustomerGroupsPage from './components/customerGroupManagment/CustomerGroupsPage';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8000/";
@@ -55,8 +54,7 @@ function App() {
           <Route path="view-customer-group" element={authRole === 'admin' ? <ViewCustomerGroup /> : <Navigate to="/" />}/>
           <Route path="edit-customer-group/:id" element={authRole === 'admin' ? <EditCustomerGroup /> : <Navigate to="/" />}/>
 
-          <Route path="customer-group-manager" element={authRole === 'admin' ? <CustomerGroupManager /> : <Navigate to="/" />}/>
-          <Route path="customer-group-cards" element={authRole === 'admin' ? <CustomerGroupCards /> : <Navigate to="/" />}/>
+          <Route path="customer-group-page" element={authRole === 'admin' ? <CustomerGroupsPage /> : <Navigate to="/" />}/>
 
           {/* إضافة المزيد من الصفحات هنا حسب الحاجة */}
 
