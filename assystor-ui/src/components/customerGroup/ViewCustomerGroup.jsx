@@ -12,15 +12,13 @@ const ViewCustomerGroup = () =>{
         axios.get(`/api/customer-groups`).then(res =>{
 
 
-            if(res.data.customer_group){
+            if(res.data.customer_groups){
                 //console.log(res.data.customer_group.length);
-                setCustomerGroup(res.data.customer_group);
+                setCustomerGroup(res.data.customer_groups);
 
             }
 
             setLoading(false);
-
-
 
         })
 

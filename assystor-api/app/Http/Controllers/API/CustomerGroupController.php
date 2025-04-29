@@ -10,22 +10,6 @@ use Illuminate\Support\Facades\Validator;
 
 class CustomerGroupController extends Controller
 {
-    //
-    // public function index()
-    // {
-    //     $customerGroup = CustomerGroup::withCount('customers')->get(); // 🔥 هون ضفنا withCount
-    //     if ($customerGroup->isEmpty()) {
-    //         return response()->json([
-    //             'status' => 404,
-    //             'message' => 'No customer groups found',
-    //         ]);
-    //     }
-    
-    //     return response()->json([
-    //         'status' => 200,
-    //         'customer_group' => $customerGroup,
-    //     ]);
-    // }
     
     public function index()
     {
@@ -235,4 +219,15 @@ class CustomerGroupController extends Controller
             'message' => 'Customer status updated successfully in the group.',
         ]);
     }
+
+    public function incompleteCustomers($id)
+{
+    $group = CustomerGroup::with(['customers' => function ($query) {
+        // تصفية العملاء الذين حالتهم incomplete فقط
+        $query->wherePivot('status', 'incomplete');
+    }])->findOrFail($id);
+
+    return response()->json($group->customers);
+}
+
     }

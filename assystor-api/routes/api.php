@@ -52,3 +52,4 @@ Route::get('customer-groups/{id}/customers', [CustomerGroupController::class, 'c
 Route::post('customer-groups/{id}/assign-customers', [CustomerGroupController::class, 'assignCustomers']);
 Route::get('customer-groups/incomplete', [CustomerGroupController::class, 'getIncompleteGroups']);
 Route::put('customer-groups/{groupId}/customers/{customerId}/update-status', [CustomerGroupController::class, 'updateCustomerStatusInGroup']);
+Route::get('customer-groups/{id}/customers/incomplete', [CustomerGroupController::class, 'incompleteCustomers']);
