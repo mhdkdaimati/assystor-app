@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 // import swal from 'sweetalert';
-import { useNavigate, Link,useParams } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 
 
 const EditCustomer = () => {
 
-        const { id } = useParams(); // استخدام useParams للحصول على المعرف
-    
+    const { id } = useParams(); // استخدام useParams للحصول على المعرف
+
 
     const navigate = useNavigate();
     const [companyList, setCompanyList] = useState([]);
@@ -135,118 +135,142 @@ const EditCustomer = () => {
     }
 
     return (
-        <div className="container">
-            {/* card */}
-            <br />
-            <div className="shadow">
-                <div className="alert alert-success" role="alert">
-                    <h4 className="alert-heading text-center">Edit customer</h4>
+        <div className="container py-4">
+            {/* card header */}
+            <div className="shadow mb-4">
+                <div className="alert alert-success text-center mb-0" role="alert">
+                    <h4 className="alert-heading">Edit Customer</h4>
                 </div>
             </div>
-            {/* card end */}
 
             <form onSubmit={customerUpdate} id="CUSTOMER_FORM" encType="multipart/form-data">
+                <div className="row g-3">
 
-                <div className="form-floating">
-                    <input type="email" name="email" onChange={handleInput} value={customerInput.email ||''} className="form-control" id="floatingName" placeholder="email" />
-                    <label htmlFor="floatingName">email</label>
-                    <span style={{ color: "red" }}>{error.email}</span>
-                </div>
-                <br />
-                <div>
-                    <select className="form-select" name="company_id" onChange={handleInput} value={customerInput.company_id || ''}>
-                        <option>Select company</option>
-                        {
-                            companyList.map((item) => {
-                                return (
-                                    <option value={item.id} key={item.id}>{item.name}</option>
-                                )
-                            })
-                        }
-                    </select>
-                </div>
-                <br />
-                
-                <select name="gender" onChange={handleInput} value={customerInput.gender ||''} className="form-select" aria-label="Default select example">
-                    <option value="male">male</option>
-                    <option value="female">female</option>
-                    {/* male,female */}
-                </select>
-                <br />
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="email" name="email" onChange={handleInput} value={customerInput.email || ''} className="form-control" placeholder="email" />
+                            <label>email</label>
+                            <span className="text-danger">{error.email}</span>
+                        </div>
+                    </div>
 
-                <div className="form-floating">
-                    <input type="text" name="first_name" onChange={handleInput} value={customerInput.first_name} className="form-control" id="floatingName" placeholder="first_name" />
-                    <label htmlFor="floatingName">first_name</label>
-                    <span style={{ color: "red" }}>{error.first_name}</span>
-                </div>
-                <br />
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <select className="form-select" name="company_id" onChange={handleInput} value={customerInput.company_id || ''}>
+                                <option value="">Select company</option>
+                                {
+                                    companyList.map(item => (
+                                        <option value={item.id} key={item.id}>{item.name}</option>
+                                    ))
+                                }
+                            </select>
+                            <label>Company</label>
+                        </div>
+                    </div>
 
-                <div className="form-floating">
-                    <input type="text" name="last_name" onChange={handleInput} value={customerInput.last_name} className="form-control" id="floatingName" placeholder="last_name" />
-                    <label htmlFor="floatingName">last_name</label>
-                    <span style={{ color: "red" }}>{error.last_name}</span>
-                </div>
-                <br />
-                
-                <div className="form-floating">
-                    <input type="date" name="birth_day" onChange={handleInput} value={customerInput.birth_day} className="form-control" id="floatingName" placeholder="birth_day" />
-                    <label htmlFor="floatingName">birth_day</label>
-                    <span style={{ color: "red" }}>{error.birth_day}</span>
-                </div>
-                <br />
-                
-                <div className="form-floating">
-                    <input type="text" name="street" onChange={handleInput} value={customerInput.street} className="form-control" id="floatingName" placeholder="street" />
-                    <label htmlFor="floatingName">street</label>
-                    <span style={{ color: "red" }}>{error.street}</span>
-                </div>
-                <br />
+                    {/* <div className="col-md-6">
+                        <div className="form-floating">
+                            <select name="gender" onChange={handleInput} value={customerInput.gender || ''} className="form-select">
+                                <option value="male">male</option>
+                                <option value="female">female</option>
+                            </select>
+                            <label>Gender</label>
+                        </div>
+                    </div> */}
 
 
 
-                
+
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <select name="gender" onChange={handleInput} value={customerInput.gender || ''} className="form-select" id="floatingGender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                            <label htmlFor="floatingGender">Gender</label>
+                        </div>
+                    </div>
 
 
-                <div className="form-floating">
-                    <input type="text" name="zip_code" onChange={handleInput} value={customerInput.zip_code} className="form-control" id="floatingName" placeholder="zip_code" />
-                    <label htmlFor="floatingName">zip_code</label>
-                    <span style={{ color: "red" }}>{error.zip_code}</span>
-                </div>
-                <br />
-                
-                <div className="form-floating">
-                    <input type="text" name="place" onChange={handleInput} value={customerInput.place} className="form-control" id="floatingName" placeholder="place" />
-                    <label htmlFor="floatingName">place</label>
-                    <span style={{ color: "red" }}>{error.place}</span>
-                </div>
-                <br />
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="text" name="first_name" onChange={handleInput} value={customerInput.first_name} className="form-control" placeholder="first_name" />
+                            <label>First Name</label>
+                            <span className="text-danger">{error.first_name}</span>
+                        </div>
+                    </div>
 
-                
-                <div className="form-floating">
-                    <input type="text" name="iban" onChange={handleInput} value={customerInput.iban} className="form-control" id="floatingName" placeholder="iban" />
-                    <label htmlFor="floatingName">iban</label>
-                    <span style={{ color: "red" }}>{error.iban}</span>
-                </div>
-                <br />
-                
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="text" name="last_name" onChange={handleInput} value={customerInput.last_name} className="form-control" placeholder="last_name" />
+                            <label>Last Name</label>
+                            <span className="text-danger">{error.last_name}</span>
+                        </div>
+                    </div>
 
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="date" name="birth_day" onChange={handleInput} value={customerInput.birth_day} className="form-control" placeholder="birth_day" />
+                            <label>Birth Day</label>
+                            <span className="text-danger">{error.birth_day}</span>
+                        </div>
+                    </div>
 
-                <div className="form-floating">
-                    <input type="text" name="contact_number" onChange={handleInput} value={customerInput.contact_number} className="form-control" id="floatingName" placeholder="contact_number" />
-                    <label htmlFor="floatingName">contact_number</label>
-                    <span style={{ color: "red" }}>{error.contact_number}</span>
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="text" name="street" onChange={handleInput} value={customerInput.street} className="form-control" placeholder="street" />
+                            <label>Street</label>
+                            <span className="text-danger">{error.street}</span>
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="text" name="zip_code" onChange={handleInput} value={customerInput.zip_code} className="form-control" placeholder="zip_code" />
+                            <label>Zip Code</label>
+                            <span className="text-danger">{error.zip_code}</span>
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="text" name="place" onChange={handleInput} value={customerInput.place} className="form-control" placeholder="place" />
+                            <label>Place</label>
+                            <span className="text-danger">{error.place}</span>
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="text" name="iban" onChange={handleInput} value={customerInput.iban} className="form-control" placeholder="iban" />
+                            <label>IBAN</label>
+                            <span className="text-danger">{error.iban}</span>
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="text" name="contact_number" onChange={handleInput} value={customerInput.contact_number} className="form-control" placeholder="contact_number" />
+                            <label>Contact Number</label>
+                            <span className="text-danger">{error.contact_number}</span>
+                        </div>
+                    </div>
+
+                    <div className="col-md-6">
+                        <div className="form-floating">
+                            <input type="text" name="pkk" onChange={handleInput} value={customerInput.pkk} className="form-control" placeholder="pkk" />
+                            <label>PKK</label>
+                            <span className="text-danger">{error.pkk}</span>
+                        </div>
+                    </div>
+
                 </div>
-                <br />
-                
-                <div className="form-floating">
-                    <input type="text" name="pkk" onChange={handleInput} value={customerInput.pkk} className="form-control" id="floatingName" placeholder="pkk" />
-                    <label htmlFor="floatingName">pkk</label>
-                    <span style={{ color: "red" }}>{error.pkk}</span>
+
+                <div className="mt-4">
+                    <button className="w-100 btn btn-lg btn-outline-success" type="submit">Update</button>
                 </div>
-                <br />
-                <button className="w-100 btn btn-lg btn-outline-success" type="submit">Update</button>
             </form>
-
         </div>
     );
 }

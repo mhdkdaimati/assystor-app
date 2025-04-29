@@ -1,0 +1,33 @@
+import React, { useState } from "react";
+import ProductList from "./ProductList";
+import EditProductForm from "./EditProductForm";
+import { Link } from "react-router-dom";
+
+function ProductPage() {
+    const [editingId, setEditingId] = useState(null);
+    const [refresh, setRefresh] = useState(false);
+
+    return (
+        <div className="container mx-auto p-4">
+            <h1 className="text-2xl font-bold mb-4">Products</h1>
+            <Link to="/create-product">Add product</Link>
+            
+            {editingId ? (
+                <EditProductForm
+                    productId={editingId}
+                    onUpdated={() => {
+                        setEditingId(null);
+                        setRefresh(!refresh);
+                    }}
+                />
+            ) : (
+                <ProductList
+                    key={refresh}
+                    onEdit={(id) => setEditingId(id)}
+                />
+            )}
+        </div>
+    );
+}
+
+export default ProductPage;

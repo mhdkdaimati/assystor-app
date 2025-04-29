@@ -37,6 +37,12 @@ const Sidebar = () => {
             <li>
               <Link to="/incompleted-customer-groups" style={linkStyle}>Incompleted customer groups</Link>
             </li>
+            <hr />
+
+            <li>
+              <Link to="/product-page" style={linkStyle}>product</Link>
+            </li>
+
           </>
         )}
       </ul>

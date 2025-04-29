@@ -78,68 +78,86 @@ const EditCompany = () => {
     }
 
     return (
-        <div className="container">
-            <br />
-            <div className="shadow">
-                <div className="alert alert-success" role="alert">
-                    <h4 className="alert-heading text-center">Edit Company</h4>
-                    <hr />
-                    <Link to="/view-company" className="card-link">Back</Link>
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-8 col-lg-6">
+                    <div className="shadow p-4 rounded bg-white">
+                        <div className="alert alert-success text-center" role="alert">
+                            <h4 className="alert-heading m-0">Edit Company</h4>
+                            <hr />
+                            <div className="text-end">
+                                <Link to="/view-company" className="btn btn-sm btn-outline-secondary">
+                                    Back
+                                </Link>
+                            </div>
+                        </div>
+
+                        <form onSubmit={companyUpdate} id="COMPANY_FORM" encType="multipart/form-data">
+                            <div className="form-floating mb-3">
+                                <input
+                                    type="text"
+                                    name="name"
+                                    onChange={handleInput}
+                                    value={companyInput.name}
+                                    className="form-control"
+                                    id="floatingName"
+                                    placeholder="Name"
+                                />
+                                <label htmlFor="floatingName">Name</label>
+                                {error.name && <div className="text-danger mt-1">{error.name}</div>}
+                            </div>
+
+                            <div className="form-floating mb-3">
+                                <input
+                                    name="responsible_person"
+                                    onChange={handleInput}
+                                    value={companyInput.responsible_person}
+                                    className="form-control"
+                                    id="floatingResponsible"
+                                    placeholder="Responsible person"
+                                />
+                                <label htmlFor="floatingResponsible">Responsible person</label>
+                                {error.responsible_person && <div className="text-danger mt-1">{error.responsible_person}</div>}
+                            </div>
+
+                            <div className="form-floating mb-3">
+                                <input
+                                    type="text"
+                                    name="tel_number"
+                                    onChange={handleInput}
+                                    value={companyInput.tel_number}
+                                    className="form-control"
+                                    id="floatingTel"
+                                    placeholder="Tel Number"
+                                />
+                                <label htmlFor="floatingTel">Tel number</label>
+                                {error.tel_number && <div className="text-danger mt-1">{error.tel_number}</div>}
+                            </div>
+
+                            <div className="mb-3">
+                                <label htmlFor="statusSelect" className="form-label">Status</label>
+                                <select
+                                    name="status"
+                                    onChange={handleInput}
+                                    value={companyInput.status}
+                                    className="form-select"
+                                    id="statusSelect"
+                                >
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <button className="btn btn-success w-100" type="submit">
+                                Update
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <form onSubmit={companyUpdate} id="COMPANY_FORM" encType="multipart/form-data">
-                <div className="form-floating">
-                    <input
-                        type="text"
-                        name="name"
-                        onChange={handleInput}
-                        value={companyInput.name}
-                        className="form-control"
-                        id="floatingName"
-                        placeholder="Name"
-                    />
-                    <label htmlFor="floatingName">Name</label>
-                    <span style={{ color: "red" }}>{error.name}</span>
-                </div>
-                <br />
-                <div className="form-floating">
-                    <input
-                        name="responsible_person"
-                        onChange={handleInput}
-                        value={companyInput.responsible_person}
-                        className="form-control"
-                        id="floatingresponsible_person"
-                        placeholder="Responsible person"
-                    />
-                    <label htmlFor="floatingresponsible_person">Responsible person</label>
-                    <span style={{ color: "red" }}>{error.responsible_person}</span>
-                </div>
-                <br />
-                <div className="form-floating">
-                    <input
-                        type="text"
-                        name="tel_number"
-                        onChange={handleInput}
-                        value={companyInput.tel_number}
-                        className="form-control"
-                        id="floatingtel_number"
-                        placeholder="Tel Number"
-                    />
-                    <label htmlFor="floatingtel_number">Tel number</label>
-                    <span style={{ color: "red" }}>{error.tel_number}</span>
-                </div>
-                <br />
-                <select name="status" onChange={handleInput} value={companyInput.status} className="form-select" aria-label="Default select example">
-                    <option value="active">active</option>
-                    <option value="inactive">inactive</option>
-                </select>
-
-                <br />
-                <button className="w-100 btn btn-lg btn-outline-success" type="submit">
-                    Update
-                </button>
-            </form>
         </div>
+
+
     );
 };
 

@@ -84,32 +84,40 @@ const ViewCompany = () => {
         })
     }
     return (
-        <div className="container">
-            {/* card */}
-            <br />
-            <div className="shadow">
-                <div className="alert alert-success" role="alert">
-                    <h4 className="alert-heading text-center">View Company</h4>
-                    <hr />
-                    <Link to="/add-company" className="card-link">Add company</Link>
+        <div className="container mt-5">
+            <div className="row justify-content-center">
+                <div className="col-12">
+                    <div className="shadow p-4 rounded bg-white mb-4">
+                        <div className="alert alert-success text-center" role="alert">
+                            <h4 className="alert-heading m-0">View Company</h4>
+                            <hr />
+                            <div className="text-end">
+                                <Link to="/add-company" className="btn btn-sm btn-outline-primary">
+                                    + Add Company
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
 
+                    <div className="table-responsive shadow rounded">
+                        <table className="table table-striped table-hover align-middle text-center mb-0">
+                            <thead className="table-success">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Responsible Person</th>
+                                    <th scope="col">Tel Number</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col" colSpan="2">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {view_company_HTML_table}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <table className="table table-striped table-hover shadow text-center">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Responsible person</th>
-                        <th scope="col">Tel number</th>
-                        <th scope="col">Status</th>
-                        <th scope="col" colSpan="2">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {view_company_HTML_table}
-                </tbody>
-            </table>
         </div>
     );
 }

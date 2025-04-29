@@ -19,7 +19,11 @@ import CustomerGroupsPage from './components/customerGroupManagment/CustomerGrou
 
 import IncompletedCustomerGroups from './components/handleCustomerGroups/IncompletedCustomerGroups';
 import ProcessCustomerGroup from './components/handleCustomerGroups/ProcessCustomerGroupe';
+import ProductList from './components/product/ProductList';
+import ProductPage from './components/product/ProductPage';
 
+
+import CreateProduct from './components/product/CreateProduct';
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1:8000/";
 axios.defaults.headers.post['Accept'] = 'application/json';
@@ -60,7 +64,13 @@ function App() {
           <Route path="incompleted-customer-groups" element={authRole === 'admin' ? <IncompletedCustomerGroups /> : <Navigate to="/" />}/>
           <Route path="process-customer-group/:id" element={authRole === 'admin' ? <ProcessCustomerGroup /> : <Navigate to="/" />}/>
 
+          {/* ProductList */}
+          <Route path="product-list" element={authRole === 'admin' ? <ProductList /> : <Navigate to="/" />}/>
           
+          <Route path="create-product" element={authRole === 'admin' ? <CreateProduct /> : <Navigate to="/" />}/>
+          
+          <Route path="product-page" element={authRole === 'admin' ? <ProductPage /> : <Navigate to="/" />}/>
+
           {/* إضافة المزيد من الصفحات هنا حسب الحاجة */}
 
 
