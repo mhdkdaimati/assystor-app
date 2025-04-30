@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ProductFieldValue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class ProductFieldValueController extends Controller
 {
@@ -39,4 +41,39 @@ class ProductFieldValueController extends Controller
         ProductFieldValue::destroy($id);
         return response()->json(['message' => 'Deleted']);
     }
+
+
+    public function bulkStore(Request $request)
+    {
+        $data = $request->validate([
+            'customer_id'       => 'required|exists:customers,id',
+            'product_id'        => 'required|exists:products,id',
+            'fields'            => 'required|array',
+            'fields.*'          => 'nullable|string',
+        ]);
+
+        $customerId = $data['customer_id'];
+        $productId  = $data['product_id'];
+        $userId     = Auth::id();
+
+        foreach ($data['fields'] as $fieldId => $value) {
+            ProductFieldValue::updateOrCreate(
+                [
+                    'customer_id'       => $customerId,
+                    'product_id'        => $productId,
+                    'product_field_id'  => $fieldId,
+                ],
+                [
+                    'employee_id'       => $userId,
+                    'value'             => $value,
+                ]
+            );
+        }
+
+        return response()->json([
+            'message' => 'Field values saved successfully.',
+        ], 200);
+    }
+
+    
 }

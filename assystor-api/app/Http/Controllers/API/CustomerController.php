@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use App\Models\ProductFieldValue;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
@@ -180,4 +181,15 @@ class CustomerController extends Controller
             }
         }
     }
+    public function productHistory($customerId)
+{
+    $fieldValues = ProductFieldValue::with(['product', 'field', 'employee'])
+        ->where('customer_id', $customerId)
+        ->get()
+        ->groupBy('product_id');
+
+    return response()->json($fieldValues);
+}
+
+    
 }

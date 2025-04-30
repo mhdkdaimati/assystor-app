@@ -43,6 +43,7 @@ Route::get('all-customers', [CustomerController::class, 'index']);
 Route::delete('delete-customer/{id}', [CustomerController::class,'destroy']);
 Route::get('show-customer/{id}', [CustomerController::class,'show']);
 Route::put('update-customer/{id}', [CustomerController::class,'update']);
+Route::get('customers/{customer}/product-history', [CustomerController::class, 'productHistory']);
 
 
 Route::post('store-customer-group', [CustomerGroupController::class, 'store']);
@@ -82,3 +83,4 @@ Route::get('field-values', [ProductFieldValueController::class, 'index']);
 Route::post('field-values', [ProductFieldValueController::class, 'store']);
 Route::put('field-values/{id}', [ProductFieldValueController::class, 'update']);
 Route::delete('field-values/{id}', [ProductFieldValueController::class, 'destroy']);
+Route::post('field-values/bulk', [ProductFieldValueController::class, 'bulkStore']);
