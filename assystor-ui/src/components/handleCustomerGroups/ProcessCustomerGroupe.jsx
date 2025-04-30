@@ -134,27 +134,27 @@ const ProcessCustomerGroup = () => {
                 status: sessionStatus,
                 comment: sessionComment,
             };
-
+    
             // إرسال الطلب الأول لإغلاق الجلسة
             await axios.post(`/api/customer-groups/close-session`, payload);
-
+    
             // إرسال الطلب الثاني لتسجيل الهيستوري
             await axios.post(`/api/customers/history`, payload);
-
+    
             swal("Session closed and history saved successfully.");
+    
+            // تصفية القائمة لإزالة الزبون الذي تم إغلاق جلسته
+            setCustomerList(prev => prev.filter(c => c.id !== selectedCustomer));
+    
+            // تصفير القيم
             setSessionStatus('');
             setSessionComment('');
-
-            setCustomerList(prev =>
-                prev.map(c => c.id === selectedCustomer ? { ...c, pivot: { ...c.pivot, status: 'complete' } } : c)
-            );
             handleCloseSessionModal();
         } catch (error) {
             console.error("Error closing session:", error);
             swal("An error occurred.");
         }
     };
-
 
 
     if (loading) return (
