@@ -13,7 +13,7 @@ class CustomerController extends Controller
     //
     public function index()
     {
-        $customer = Customer::all();
+        $customer = Customer::orderBy('created_at', 'desc')->get();
 
         return response()->json([
             'status' => 200,
@@ -128,7 +128,7 @@ class CustomerController extends Controller
             'street' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
             'place' => 'nullable|string|max:255',
-            'iban' => 'nullable|string|max:34', 
+            'iban' => 'nullable|string|max:34',
             'contact_number' => 'nullable|string|max:20',
             'pkk' => 'nullable|string|max:50',
             'customer_groups' => 'nullable|array',
@@ -162,11 +162,11 @@ class CustomerController extends Controller
                 $customer->pkk = $request->input('pkk');
 
                 $customer->update();
-                
+
                 if ($request->has('customer_groups')) {
                     $customer->customerGroups()->sync($request->input('customer_groups'));
                 }
-    
+
 
                 return response()->json([
                     'status' => 200,
@@ -181,15 +181,13 @@ class CustomerController extends Controller
             }
         }
     }
-    public function productHistory($customerId)
-{
-    $fieldValues = ProductFieldValue::with(['product', 'field', 'employee'])
-        ->where('customer_id', $customerId)
-        ->get()
-        ->groupBy('product_id');
+    public function customerProducts($customerId)
+    {
+        $fieldValues = ProductFieldValue::with(['product', 'field', 'employee'])
+            ->where('customer_id', $customerId)
+            ->get()
+            ->groupBy('product_id');
 
-    return response()->json($fieldValues);
-}
-
-    
+        return response()->json($fieldValues);
+    }
 }

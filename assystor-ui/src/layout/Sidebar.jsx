@@ -40,7 +40,7 @@ const Sidebar = () => {
             <hr />
 
             <li>
-              <Link to="/product-page" style={linkStyle}>product</Link>
+              <Link to="/product-page" style={linkStyle}>Product</Link>
             </li>
 
           </>

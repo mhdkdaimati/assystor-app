@@ -10,7 +10,7 @@ use App\Http\Controllers\API\CustomerGroupController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\ProductFieldController;
 use App\Http\Controllers\Api\ProductFieldValueController;
-
+use App\Http\Controllers\API\CustomerHistoryController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -43,7 +43,7 @@ Route::get('all-customers', [CustomerController::class, 'index']);
 Route::delete('delete-customer/{id}', [CustomerController::class,'destroy']);
 Route::get('show-customer/{id}', [CustomerController::class,'show']);
 Route::put('update-customer/{id}', [CustomerController::class,'update']);
-Route::get('customers/{customer}/product-history', [CustomerController::class, 'productHistory']);
+Route::get('customers/{customer}/customer-products', [CustomerController::class, 'customerProducts']);
 
 
 Route::post('store-customer-group', [CustomerGroupController::class, 'store']);
@@ -59,7 +59,7 @@ Route::get('customer-groups/incomplete', [CustomerGroupController::class, 'getIn
 Route::put('customer-groups/{groupId}/customers/{customerId}/update-status', [CustomerGroupController::class, 'updateCustomerStatusInGroup']);
 Route::get('customer-groups/{id}/customers/incomplete', [CustomerGroupController::class, 'incompleteCustomers']);
 
-
+Route::post('/customer-groups/close-session', [CustomerGroupController::class, 'closeSession']);
 
 //products
 Route::prefix('products')->group(function () {
@@ -84,3 +84,6 @@ Route::post('field-values', [ProductFieldValueController::class, 'store']);
 Route::put('field-values/{id}', [ProductFieldValueController::class, 'update']);
 Route::delete('field-values/{id}', [ProductFieldValueController::class, 'destroy']);
 Route::post('field-values/bulk', [ProductFieldValueController::class, 'bulkStore']);
+// CustomerHistoryController
+Route::get('customers/{customerId}/history', [CustomerHistoryController::class, 'index']);
+Route::post('customers/history', [CustomerHistoryController::class, 'store']);

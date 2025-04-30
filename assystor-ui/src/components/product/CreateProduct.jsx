@@ -34,9 +34,14 @@ const CreateProduct = () => {
                 ...product,
                 fields: fields
             });
-            alert("Product created!");
+            swal("Product created!");
         } catch (err) {
-            console.error(err);
+            if (err.response && err.response.status === 422) {
+                const errors = err.response.data.errors;
+                const errorMessages = Object.values(errors).flat().join(", ");
+                swal(errorMessages);
+            }
+            
         }
     };
 
