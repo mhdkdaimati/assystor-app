@@ -17,73 +17,40 @@ const Navbar = () => {
             });
 
             if (res.data.status === 200) {
-                // إزالة القيم من localStorage
                 localStorage.removeItem('auth_token');
                 localStorage.removeItem('auth_name');
                 localStorage.removeItem('auth_role');
 
-                // عرض رسالة نجاح
                 swal("Operation Completed", res.data.message, "success", { button: false });
-
-                // التوجيه إلى صفحة تسجيل الدخول
                 navigate('/login');
             } else {
-                // عرض رسالة خطأ إذا لم يكن status 200
                 swal("Error", res.data.message || "Logout failed", "error");
             }
         } catch (error) {
-            // معالجة الأخطاء
             swal("Error", "Something went wrong. Please try again.", "error");
         }
     };
+
     const authButtons = !localStorage.getItem('auth_token') ? (
         <>
             <Link className="nav-link" to="/login">Login</Link>
         </>
     ) : (
         <>
-            <button className="nav-link logout-btn" onClick={logoutSubmit}>Logout</button>
+            <button className="nav-link btn btn-link text-light" onClick={logoutSubmit}>Logout</button>
         </>
     );
 
     return (
-        <nav style={navbarStyle}>
-            <div style={logoStyle}>
-                <Link to="/" style={linkStyle}>MyApp</Link>
-            </div>
-            <div style={navLinksStyle}>
-                {authButtons}
+        <nav className="navbar navbar-expand-lg navbar-dark bg-secondary">
+            <div className="container-fluid">
+                <Link className="navbar-brand" to="/">Call Center App</Link>
+                <div className="d-flex">
+                    {authButtons}
+                </div>
             </div>
         </nav>
     );
-};
-
-// CSS Styles
-const navbarStyle = {
-    background: '#2c3e50',
-    color: '#ecf0f1',
-    padding: '1rem 2rem',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottom: '4px solid #1abc9c',
-};
-
-const logoStyle = {
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-};
-
-const navLinksStyle = {
-    display: 'flex',
-    gap: '1rem',
-};
-
-const linkStyle = {
-    color: '#ecf0f1',
-    textDecoration: 'none',
-    fontWeight: '500',
-    transition: 'color 0.3s',
 };
 
 export default Navbar;

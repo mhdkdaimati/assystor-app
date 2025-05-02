@@ -13,6 +13,8 @@ class UserController extends Controller
 {
     public function index()
     {
+        //select all users but not the logged in user
+        
         $users = User::orderBy('created_at', 'desc')->get(); // ترتيب البيانات
         return response()->json([
             'status' => 200,
