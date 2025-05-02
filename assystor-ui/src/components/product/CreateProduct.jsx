@@ -47,7 +47,6 @@ const CreateProduct = () => {
 
     return (
         <div className="container mt-4">
-            <h2>Add Product</h2>
             <form onSubmit={handleSubmit}>
                 <input
                     className="form-control mb-2"

@@ -2,7 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CompanyController;
 use App\Http\Controllers\API\CustomerController;
@@ -12,11 +11,12 @@ use App\Http\Controllers\Api\ProductFieldController;
 use App\Http\Controllers\Api\ProductFieldValueController;
 use App\Http\Controllers\API\CustomerHistoryController;
 
+use App\Http\Controllers\API\UserController;
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('register',[AuthController::class,'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function (){
@@ -87,3 +87,15 @@ Route::post('field-values/bulk', [ProductFieldValueController::class, 'bulkStore
 // CustomerHistoryController
 Route::get('customers/{customerId}/history', [CustomerHistoryController::class, 'index']);
 Route::post('customers/history', [CustomerHistoryController::class, 'store']);
+
+
+
+
+
+
+
+Route::post('store-user', [UserController::class, 'store']);
+Route::get('all-users', [UserController::class, 'index']);
+Route::get('show-user/{id}', [UserController::class,'show']);
+Route::put('update-user/{id}', [UserController::class,'update']);
+Route::delete('delete-user/{id}', [UserController::class,'destroy']);

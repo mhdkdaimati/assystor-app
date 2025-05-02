@@ -33,6 +33,9 @@ function Login() {
         localStorage.setItem('auth_token', res.data.token);
         localStorage.setItem('auth_name', res.data.username);
         localStorage.setItem('auth_role', res.data.role); // تخزين دور المستخدم
+        window.dispatchEvent(new Event("authChanged"));
+
+
 
         swal("Success", res.data.message, "success");
         navigate('/');

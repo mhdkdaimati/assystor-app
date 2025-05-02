@@ -71,82 +71,95 @@ const AddCompany = () => {
 
     return (
         <>
-            <div className="container mt-5">
-                <div className="row justify-content-center">
-                    <div className="col-md-8 col-lg-6">
-                        <div className="shadow p-4 rounded bg-white">
-                            <div className="alert alert-success text-center" role="alert">
-                                <h4 className="alert-heading m-0">Add Company</h4>
-                            </div>
-
-                            <form onSubmit={companySubmit} id="COMPANY_FORM">
-                                <div className="form-floating mb-3">
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        onChange={handleInput}
-                                        value={companyInput.name}
-                                        className="form-control"
-                                        id="floatingName"
-                                        placeholder="Name"
-                                    />
-                                    <label htmlFor="floatingName">Name</label>
-                                    {companyInput.error_list.name && (
-                                        <div className="text-danger mt-1">{companyInput.error_list.name}</div>
-                                    )}
-                                </div>
-
-                                <div className="form-floating mb-3">
-                                    <input
-                                        name="responsible_person"
-                                        onChange={handleInput}
-                                        value={companyInput.responsible_person}
-                                        className="form-control"
-                                        id="floatingResponsible"
-                                        placeholder="Responsible person"
-                                    />
-                                    <label htmlFor="floatingResponsible">Responsible person</label>
-                                    {companyInput.error_list.responsible_person && (
-                                        <div className="text-danger mt-1">{companyInput.error_list.responsible_person}</div>
-                                    )}
-                                </div>
-
-                                <div className="form-floating mb-3">
-                                    <input
-                                        type="text"
-                                        name="tel_number"
-                                        onChange={handleInput}
-                                        value={companyInput.tel_number}
-                                        className="form-control"
-                                        id="floatingTel"
-                                        placeholder="Tel number"
-                                    />
-                                    <label htmlFor="floatingTel">Tel number</label>
-                                    {companyInput.error_list.tel_number && (
-                                        <div className="text-danger mt-1">{companyInput.error_list.tel_number}</div>
-                                    )}
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="statusSelect" className="form-label">Status</label>
-                                    <select
-                                        name="status"
-                                        onChange={handleInput}
-                                        value={companyInput.status}
-                                        className="form-select"
-                                        id="statusSelect"
-                                    >
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
-                                    </select>
-                                </div>
-
-                                <button className="btn btn-primary w-100" type="submit">Save</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+<div className="container py-5" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
+  <div className="row justify-content-center">
+    <div className="col-md-7 col-lg-6">
+      <div className="card shadow rounded-4 border-0">
+        <div className="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
+          <h3 className="mb-0">🏢 Add New Company</h3>
+        </div>
+        <div className="card-body p-4">
+          <form onSubmit={companySubmit} id="COMPANY_FORM">
+            <div className="mb-3">
+              <label htmlFor="name" className="form-label fw-semibold">
+                Company Name
+              </label>
+              <div className="input-group">
+                <span className="input-group-text"><i className="bi bi-building"></i></span>
+                <input
+                  type="text"
+                  name="name"
+                  onChange={handleInput}
+                  value={companyInput.name}
+                  className="form-control"
+                  id="name"
+                  placeholder="Enter company name"
+                />
+              </div>
+              <small className="text-danger">{companyInput.error_list.name}</small>
             </div>
+
+            <div className="mb-3">
+              <label htmlFor="responsible_person" className="form-label fw-semibold">
+                Responsible Person
+              </label>
+              <div className="input-group">
+                <span className="input-group-text"><i className="bi bi-person-badge-fill"></i></span>
+                <input
+                  type="text"
+                  name="responsible_person"
+                  onChange={handleInput}
+                  value={companyInput.responsible_person}
+                  className="form-control"
+                  id="responsible_person"
+                  placeholder="Enter name"
+                />
+              </div>
+              <small className="text-danger">{companyInput.error_list.responsible_person}</small>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="tel_number" className="form-label fw-semibold">
+                Telephone Number
+              </label>
+              <div className="input-group">
+                <span className="input-group-text"><i className="bi bi-telephone-fill"></i></span>
+                <input
+                  type="text"
+                  name="tel_number"
+                  onChange={handleInput}
+                  value={companyInput.tel_number}
+                  className="form-control"
+                  id="tel_number"
+                  placeholder="Enter phone number"
+                />
+              </div>
+              <small className="text-danger">{companyInput.error_list.tel_number}</small>
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="status" className="form-label fw-semibold">Status</label>
+              <select
+                name="status"
+                onChange={handleInput}
+                value={companyInput.status}
+                className="form-select"
+                id="status"
+              >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+
+            <button type="submit" className="btn btn-primary w-100 rounded-pill shadow-sm fw-bold">
+              <i className="bi bi-building-add me-2"></i> Save Company
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
         </>
     );
 }

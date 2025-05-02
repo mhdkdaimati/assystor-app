@@ -84,41 +84,40 @@ const ViewCompany = () => {
         })
     }
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-12">
-                    <div className="shadow p-4 rounded bg-white mb-4">
-                        <div className="alert alert-success text-center" role="alert">
-                            <h4 className="alert-heading m-0">View Company</h4>
-                            <hr />
-                            <div className="text-end">
-                                <Link to="/add-company" className="btn btn-sm btn-outline-primary">
-                                    + Add Company
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="table-responsive shadow rounded">
-                        <table className="table table-striped table-hover align-middle text-center mb-0">
-                            <thead className="table-success">
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Responsible Person</th>
-                                    <th scope="col">Tel Number</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col" colSpan="2">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {view_company_HTML_table}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+<div className="container py-5">
+  <div className="row justify-content-center">
+    <div className="col-12">
+      <div className="card shadow-sm border-0 mb-4">
+        <div className="card-body bg-light rounded-4 d-flex justify-content-between align-items-center px-4 py-3">
+          <h4 className="mb-0 fw-bold text-primary">
+            <i className="bi bi-buildings me-2"></i> Company List
+          </h4>
+          <Link to="/add-company" className="btn btn-primary rounded-pill shadow-sm">
+            <i className="bi bi-plus-circle me-1"></i> Add Company
+          </Link>
         </div>
+      </div>
+
+      <div className="table-responsive shadow-sm rounded-4 bg-white p-3">
+        <table className="table table-hover table-bordered align-middle text-center mb-0">
+          <thead className="table-primary text-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Company Name</th>
+              <th scope="col">Responsible Person</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Status</th>
+              <th scope="col" colSpan="2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {view_company_HTML_table}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
     );
 }
 export default ViewCompany;

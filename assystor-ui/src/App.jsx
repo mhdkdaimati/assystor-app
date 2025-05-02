@@ -6,9 +6,15 @@ import Dashboard from './components/Dashboard';
 import axios from 'axios';
 import ProtectedRoute from './ProtectedRoute';
 import AddUser from './components/user/AddUser';
+
+import EditUser from './components/user/EditUser';
+import ViewUser from './components/user/ViewUser';
+
 import AddCompany from './components/company/AddCompany';
 import ViewCompany from './components/company/ViewCompany';
 import EditCompany from './components/company/EditCompany';
+
+
 import AddCustomer from './components/customer/AddCustomer';
 import ViewCustomer from './components/customer/ViewCustomer';
 import EditCustomer from './components/customer/EditCustomer';
@@ -21,6 +27,7 @@ import IncompletedCustomerGroups from './components/handleCustomerGroups/Incompl
 import ProcessCustomerGroup from './components/handleCustomerGroups/ProcessCustomerGroupe';
 import ProductList from './components/product/ProductList';
 import ProductPage from './components/product/ProductPage';
+import { useState, useEffect } from 'react';
 
 
 import CreateProduct from './components/product/CreateProduct';
@@ -31,8 +38,25 @@ axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('auth_token')}`;
 
 function App() {
-  const authRole = localStorage.getItem('auth_role'); // الحصول على دور المستخدم
-  // console.log(authRole);
+
+  const [auth, setAuth] = useState({
+    token: localStorage.getItem('auth_token'),
+    role: localStorage.getItem('auth_role'),
+  });
+  useEffect(() => {
+    const handleAuthChange = () => {
+      setAuth({
+        token: localStorage.getItem('auth_token'),
+        role: localStorage.getItem('auth_role'),
+      });
+    };
+  
+    window.addEventListener('authChanged', handleAuthChange);
+    return () => window.removeEventListener('authChanged', handleAuthChange);
+  }, []);
+  
+  //const auth.role = localStorage.getItem('auth_role'); // الحصول على دور المستخدم
+  // console.log(auth.role);
 
   return (
     <Router>
@@ -45,31 +69,34 @@ function App() {
           <Route index element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
 
-          <Route path="add-user" element={authRole === 'admin' ? <AddUser /> : <Navigate to="/" />}/>
-
-          <Route path="add-company" element={authRole === 'admin' ? <AddCompany /> : <Navigate to="/" />}/>
-          <Route path="view-company" element={authRole === 'admin' ? <ViewCompany /> : <Navigate to="/" />}/>
-          <Route path="edit-company/:id" element={authRole === 'admin' ? <EditCompany /> : <Navigate to="/" />}/>
-
-          <Route path="add-customer" element={authRole === 'admin' ? <AddCustomer /> : <Navigate to="/" />}/>
-          <Route path="view-customer" element={authRole === 'admin' ? <ViewCustomer /> : <Navigate to="/" />}/>
-          <Route path="edit-customer/:id" element={authRole === 'admin' ? <EditCustomer /> : <Navigate to="/" />}/>
+          <Route path="add-user" element={auth.role === 'admin' ? <AddUser /> : <Navigate to="/" />}/>
+          <Route path="view-user" element={auth.role === 'admin' ? <ViewUser /> : <Navigate to="/" />}/>
+          <Route path="edit-user/:id" element={auth.role === 'admin' ? <EditUser /> : <Navigate to="/" />}/>
 
 
-          <Route path="add-customer-group" element={authRole === 'admin' ? <AddCustomerGroup /> : <Navigate to="/" />}/>
-          <Route path="view-customer-group" element={authRole === 'admin' ? <ViewCustomerGroup /> : <Navigate to="/" />}/>
-          <Route path="edit-customer-group/:id" element={authRole === 'admin' ? <EditCustomerGroup /> : <Navigate to="/" />}/>
+          <Route path="add-company" element={auth.role === 'admin' ? <AddCompany /> : <Navigate to="/" />}/>
+          <Route path="view-company" element={auth.role === 'admin' ? <ViewCompany /> : <Navigate to="/" />}/>
+          <Route path="edit-company/:id" element={auth.role === 'admin' ? <EditCompany /> : <Navigate to="/" />}/>
 
-          <Route path="customer-group-page" element={authRole === 'admin' ? <CustomerGroupsPage /> : <Navigate to="/" />}/>
-          <Route path="incompleted-customer-groups" element={authRole === 'admin' ? <IncompletedCustomerGroups /> : <Navigate to="/" />}/>
-          <Route path="process-customer-group/:id" element={authRole === 'admin' ? <ProcessCustomerGroup /> : <Navigate to="/" />}/>
+          <Route path="add-customer" element={auth.role === 'admin' ? <AddCustomer /> : <Navigate to="/" />}/>
+          <Route path="view-customer" element={auth.role === 'admin' ? <ViewCustomer /> : <Navigate to="/" />}/>
+          <Route path="edit-customer/:id" element={auth.role === 'admin' ? <EditCustomer /> : <Navigate to="/" />}/>
+
+
+          <Route path="add-customer-group" element={auth.role === 'admin' ? <AddCustomerGroup /> : <Navigate to="/" />}/>
+          <Route path="view-customer-group" element={auth.role === 'admin' ? <ViewCustomerGroup /> : <Navigate to="/" />}/>
+          <Route path="edit-customer-group/:id" element={auth.role === 'admin' ? <EditCustomerGroup /> : <Navigate to="/" />}/>
+
+          <Route path="customer-group-page" element={auth.role === 'admin' ? <CustomerGroupsPage /> : <Navigate to="/" />}/>
+          <Route path="incompleted-customer-groups" element={auth.role === 'admin' ? <IncompletedCustomerGroups /> : <Navigate to="/" />}/>
+          <Route path="process-customer-group/:id" element={auth.role === 'admin' ? <ProcessCustomerGroup /> : <Navigate to="/" />}/>
 
           {/* ProductList */}
-          <Route path="product-list" element={authRole === 'admin' ? <ProductList /> : <Navigate to="/" />}/>
+          <Route path="product-list" element={auth.role === 'admin' ? <ProductList /> : <Navigate to="/" />}/>
           
-          <Route path="create-product" element={authRole === 'admin' ? <CreateProduct /> : <Navigate to="/" />}/>
+          <Route path="create-product" element={auth.role === 'admin' ? <CreateProduct /> : <Navigate to="/" />}/>
           
-          <Route path="product-page" element={authRole === 'admin' ? <ProductPage /> : <Navigate to="/" />}/>
+          <Route path="product-page" element={auth.role === 'admin' ? <ProductPage /> : <Navigate to="/" />}/>
 
           {/* إضافة المزيد من الصفحات هنا حسب الحاجة */}
 

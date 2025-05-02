@@ -15,17 +15,21 @@ const Sidebar = () => {
         </li>
         {authRole === 'admin' && (
           <>
+          <hr />
+            <li><b>Management</b></li>
             <li>
-              <Link to="/add-user" style={linkStyle}>Add User</Link>
+              <Link to="/view-user" style={linkStyle}>Users</Link>
             </li>
-            <hr />
             <li>
-              <Link to="/view-company" style={linkStyle}>View Company</Link>
+              <Link to="/view-company" style={linkStyle}>Companies</Link>
             </li>
-            <hr />
             <li>
-              <Link to="/view-customer" style={linkStyle}>View Customer</Link>
+              <Link to="/view-customer" style={linkStyle}>Customers</Link>
             </li>
+            <li>
+              <Link to="/product-page" style={linkStyle}>Products</Link>
+            </li>
+
             <hr />
             <li>
               <Link to="/view-customer-group" style={linkStyle}>View Customer Group</Link>
@@ -39,9 +43,6 @@ const Sidebar = () => {
             </li>
             <hr />
 
-            <li>
-              <Link to="/product-page" style={linkStyle}>Product</Link>
-            </li>
 
           </>
         )}
