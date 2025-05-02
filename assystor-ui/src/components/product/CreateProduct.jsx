@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate, Link } from 'react-router-dom';
 
 const CreateProduct = () => {
     const [product, setProduct] = useState({
@@ -20,6 +21,7 @@ const CreateProduct = () => {
     const addField = () => {
         setFields([...fields, { name: "", type: "text" }]);
     };
+
     const handleRemoveField = (index) => {
         if (fields.length > 1) {
             const newFields = fields.filter((_, i) => i !== index);
@@ -34,39 +36,56 @@ const CreateProduct = () => {
                 ...product,
                 fields: fields
             });
-            swal("Product created!");
+            swal("Product created!", "Your product has been successfully created.", "success");
         } catch (err) {
             if (err.response && err.response.status === 422) {
                 const errors = err.response.data.errors;
                 const errorMessages = Object.values(errors).flat().join(", ");
-                swal(errorMessages);
+                swal("Error", errorMessages, "error");
             }
-            
         }
     };
 
     return (
-        <div className="container mt-4">
-            <form onSubmit={handleSubmit}>
-                <input
-                    className="form-control mb-2"
-                    type="text"
-                    placeholder="Product name"
-                    value={product.name}
-                    onChange={(e) => setProduct({ ...product, name: e.target.value })}
-                />
+        <div className="container mt-5">
+            <div className="d-flex justify-content-between align-items-center mb-4">
+                <h2 className="text-primary">Create New Product</h2>
+                <Link to="/product-page" className="btn btn-secondary">
+                    <i className="bi bi-arrow-left me-1"></i> Back
+                </Link>
+            </div>
 
-                <textarea
-                    className="form-control mb-3"
-                    placeholder="Description"
-                    value={product.description}
-                    onChange={(e) => setProduct({ ...product, description: e.target.value })}
-                />
+            <form onSubmit={handleSubmit} className="shadow p-4 rounded bg-light">
+                <div className="mb-4">
+                    <label htmlFor="productName" className="form-label">Product Name</label>
+                    <input
+                        id="productName"
+                        className="form-control"
+                        type="text"
+                        placeholder="Enter product name"
+                        value={product.name}
+                        onChange={(e) => setProduct({ ...product, name: e.target.value })}
+                        required
+                    />
+                </div>
 
-                <h5>Fields</h5>
+                <div className="mb-4">
+                    <label htmlFor="productDescription" className="form-label">Description</label>
+                    <textarea
+                        id="productDescription"
+                        className="form-control"
+                        placeholder="Enter product description"
+                        value={product.description}
+                        onChange={(e) => setProduct({ ...product, description: e.target.value })}
+                        rows="4"
+                        required
+                    />
+                </div>
+
+                <h5 className="text-secondary mb-3">Fields</h5>
                 {fields.map((field, index) => (
-                    <div className="row mb-2" key={index}>
-                        <div className="col">
+                    <div className="row mb-3 align-items-center" key={index}>
+                        <div className="col-md-5">
                             <input
                                 type="text"
                                 className="form-control"
@@ -74,20 +93,22 @@ const CreateProduct = () => {
                                 placeholder="Field name"
                                 value={field.name}
                                 onChange={(e) => handleFieldChange(index, e)}
+                                required
                             />
                         </div>
-                        <div className="col">
+                        <div className="col-md-4">
                             <select
                                 className="form-select"
                                 name="type"
                                 value={field.type}
                                 onChange={(e) => handleFieldChange(index, e)}
+                                required
                             >
                                 <option value="text">Text</option>
                                 <option value="number">Number</option>
                             </select>
                         </div>
-                        <div className="col-auto">
+                        <div className="col-md-3 text-end">
                             {index > 0 && (
                                 <button
                                     type="button"
@@ -100,15 +121,17 @@ const CreateProduct = () => {
                         </div>
                     </div>
                 ))}
-                <button
-                    type="button"
-                    className="btn btn-outline-primary mb-3"
-                    onClick={addField}
-                >
-                    + Add Field
-                </button>
 
-                <br />
+                <div className="mb-4">
+                    <button
+                        type="button"
+                        className="btn btn-outline-primary"
+                        onClick={addField}
+                    >
+                        + Add Field
+                    </button>
+                </div>
+
                 <button type="submit" className="btn btn-success w-100">Create Product</button>
             </form>
         </div>

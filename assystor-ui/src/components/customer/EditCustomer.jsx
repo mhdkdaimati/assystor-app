@@ -135,143 +135,201 @@ const EditCustomer = () => {
     }
 
     return (
-        <div className="container py-4">
-            {/* card header */}
-            <div className="shadow mb-4">
-                <div className="alert alert-success text-center mb-0" role="alert">
-                    <h4 className="alert-heading">Edit Customer</h4>
-                </div>
+        <div className="container py-5">
+  <div className="row justify-content-center">
+    <div className="col-md-8 col-lg-6">
+      <div className="card shadow-sm border-0 rounded-4">
+        <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center rounded-top-4 px-4 py-3">
+          <h5 className="mb-0 fw-bold">
+            <i className="bi bi-person-lines-fill me-2"></i>Edit Customer
+          </h5>
+          <Link to="/view-customer" className="btn btn-sm btn-outline-light rounded-pill">
+            <i className="bi bi-arrow-left me-1"></i> Back
+          </Link>
+        </div>
+        <div className="card-body p-4">
+          <form onSubmit={customerUpdate} id="CUSTOMER_FORM" encType="multipart/form-data">
+            <div className="form-floating mb-3">
+              <input
+                type="email"
+                name="email"
+                onChange={handleInput}
+                value={customerInput.email || ''}
+                className="form-control"
+                id="floatingEmail"
+                placeholder="Email"
+              />
+              <label htmlFor="floatingEmail">Email</label>
+              <div className="text-danger mt-1">{error.email}</div>
             </div>
 
-            <form onSubmit={customerUpdate} id="CUSTOMER_FORM" encType="multipart/form-data">
-                <div className="row g-3">
+            <div className="form-floating mb-3">
+              <select
+                className="form-select"
+                name="company_id"
+                onChange={handleInput}
+                value={customerInput.company_id || ''}
+                id="floatingCompany"
+              >
+                <option value="">Select Company</option>
+                {companyList.map(item => (
+                  <option value={item.id} key={item.id}>{item.name}</option>
+                ))}
+              </select>
+              <label htmlFor="floatingCompany">Company</label>
+            </div>
 
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="email" name="email" onChange={handleInput} value={customerInput.email || ''} className="form-control" placeholder="email" />
-                            <label>email</label>
-                            <span className="text-danger">{error.email}</span>
-                        </div>
-                    </div>
+            <div className="form-floating mb-3">
+              <select
+                name="gender"
+                onChange={handleInput}
+                value={customerInput.gender || ''}
+                className="form-select"
+                id="floatingGender"
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              <label htmlFor="floatingGender">Gender</label>
+            </div>
 
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <select className="form-select" name="company_id" onChange={handleInput} value={customerInput.company_id || ''}>
-                                <option value="">Select company</option>
-                                {
-                                    companyList.map(item => (
-                                        <option value={item.id} key={item.id}>{item.name}</option>
-                                    ))
-                                }
-                            </select>
-                            <label>Company</label>
-                        </div>
-                    </div>
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="first_name"
+                onChange={handleInput}
+                value={customerInput.first_name || ''}
+                className="form-control"
+                id="floatingFirstName"
+                placeholder="First Name"
+              />
+              <label htmlFor="floatingFirstName">First Name</label>
+              <div className="text-danger mt-1">{error.first_name}</div>
+            </div>
 
-                    {/* <div className="col-md-6">
-                        <div className="form-floating">
-                            <select name="gender" onChange={handleInput} value={customerInput.gender || ''} className="form-select">
-                                <option value="male">male</option>
-                                <option value="female">female</option>
-                            </select>
-                            <label>Gender</label>
-                        </div>
-                    </div> */}
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="last_name"
+                onChange={handleInput}
+                value={customerInput.last_name || ''}
+                className="form-control"
+                id="floatingLastName"
+                placeholder="Last Name"
+              />
+              <label htmlFor="floatingLastName">Last Name</label>
+              <div className="text-danger mt-1">{error.last_name}</div>
+            </div>
 
+            <div className="form-floating mb-3">
+              <input
+                type="date"
+                name="birth_day"
+                onChange={handleInput}
+                value={customerInput.birth_day || ''}
+                className="form-control"
+                id="floatingBirthDay"
+                placeholder="Birth Day"
+              />
+              <label htmlFor="floatingBirthDay">Birth Day</label>
+              <div className="text-danger mt-1">{error.birth_day}</div>
+            </div>
 
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="street"
+                onChange={handleInput}
+                value={customerInput.street || ''}
+                className="form-control"
+                id="floatingStreet"
+                placeholder="Street"
+              />
+              <label htmlFor="floatingStreet">Street</label>
+              <div className="text-danger mt-1">{error.street}</div>
+            </div>
 
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="zip_code"
+                onChange={handleInput}
+                value={customerInput.zip_code || ''}
+                className="form-control"
+                id="floatingZipCode"
+                placeholder="Zip Code"
+              />
+              <label htmlFor="floatingZipCode">Zip Code</label>
+              <div className="text-danger mt-1">{error.zip_code}</div>
+            </div>
 
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <select name="gender" onChange={handleInput} value={customerInput.gender || ''} className="form-select" id="floatingGender">
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                            <label htmlFor="floatingGender">Gender</label>
-                        </div>
-                    </div>
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="place"
+                onChange={handleInput}
+                value={customerInput.place || ''}
+                className="form-control"
+                id="floatingPlace"
+                placeholder="Place"
+              />
+              <label htmlFor="floatingPlace">Place</label>
+              <div className="text-danger mt-1">{error.place}</div>
+            </div>
 
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="iban"
+                onChange={handleInput}
+                value={customerInput.iban || ''}
+                className="form-control"
+                id="floatingIBAN"
+                placeholder="IBAN"
+              />
+              <label htmlFor="floatingIBAN">IBAN</label>
+              <div className="text-danger mt-1">{error.iban}</div>
+            </div>
 
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="text" name="first_name" onChange={handleInput} value={customerInput.first_name} className="form-control" placeholder="first_name" />
-                            <label>First Name</label>
-                            <span className="text-danger">{error.first_name}</span>
-                        </div>
-                    </div>
+            <div className="form-floating mb-3">
+              <input
+                type="text"
+                name="contact_number"
+                onChange={handleInput}
+                value={customerInput.contact_number || ''}
+                className="form-control"
+                id="floatingContactNumber"
+                placeholder="Contact Number"
+              />
+              <label htmlFor="floatingContactNumber">Contact Number</label>
+              <div className="text-danger mt-1">{error.contact_number}</div>
+            </div>
 
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="text" name="last_name" onChange={handleInput} value={customerInput.last_name} className="form-control" placeholder="last_name" />
-                            <label>Last Name</label>
-                            <span className="text-danger">{error.last_name}</span>
-                        </div>
-                    </div>
+            <div className="form-floating mb-4">
+              <input
+                type="text"
+                name="pkk"
+                onChange={handleInput}
+                value={customerInput.pkk || ''}
+                className="form-control"
+                id="floatingPKK"
+                placeholder="PKK"
+              />
+              <label htmlFor="floatingPKK">PKK</label>
+              <div className="text-danger mt-1">{error.pkk}</div>
+            </div>
 
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="date" name="birth_day" onChange={handleInput} value={customerInput.birth_day} className="form-control" placeholder="birth_day" />
-                            <label>Birth Day</label>
-                            <span className="text-danger">{error.birth_day}</span>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="text" name="street" onChange={handleInput} value={customerInput.street} className="form-control" placeholder="street" />
-                            <label>Street</label>
-                            <span className="text-danger">{error.street}</span>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="text" name="zip_code" onChange={handleInput} value={customerInput.zip_code} className="form-control" placeholder="zip_code" />
-                            <label>Zip Code</label>
-                            <span className="text-danger">{error.zip_code}</span>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="text" name="place" onChange={handleInput} value={customerInput.place} className="form-control" placeholder="place" />
-                            <label>Place</label>
-                            <span className="text-danger">{error.place}</span>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="text" name="iban" onChange={handleInput} value={customerInput.iban} className="form-control" placeholder="iban" />
-                            <label>IBAN</label>
-                            <span className="text-danger">{error.iban}</span>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="text" name="contact_number" onChange={handleInput} value={customerInput.contact_number} className="form-control" placeholder="contact_number" />
-                            <label>Contact Number</label>
-                            <span className="text-danger">{error.contact_number}</span>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6">
-                        <div className="form-floating">
-                            <input type="text" name="pkk" onChange={handleInput} value={customerInput.pkk} className="form-control" placeholder="pkk" />
-                            <label>PKK</label>
-                            <span className="text-danger">{error.pkk}</span>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div className="mt-4">
-                    <button className="w-100 btn btn-lg btn-outline-success" type="submit">Update</button>
-                </div>
-            </form>
+            <button className="btn btn-primary w-100 rounded-pill shadow-sm" type="submit">
+              <i className="bi bi-check-circle me-1"></i> Update Customer
+            </button>
+          </form>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
     );
 }
 export default EditCustomer;

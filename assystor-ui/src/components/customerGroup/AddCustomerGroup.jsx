@@ -56,26 +56,46 @@ const AddCustomerGroup = () => {
 
 
     return (
-        <>
-            <br />
-            <div className="shadow">
-                <div className="alert alert-success" role="alert">
-                    <h4 className="alert-heading text-center">Add Customer Group</h4>
+<div className="container py-5" style={{ backgroundColor: "#f8f9fa", minHeight: "100vh" }}>
+    <div className="row justify-content-center">
+        <div className="col-md-7 col-lg-6">
+            <div className="card shadow rounded-4 border-0">
+                <div className="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
+                    <h3 className="mb-0">👤 Add New Customer Group</h3>
+                    <Link to="/view-customer-group" className="btn btn-sm btn-outline-light rounded-pill">
+                        <i className="bi bi-arrow-left me-1"></i> Back
+                    </Link>
+                </div>
+                <div className="card-body p-4">
+                    <form onSubmit={customerGroupSubmit} id="CUSTOMER_GROUP_FORM">
+                        <div className="mb-3">
+                            <label htmlFor="name" className="form-label fw-semibold">Name</label>
+                            <div className="input-group">
+                                <span className="input-group-text"><i className="bi bi-person-fill"></i></span>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    onChange={handleInput}
+                                    value={customerGroupInput.name}
+                                    className="form-control"
+                                    id="name"
+                                    placeholder="Enter customer group name"
+                                />
+                            </div>
+                            <small className="text-danger">{customerGroupInput.error_list.name}</small>
+                        </div>
+
+                        <div className="mb-4">
+                            <button type="submit" className="btn btn-primary w-100 rounded-pill shadow-sm fw-bold">
+                                <i className="bi bi-person-add me-2"></i> Save Customer Group
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <form onSubmit={customerGroupSubmit} id="CUSTOMER_GROUP_FORM" >
-
-                <div className="form-floating">
-                    <input type="text" name="name" onChange={handleInput} value={customerGroupInput.name} className="form-control" id="floatingName" placeholder="Name" />
-                    <label htmlFor="floatingName">Name</label>
-                    <span style={{ color: "red" }}>{customerGroupInput.error_list.name}</span>
-                </div>
-                <br />
-
-                <button className="w-100 btn btn-lg btn-outline-primary" type="submit">Save</button>
-            </form>
-        </>
+        </div>
+    </div>
+</div>
     );
 }
 export default AddCustomerGroup;

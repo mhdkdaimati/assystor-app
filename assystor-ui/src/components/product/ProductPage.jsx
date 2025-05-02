@@ -9,7 +9,6 @@ function ProductPage() {
 
     return (
         <div className="container mx-auto p-4">
-            <Link to="/create-product">Add product</Link>
             
             {editingId ? (
                 <EditProductForm

@@ -29,11 +29,10 @@ const Sidebar = () => {
             <li>
               <Link to="/product-page" style={linkStyle}>Products</Link>
             </li>
-
-            <hr />
             <li>
-              <Link to="/view-customer-group" style={linkStyle}>View Customer Group</Link>
+              <Link to="/view-customer-group" style={linkStyle}>Customer Groups</Link>
             </li>
+
             <hr />
             <li>
               <Link to="/customer-group-page" style={linkStyle}>Customer Group page</Link>

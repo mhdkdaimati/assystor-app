@@ -77,6 +77,10 @@ const AddCompany = () => {
       <div className="card shadow rounded-4 border-0">
         <div className="card-header bg-gradient bg-primary text-white text-center rounded-top-4">
           <h3 className="mb-0">🏢 Add New Company</h3>
+                                      <Link to="/view-company" className="btn btn-sm btn-outline-light rounded-pill">
+                                          <i className="bi bi-arrow-left me-1"></i> Back
+                                      </Link>
+          
         </div>
         <div className="card-body p-4">
           <form onSubmit={companySubmit} id="COMPANY_FORM">

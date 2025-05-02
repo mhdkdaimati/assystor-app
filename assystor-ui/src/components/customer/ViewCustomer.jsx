@@ -108,34 +108,43 @@ const ViewCustomer = () => {
     }
 
     return (
-        <div className="container mt-5">
-            <div className="card shadow mb-4">
-                <div className="card-header bg-primary text-white text-center">
-                    <h4>View Customers</h4>
-                </div>
-                <div className="card-body">
-                    <Link to="/add-customer" className="btn btn-success mb-3">Add Customer</Link>
-                    <DataTable
-                        columns={columns}
-                        data={filteredCustomers}
-                        pagination
-                        highlightOnHover
-                        striped
-                        responsive
-                        subHeader
-                        subHeaderComponent={
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                className="form-control w-25"
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                        }
-                    />
-                </div>
-            </div>
+<div className="container py-5">
+  <div className="row justify-content-center">
+    <div className="col-12">
+      <div className="card shadow-sm border-0 mb-4">
+        <div className="card-body bg-light rounded-4 d-flex justify-content-between align-items-center px-4 py-3">
+          <h4 className="mb-0 fw-bold text-primary">
+            <i className="bi bi-person-lines-fill me-2"></i> Customer List
+          </h4>
+          <Link to="/add-customer" className="btn btn-primary rounded-pill shadow-sm">
+            <i className="bi bi-plus-circle me-1"></i> Add Customer
+          </Link>
         </div>
+      </div>
+
+      <div className="table-responsive shadow-sm rounded-4 bg-white p-3">
+        <DataTable
+          columns={columns}
+          data={filteredCustomers}
+          pagination
+          highlightOnHover
+          striped
+          responsive
+          subHeader
+          subHeaderComponent={
+            <input
+              type="text"
+              placeholder="Search..."
+              className="form-control w-25"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          }
+        />
+      </div>
+    </div>
+  </div>
+</div>
     );
 };
 
