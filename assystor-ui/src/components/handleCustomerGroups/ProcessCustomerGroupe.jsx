@@ -131,21 +131,21 @@ const ProcessCustomerGroup = () => {
             const payload = {
                 customer_id: selectedCustomer,
                 group_id: id,
-                status: sessionStatus,
+                status: sessionStatus || 'customer_completed',
                 comment: sessionComment,
             };
-    
+
             // إرسال الطلب الأول لإغلاق الجلسة
             await axios.post(`/api/customer-groups/close-session`, payload);
-    
+
             // إرسال الطلب الثاني لتسجيل الهيستوري
             await axios.post(`/api/customers/history`, payload);
-    
+
             swal("Session closed and history saved successfully.");
-    
+
             // تصفية القائمة لإزالة الزبون الذي تم إغلاق جلسته
             setCustomerList(prev => prev.filter(c => c.id !== selectedCustomer));
-    
+
             // تصفير القيم
             setSessionStatus('');
             setSessionComment('');
@@ -250,14 +250,30 @@ const ProcessCustomerGroup = () => {
                             {selectedProduct.fields.map((field) => (
                                 <div key={field.id} className="mb-2">
                                     <label>{field.name}</label>
-                                    <input
-                                        type={field.type === 'number' ? 'number' : 'text'}
-                                        className="form-control"
-                                        placeholder={`Enter ${field.name}`}
-                                        value={fieldValues[field.id] || ''}
-                                        onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                                    />
-                                </div>
+                                    {field.type === 'select' ? (
+                                        <select
+                                            className="form-control"
+                                            value={fieldValues[field.id] || ''}
+                                            onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                                        >
+                                            <option value="" disabled>
+                                                Select {field.name}
+                                            </option>
+                                            {field.options.split(',').map((option) => (
+                                                <option key={option.trim()} value={option.trim()}>
+                                                    {option.trim()}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            type={field.type === 'number' ? 'number' : 'text'}
+                                            className="form-control"
+                                            placeholder={`Enter ${field.name}`}
+                                            value={fieldValues[field.id] || ''}
+                                            onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                                        />
+                                    )}                                </div>
                             ))}
                         </div>
                     )}
@@ -286,9 +302,16 @@ const ProcessCustomerGroup = () => {
                             value={sessionStatus}
                             onChange={(e) => setSessionStatus(e.target.value)}
                         >
-                            <option value="">Select status</option>
-                            <option value="interested">interested</option>
-                            <option value="not_interested">not_interested</option>
+                            <option value="customer_completed">customer_completed</option>
+                            <option value="quarantine_repeat_later">quarantine_repeat_later</option>
+                            <option value="quarantine_not_answer">quarantine_not_answer</option>
+                            <option value="quarantine_not_interested">quarantine_not_interested</option>
+                            <option value="quarantine_not_want_to_be_contacted">quarantine_not_want_to_be_contacted</option>
+                            <option value="quarantine_mailbox_comes">quarantine_mailbox_comes</option>
+                            <option value="quarantine_cacs">quarantine_cacs</option>
+                            <option value="quarantine_rnv">quarantine_rnv</option>
+                            <option value="quarantine_n_months">quarantine_n_months</option>
+                            <option value="quarantine_data_cards">quarantine_data_cards</option>
                         </select>
                     </div>
                     <div className="mb-3">

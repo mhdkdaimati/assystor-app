@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import swal from "sweetalert";
 
-function EditProductForm({ productId, onUpdated }) {
-    const [product, setProduct] = useState({
-        name: "",
-        description: "",
-    });
+function EditProductForm({ productId, onUpdated, onCancel }) {
+    const [product, setProduct] = useState({ name: "", description: "" });
     const [fields, setFields] = useState([]);
 
     useEffect(() => {
@@ -24,13 +21,44 @@ function EditProductForm({ productId, onUpdated }) {
     };
 
     const handleFieldChange = (index, e) => {
+        const { name, value } = e.target;
         const updatedFields = [...fields];
-        updatedFields[index][e.target.name] = e.target.value;
+        updatedFields[index][name] = value;
+
+        if (name === "type" && value !== "select") {
+            updatedFields[index].options = [];
+        }
+
+        setFields(updatedFields);
+    };
+
+    const handleOptionAdd = (index, optionValue) => {
+        if (optionValue.trim() === "") return;
+        const updatedFields = [...fields];
+        const currentOptions = Array.isArray(updatedFields[index].options)
+            ? updatedFields[index].options
+            : (updatedFields[index].options || "").split(",").map(opt => opt.trim());
+
+        updatedFields[index].options = [...currentOptions, optionValue.trim()];
+        setFields(updatedFields);
+    };
+
+    const handleOptionRemove = (index, optionIndex) => {
+        const updatedFields = [...fields];
+        let currentOptions = updatedFields[index].options;
+
+        if (!Array.isArray(currentOptions)) {
+            currentOptions = typeof currentOptions === "string"
+                ? currentOptions.split(",").map(opt => opt.trim())
+                : [];
+        }
+
+        updatedFields[index].options = currentOptions.filter((_, i) => i !== optionIndex);
         setFields(updatedFields);
     };
 
     const addField = () => {
-        setFields([...fields, { name: "", type: "text" }]);
+        setFields([...fields, { name: "", type: "text", options: [] }]);
     };
 
     const handleRemoveField = (index) => {
@@ -43,17 +71,27 @@ function EditProductForm({ productId, onUpdated }) {
     const handleUpdate = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`/api/products/${productId}`, {
+            const payload = {
                 ...product,
-                fields,
-            });
-            swal("Product updated!", "Your product has been successfully updated.", "success");
-            onUpdated(); // إعادة تحميل القائمة
-        } catch (err) {
-            if (err.response && err.response.status === 422) {
-                const errors = err.response.data.errors;
+                fields: fields.map(field => ({
+                    name: field.name,
+                    type: field.type,
+                    options: field.type === "select" && Array.isArray(field.options)
+                        ? field.options.join(", ")
+                        : "",
+                })),
+            };
+
+            await axios.put(`/api/products/${productId}`, payload);
+            swal("Success", "Product updated successfully!", "success");
+            if (onUpdated) onUpdated();
+        } catch (error) {
+            if (error.response?.status === 422) {
+                const errors = error.response.data.errors;
                 const errorMessages = Object.values(errors).flat().join(", ");
-                swal("Error", errorMessages, "error");
+                swal("Validation Error", errorMessages, "error");
+            } else {
+                swal("Error", "Something went wrong while updating the product.", "error");
             }
         }
     };
@@ -64,20 +102,21 @@ function EditProductForm({ productId, onUpdated }) {
         <div className="container mt-5">
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2 className="text-primary">Edit Product</h2>
-                <Link to="/product-page" className="btn btn-secondary">
-                    <i className="bi bi-arrow-left me-1"></i> Back
-                </Link>
+                <button
+                    className="btn btn-secondary"
+                    onClick={onCancel}
+                >
+                    <i className="bi bi-arrow-left me-1"></i> Cancel
+                </button>
             </div>
 
             <form onSubmit={handleUpdate} className="shadow p-4 rounded bg-light">
                 <div className="mb-4">
-                    <label htmlFor="productName" className="form-label">Product Name</label>
+                    <label className="form-label">Product Name</label>
                     <input
-                        id="productName"
                         className="form-control"
                         type="text"
                         name="name"
-                        placeholder="Enter product name"
                         value={product.name}
                         onChange={handleChange}
                         required
@@ -85,12 +124,10 @@ function EditProductForm({ productId, onUpdated }) {
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="productDescription" className="form-label">Description</label>
+                    <label className="form-label">Description</label>
                     <textarea
-                        id="productDescription"
                         className="form-control"
                         name="description"
-                        placeholder="Enter product description"
                         value={product.description}
                         onChange={handleChange}
                         rows="4"
@@ -100,8 +137,8 @@ function EditProductForm({ productId, onUpdated }) {
 
                 <h5 className="text-secondary mb-3">Fields</h5>
                 {fields.map((field, index) => (
-                    <div className="row mb-3 align-items-center" key={index}>
-                        <div className="col-md-5">
+                    <div className="row mb-3 align-items-start" key={index}>
+                        <div className="col-md-4 mb-2">
                             <input
                                 type="text"
                                 className="form-control"
@@ -112,7 +149,8 @@ function EditProductForm({ productId, onUpdated }) {
                                 required
                             />
                         </div>
-                        <div className="col-md-4">
+
+                        <div className="col-md-3 mb-2">
                             <select
                                 className="form-select"
                                 name="type"
@@ -122,16 +160,62 @@ function EditProductForm({ productId, onUpdated }) {
                             >
                                 <option value="text">Text</option>
                                 <option value="number">Number</option>
+                                <option value="select">Select</option>
                             </select>
                         </div>
-                        <div className="col-md-3 text-end">
+
+                        {field.type === "select" && (
+                            <div className="col-md-5 mb-2">
+                                <div className="d-flex align-items-center">
+                                    <input
+                                        type="text"
+                                        className="form-control me-2"
+                                        placeholder="Add option"
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                e.preventDefault();
+                                                handleOptionAdd(index, e.target.value);
+                                                e.target.value = "";
+                                            }
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline-primary"
+                                        onClick={(e) => {
+                                            const input = e.target.closest('.d-flex').querySelector("input");
+                                            handleOptionAdd(index, input.value);
+                                            input.value = "";
+                                        }}
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                                <ul className="mt-2 list-unstyled">
+                                    {(Array.isArray(field.options) ? field.options : field.options?.split(",") || []).map((option, optionIndex) => (
+                                        <li key={optionIndex} className="d-flex align-items-center">
+                                            <span>{option.trim()}</span>
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm btn-danger ms-2"
+                                                onClick={() => handleOptionRemove(index, optionIndex)}
+                                            >
+                                                &times;
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+
+                        <div className="col-md-1 text-end">
                             {index > 0 && (
                                 <button
                                     type="button"
                                     className="btn btn-danger"
                                     onClick={() => handleRemoveField(index)}
                                 >
-                                    Remove
+                                    &times;
                                 </button>
                             )}
                         </div>

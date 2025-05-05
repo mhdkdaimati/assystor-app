@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from 'react-router-dom';
+import swal from "sweetalert";
+import { useNavigate, Link } from "react-router-dom";
 
 const CreateProduct = () => {
     const [product, setProduct] = useState({
@@ -9,23 +10,37 @@ const CreateProduct = () => {
     });
 
     const [fields, setFields] = useState([
-        { name: "", type: "text" }
+        { name: "", type: "text", options: [] }
     ]);
 
     const handleFieldChange = (index, e) => {
-        const newFields = [...fields];
-        newFields[index][e.target.name] = e.target.value;
-        setFields(newFields);
+        const { name, value } = e.target;
+        const updatedFields = [...fields];
+        updatedFields[index][name] = value;
+        setFields(updatedFields);
+    };
+
+    const handleOptionAdd = (index, optionValue) => {
+        const updatedFields = [...fields];
+        if (optionValue.trim() !== "") {
+            updatedFields[index].options = [...updatedFields[index].options, optionValue.trim()];
+            setFields(updatedFields);
+        }
+    };
+
+    const handleOptionRemove = (index, optionIndex) => {
+        const updatedFields = [...fields];
+        updatedFields[index].options = updatedFields[index].options.filter((_, i) => i !== optionIndex);
+        setFields(updatedFields);
     };
 
     const addField = () => {
-        setFields([...fields, { name: "", type: "text" }]);
+        setFields([...fields, { name: "", type: "text", options: [] }]);
     };
 
     const handleRemoveField = (index) => {
         if (fields.length > 1) {
-            const newFields = fields.filter((_, i) => i !== index);
-            setFields(newFields);
+            setFields(fields.filter((_, i) => i !== index));
         }
     };
 
@@ -34,14 +49,19 @@ const CreateProduct = () => {
         try {
             const res = await axios.post("/api/products", {
                 ...product,
-                fields: fields
+                fields: fields.map(field => ({
+                    ...field,
+                    options: field.options.join(", "), // تحويل الخيارات إلى نص مفصول بفاصلة
+                })),
             });
             swal("Product created!", "Your product has been successfully created.", "success");
         } catch (err) {
-            if (err.response && err.response.status === 422) {
+            if (err.response?.status === 422) {
                 const errors = err.response.data.errors;
                 const errorMessages = Object.values(errors).flat().join(", ");
                 swal("Error", errorMessages, "error");
+            } else {
+                swal("Error", "Something went wrong.", "error");
             }
         }
     };
@@ -83,44 +103,92 @@ const CreateProduct = () => {
                 </div>
 
                 <h5 className="text-secondary mb-3">Fields</h5>
+
                 {fields.map((field, index) => (
-                    <div className="row mb-3 align-items-center" key={index}>
-                        <div className="col-md-5">
-                            <input
-                                type="text"
-                                className="form-control"
-                                name="name"
-                                placeholder="Field name"
-                                value={field.name}
-                                onChange={(e) => handleFieldChange(index, e)}
-                                required
-                            />
-                        </div>
-                        <div className="col-md-4">
-                            <select
-                                className="form-select"
-                                name="type"
-                                value={field.type}
-                                onChange={(e) => handleFieldChange(index, e)}
-                                required
+    <div className="row mb-3 align-items-start" key={index}>
+        <div className="col-md-4 mb-2">
+            <input
+                type="text"
+                className="form-control"
+                name="name"
+                placeholder="Field name"
+                value={field.name}
+                onChange={(e) => handleFieldChange(index, e)}
+                required
+            />
+        </div>
+
+        <div className="col-md-3 mb-2">
+            <select
+                className="form-select"
+                name="type"
+                value={field.type}
+                onChange={(e) => handleFieldChange(index, e)}
+                required
+            >
+                <option value="text">Text</option>
+                <option value="number">Number</option>
+                <option value="select">Select</option>
+            </select>
+        </div>
+
+        {field.type === "select" && (
+            <div className="col-md-5 mb-2">
+                <div className="d-flex align-items-center">
+                    <input
+                        type="text"
+                        className="form-control me-2"
+                        placeholder="Add option"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                handleOptionAdd(index, e.target.value);
+                                e.target.value = "";
+                            }
+                        }}
+                    />
+                    <button
+                        type="button"
+                        className="btn btn-outline-primary"
+                        onClick={(e) => {
+                            const input = e.target.previousSibling;
+                            handleOptionAdd(index, input.value);
+                            input.value = "";
+                        }}
+                    >
+                        Add
+                    </button>
+                </div>
+                <ul className="mt-2">
+                    {field.options.map((option, optionIndex) => (
+                        <li key={optionIndex} className="d-flex align-items-center">
+                            {option}
+                            <button
+                                type="button"
+                                className="btn btn-sm btn-danger ms-2"
+                                onClick={() => handleOptionRemove(index, optionIndex)}
                             >
-                                <option value="text">Text</option>
-                                <option value="number">Number</option>
-                            </select>
-                        </div>
-                        <div className="col-md-3 text-end">
-                            {index > 0 && (
-                                <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={() => handleRemoveField(index)}
-                                >
-                                    Remove
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                ))}
+                                &times;
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        )}
+
+        <div className="col-md-1 text-end">
+            {index > 0 && (
+                <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={() => handleRemoveField(index)}
+                >
+                    &times;
+                </button>
+            )}
+        </div>
+    </div>
+))}
 
                 <div className="mb-4">
                     <button

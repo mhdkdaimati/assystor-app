@@ -3,6 +3,7 @@ import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
+import * as XLSX from 'xlsx';
 
 const ViewCustomer = () => {
     const [loading, setLoading] = useState(true);
@@ -47,6 +48,13 @@ const ViewCustomer = () => {
                 thisClicked.innerText = "Delete";
             }
         });
+    };
+
+    const exportToExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(filteredCustomers);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Customers");
+        XLSX.writeFile(workbook, "Customers.xlsx");
     };
 
     const columns = [
@@ -108,43 +116,55 @@ const ViewCustomer = () => {
     }
 
     return (
-<div className="container py-5">
-  <div className="row justify-content-center">
-    <div className="col-12">
-      <div className="card shadow-sm border-0 mb-4">
-        <div className="card-body bg-light rounded-4 d-flex justify-content-between align-items-center px-4 py-3">
-          <h4 className="mb-0 fw-bold text-primary">
-            <i className="bi bi-person-lines-fill me-2"></i> Customer List
-          </h4>
-          <Link to="/add-customer" className="btn btn-primary rounded-pill shadow-sm">
-            <i className="bi bi-plus-circle me-1"></i> Add Customer
-          </Link>
-        </div>
-      </div>
+        <div className="container py-5">
+            <div className="row justify-content-center">
+                <div className="col-12">
+                    <div className="card shadow-sm border-0 mb-4">
+                        <div className="card-body bg-light rounded-4 d-flex justify-content-between align-items-center px-4 py-3">
+                            <h4 className="mb-0 fw-bold text-primary">
+                                <i className="bi bi-person-lines-fill me-2"></i> Customer List
+                            </h4>
+                            <div>
+                                <button
+                                    className="btn btn-success rounded-pill shadow-sm me-2"
+                                    onClick={exportToExcel}
+                                >
+                                    <i className="bi bi-file-earmark-excel me-1"></i> Export to Excel
+                                </button>
+                                <Link to="/upload-customers" className="btn btn-primary rounded-pill shadow-sm me-2">
+                                    <i className="bi bi-upload me-1"></i> Upload Customers
+                                </Link>
+                                <Link to="/add-customer" className="btn btn-primary rounded-pill shadow-sm ">
+                                    <i className="bi bi-plus-circle me-1"></i> Add Customer
+                                </Link>
 
-      <div className="table-responsive shadow-sm rounded-4 bg-white p-3">
-        <DataTable
-          columns={columns}
-          data={filteredCustomers}
-          pagination
-          highlightOnHover
-          striped
-          responsive
-          subHeader
-          subHeaderComponent={
-            <input
-              type="text"
-              placeholder="Search..."
-              className="form-control w-25"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          }
-        />
-      </div>
-    </div>
-  </div>
-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="table-responsive shadow-sm rounded-4 bg-white p-3">
+                        <DataTable
+                            columns={columns}
+                            data={filteredCustomers}
+                            pagination
+                            highlightOnHover
+                            striped
+                            responsive
+                            subHeader
+                            subHeaderComponent={
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    className="form-control w-25"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                            }
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 };
 

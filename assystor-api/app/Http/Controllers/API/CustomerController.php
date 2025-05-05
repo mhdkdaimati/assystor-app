@@ -4,8 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use App\Imports\CustomersImport;
 use App\Models\ProductFieldValue;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Validator;
 
 class CustomerController extends Controller
@@ -189,5 +191,19 @@ class CustomerController extends Controller
             ->groupBy('product_id');
 
         return response()->json($fieldValues);
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,csv',
+        ]);
+
+        Excel::import(new CustomersImport, $request->file('file'));
+        
+        return response()->json([
+            'status' => 200,
+            'message' => 'Customers imported successfully',
+        ]);
     }
 }

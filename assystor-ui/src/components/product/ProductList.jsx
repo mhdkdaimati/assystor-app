@@ -103,7 +103,14 @@ function ProductList({ onEdit }) {
                                                         {product.fields.map(field => (
                                                             <tr key={field.id}>
                                                                 <td>{field.name}</td>
-                                                                <td>{field.type}</td>
+                                                                <td>
+                                                                    {field.type}
+                                                                    {field.type === 'select' && field.options ? (
+                                                                        <div className="text-muted small mt-1">
+                                                                            Options: {field.options}
+                                                                        </div>
+                                                                    ) : null}
+                                                                </td>
                                                             </tr>
                                                         ))}
                                                     </tbody>

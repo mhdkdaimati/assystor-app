@@ -44,6 +44,7 @@ Route::delete('delete-customer/{id}', [CustomerController::class,'destroy']);
 Route::get('show-customer/{id}', [CustomerController::class,'show']);
 Route::put('update-customer/{id}', [CustomerController::class,'update']);
 Route::get('customers/{customer}/customer-products', [CustomerController::class, 'customerProducts']);
+Route::post('customers/import', [CustomerController::class, 'import']);
 
 
 Route::post('store-customer-group', [CustomerGroupController::class, 'store']);

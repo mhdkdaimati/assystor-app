@@ -9,7 +9,6 @@ function ProductPage() {
 
     return (
         <div className="container mx-auto p-4">
-            
             {editingId ? (
                 <EditProductForm
                     productId={editingId}
@@ -17,6 +16,7 @@ function ProductPage() {
                         setEditingId(null);
                         setRefresh(!refresh);
                     }}
+                    onCancel={() => setEditingId(null)} // تحديث الحالة عند الإلغاء
                 />
             ) : (
                 <ProductList

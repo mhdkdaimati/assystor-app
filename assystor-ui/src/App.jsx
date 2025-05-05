@@ -14,7 +14,7 @@ import AddCompany from './components/company/AddCompany';
 import ViewCompany from './components/company/ViewCompany';
 import EditCompany from './components/company/EditCompany';
 
-
+import UploadCustomers from './components/customer/UploadCustomers';
 import AddCustomer from './components/customer/AddCustomer';
 import ViewCustomer from './components/customer/ViewCustomer';
 import EditCustomer from './components/customer/EditCustomer';
@@ -81,8 +81,8 @@ function App() {
           <Route path="add-customer" element={auth.role === 'admin' ? <AddCustomer /> : <Navigate to="/" />}/>
           <Route path="view-customer" element={auth.role === 'admin' ? <ViewCustomer /> : <Navigate to="/" />}/>
           <Route path="edit-customer/:id" element={auth.role === 'admin' ? <EditCustomer /> : <Navigate to="/" />}/>
-
-
+          <Route path="upload-customers" element={auth.role === 'admin' ? <UploadCustomers /> : <Navigate to="/" />}/>
+          
           <Route path="add-customer-group" element={auth.role === 'admin' ? <AddCustomerGroup /> : <Navigate to="/" />}/>
           <Route path="view-customer-group" element={auth.role === 'admin' ? <ViewCustomerGroup /> : <Navigate to="/" />}/>
           <Route path="edit-customer-group/:id" element={auth.role === 'admin' ? <EditCustomerGroup /> : <Navigate to="/" />}/>
