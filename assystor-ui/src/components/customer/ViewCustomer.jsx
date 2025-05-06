@@ -16,8 +16,8 @@ const ViewCustomer = () => {
 
         axios.get(`/api/all-customers`).then(res => {
             if (res.status === 200) {
-                setCustomerList(res.data.customer);
-                setFilteredCustomers(res.data.customer); // تعيين البيانات المفلترة
+                setCustomerList(res.data.customers);
+                setFilteredCustomers(res.data.customers); // تعيين البيانات المفلترة
             }
             setLoading(false);
         });
@@ -69,8 +69,8 @@ const ViewCustomer = () => {
             sortable: true,
         },
         {
-            name: 'Company ID',
-            selector: row => row.company_id,
+            name: 'Company',
+            selector: row => row.company ? row.company.name : 'N/A',
             sortable: true,
         },
         {

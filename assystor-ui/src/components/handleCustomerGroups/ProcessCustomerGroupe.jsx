@@ -127,6 +127,11 @@ const ProcessCustomerGroup = () => {
     };
 
     const handleCloseCustomerSession = async () => {
+
+        if (!sessionComment.trim()) {
+            swal("Error", "Comment is required.", "error");
+            return;
+        }
         try {
             const payload = {
                 customer_id: selectedCustomer,
@@ -322,7 +327,8 @@ const ProcessCustomerGroup = () => {
                             rows="3"
                             value={sessionComment}
                             onChange={(e) => setSessionComment(e.target.value)}
-                            placeholder="Enter your comment here..."
+                            placeholder="Enter your comment here..." 
+                            required
                         />
                     </div>
                 </Modal.Body>
@@ -408,7 +414,8 @@ const CustomerHistory = ({ history }) => (
                             <div className="timeline-body">
                                 <p><strong>Status:</strong> {entry.status}</p>
                                 <p><strong>Comment:</strong> {entry.comment || 'No comment provided'}</p>
-                                <p><strong>Employee:</strong> </p>
+                                <p><strong>Employee:</strong> {entry.employee.name}</p>
+                                <p><strong>Group:</strong> {entry.group.name}</p>
                             </div>
                         </div>
                     </div>

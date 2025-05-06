@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        //select all users but not the logged in user
+        //
         
         $users = User::orderBy('created_at', 'desc')->get(); // ترتيب البيانات
         return response()->json([
@@ -30,7 +30,7 @@ class UserController extends Controller
             'name' => 'required|min:3|max:191',
             'email' => 'required|email|max:191|unique:users,email',
             'password' => 'required|min:5',
-            'role' => 'required|in:admin,manager,operator', // حسب الصلاحيات
+            'role' => 'required|in:admin,manager,operator', 
 
         ]);
 

@@ -10,6 +10,11 @@ class CustomerHistoryController extends Controller
 {
     public function store(Request $request)
     {
+
+        //logger(dd(auth()->user()));
+
+        logger('Authenticated user:', [auth()->user()]);
+
         $validated = $request->validate([
             'customer_id' => 'required|exists:customers,id',
             'group_id' => 'required|exists:customer_groups,id',

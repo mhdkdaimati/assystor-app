@@ -132,11 +132,22 @@ class CustomerGroupController extends Controller
 
     public function customers($id)
     {
-        $group = CustomerGroup::with('customers')->findOrFail($id);
-
-        return response()->json($group->customers);
+        $group = CustomerGroup::with(['customers.company'])->findOrFail($id);
+    
+        $customers = $group->customers->map(function ($customer) {
+            return [
+                'id' => $customer->id,
+                'first_name' => $customer->first_name,
+                'last_name' => $customer->last_name,
+                'email' => $customer->email,
+                'contact_number' => $customer->contact_number,
+                'company_name' => $customer->company->name ?? 'N/A', // عرض اسم الشركة أو 'N/A' إذا لم تكن موجودة
+                'status' => $customer->pivot->status ?? 'N/A',
+            ];
+        });
+    
+        return response()->json($customers);
     }
-
 
     public function assignCustomers(Request $request, $id)
     {

@@ -37,6 +37,18 @@ axios.defaults.headers.post['Accept'] = 'application/json';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('auth_token')}`;
 
+axios.interceptors.request.use(
+  config => {
+    const token = localStorage.getItem('auth_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  error => Promise.reject(error)
+);
+
+
 function App() {
 
   const [auth, setAuth] = useState({
@@ -55,8 +67,6 @@ function App() {
     return () => window.removeEventListener('authChanged', handleAuthChange);
   }, []);
   
-  //const auth.role = localStorage.getItem('auth_role'); // الحصول على دور المستخدم
-  // console.log(auth.role);
 
   return (
     <Router>

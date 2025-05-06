@@ -31,7 +31,7 @@ const CustomerGroupsPage = () => {
     const fetchAllCustomers = async () => {
         try {
             const res = await axios.get('/api/all-customers');
-            setAllCustomers(res.data.customer);
+            setAllCustomers(res.data.customers);
         } catch (error) {
             console.error(error);
         }
@@ -122,7 +122,7 @@ const CustomerGroupsPage = () => {
             (c.last_name?.toLowerCase() || "").includes(searchLower) ||
             (c.email?.toLowerCase() || "").includes(searchLower) ||
             (c.contact_number?.toLowerCase() || "").includes(searchLower) ||
-            (c.company_name?.toLowerCase() || "").includes(searchLower)
+            (c.company.name?.toLowerCase() || "").includes(searchLower)
         );
     });
 
@@ -140,7 +140,7 @@ const CustomerGroupsPage = () => {
                             onClick={() => handleGroupClick(group)}
                             style={{ cursor: "pointer" }}
                         >
-                            {group.name} ({group.customers_count})
+                            {group.name} ({group.customers_count})<br/>{group.status}
                         </li>
                     ))
                 ) : (
@@ -188,7 +188,7 @@ const CustomerGroupsPage = () => {
                                                 </div>
                                                 <p>Email: {customer.email}</p>
                                                 <p>Phone: {customer.contact_number}</p>
-                                                <p>Company: {customer.company_name || 'N/A'}</p>
+                                                <p>Company: {customer.company?.name || 'N/A'}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -211,6 +211,7 @@ const CustomerGroupsPage = () => {
                                     <th>Email</th>
                                     <th>Phone</th>
                                     <th>Company</th>
+                                    <th>Status</th> {/* إضافة عمود جديد للحالة */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -227,7 +228,9 @@ const CustomerGroupsPage = () => {
                                         <td>{customer.first_name} {customer.last_name}</td>
                                         <td>{customer.email}</td>
                                         <td>{customer.contact_number}</td>
-                                        <td>{customer.company_name || 'N/A'}</td>
+                                        <td>{customer.company?.name || 'N/A'}</td>
+                                        <td>{customer.status || 'N/A'}</td> {/* عرض حالة الزبون */}
+
                                     </tr>
                                 ))}
                             </tbody>

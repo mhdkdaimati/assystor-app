@@ -33,7 +33,7 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
-    public $timestamps=false;
+    public $timestamps = false;
 
     /**
      * The attributes that should be cast.
@@ -44,4 +44,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // app/Models/User.php
 }

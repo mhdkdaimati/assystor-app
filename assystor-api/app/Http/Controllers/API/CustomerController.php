@@ -15,15 +15,16 @@ class CustomerController extends Controller
     //
     public function index()
     {
-        $customer = Customer::orderBy('created_at', 'desc')->get();
-
+        $customers = Customer::with('company') // تحميل العلاقة مع الشركة
+                             ->orderBy('created_at', 'desc')
+                             ->get();
+    
         return response()->json([
             'status' => 200,
-            'customer' => $customer,
+            'customers' => $customers,
         ]);
     }
-
-    public function store(Request $request)
+        public function store(Request $request)
     {
 
         $validator = Validator::make($request->all(), [

@@ -59,6 +59,13 @@ const ViewCustomerGroup = () => {
             selector: row => row.id,
             sortable: true,
         },
+        //customers_count
+        {
+            name: 'Customers count',
+            selector: row => row.customers_count,
+            sortable: true,
+        },
+
         {
             name: 'Name',
             selector: row => row.name,
