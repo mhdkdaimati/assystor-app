@@ -12,62 +12,89 @@ class ProductController extends Controller
 {
     public function index()
     {
-        return Product::with('fields')->get();
+        $products = Product::with(['fields' => function ($query) {
+            $query->with(['options' => function ($query) {
+                $query->whereHas('field', function ($q) {
+                    $q->where('type', 'select');
+                });
+            }]);
+        }])->get();
+    
+        return response()->json($products);
     }
-
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'fields' => 'nullable|array',
-            'fields.*.name' => 'required|string|max:255',
-            'fields.*.type' => 'required|string|in:text,number,select',
-            'fields.*.options' => 'nullable|string', // الخيارات لقائمة select
+            'fields' => 'required|array',
+            'fields.*.name' => 'required|string',
+            'fields.*.type' => 'required|in:text,number,select',
+            'fields.*.options' => 'nullable|array',  // التأكد أن الخيارات هي مصفوفة
+            'fields.*.options.*.name' => 'required|string',  // التأكد من أن كل خيار يحتوي على اسم
+            'fields.*.options.*.description' => 'required|string',  // التأكد من أن كل خيار يحتوي على اسم
+            'fields.*.options.*.extra_info' => 'required|string',  // التأكد من أن كل خيار يحتوي على اسم
         ]);
-        
-        DB::beginTransaction();
-
-        try {
-            $product = Product::create([
-                'name' => $request->name,
-                'description' => $request->description,
+            
+        $product = Product::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+        ]);
+    
+        foreach ($validated['fields'] as $fieldData) {
+            $field = $product->fields()->create([
+                'name' => $fieldData['name'],
+                'type' => $fieldData['type'],
             ]);
-
-            foreach ($request->fields as $field) {
-                ProductField::create([
-                    'product_id' => $product->id,
-                    'name'       => $field['name'],
-                    'type'       => $field['type'],
-                    'options'    => $field['type'] === 'select' ? $field['options'] ?? '' : null,
-                ]);
-                            }
-
-            DB::commit();
-
-            return response()->json(['message' => 'Product created', 'product' => $product], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['error' => 'Failed to create product', 'details' => $e->getMessage()], 500);
+    
+            if ($fieldData['type'] === 'select' && isset($fieldData['options'])) {
+                foreach ($fieldData['options'] as $optionData) {
+                    $field->options()->create([
+                        'name' => $optionData['name'],
+                        'description' => $optionData['description'] ?? null,
+                        'extra_info' => $optionData['extra_info'] ?? null,
+                    ]);
+                }
+            }
         }
+    
+        return response()->json([
+            'message' => 'Product created',
+            'product' => $product->load('fields.options'),
+        ]);
     }
+
+
+
 
 
     public function show($id)
     {
-        return Product::with('fields')->findOrFail($id);
+        $product = Product::with(['fields' => function($query) {
+            $query->with(['options' => function($query) {
+                $query->whereHas('field', function($q) {
+                    $q->where('type', 'select');
+                });
+            }]);
+        }])->findOrFail($id);
+    
+        return $product;
     }
-
+    
+    
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'fields' => 'nullable|array',
+            'fields' => 'required|array',
             'fields.*.id' => 'nullable|integer|exists:product_fields,id',
-            'fields.*.name' => 'required|string|max:255',
-            'fields.*.type' => 'required|string|in:text,number,select',
-            'fields.*.options' => 'nullable|string',
+            'fields.*.name' => 'required|string',
+            'fields.*.type' => 'required|in:text,number,select',
+            'fields.*.options' => 'nullable|array',
+            'fields.*.options.*.name' => 'required|string',
+            'fields.*.options.*.description' => 'nullable|string',
+            'fields.*.options.*.extra_info' => 'nullable|string',
         ]);
     
         DB::beginTransaction();
@@ -75,29 +102,53 @@ class ProductController extends Controller
         try {
             $product = Product::findOrFail($id);
             $product->update([
-                'name' => $request->name,
-                'description' => $request->description,
+                'name' => $validated['name'],
+                'description' => $validated['description'],
             ]);
     
             $existingFieldIds = [];
     
-            foreach ($request->fields as $fieldData) {
+            foreach ($validated['fields'] as $fieldData) {
                 if (isset($fieldData['id'])) {
+                    // تحديث الحقل الموجود
                     $field = ProductField::findOrFail($fieldData['id']);
                     $field->update([
-                        'name'    => $fieldData['name'],
-                        'type'    => $fieldData['type'],
-                        'options' => $fieldData['type'] === 'select' ? $fieldData['options'] ?? '' : null,
+                        'name' => $fieldData['name'],
+                        'type' => $fieldData['type'],
                     ]);
+    
                     $existingFieldIds[] = $field->id;
+    
+                    // تحديث الخيارات إذا كان الحقل من النوع "select"
+                    if ($fieldData['type'] === 'select' && isset($fieldData['options'])) {
+                        $field->options()->delete(); // حذف الخيارات القديمة
+                        foreach ($fieldData['options'] as $optionData) {
+                            $field->options()->create([
+                                'name' => $optionData['name'],
+                                'description' => $optionData['description'] ?? null,
+                                'extra_info' => $optionData['extra_info'] ?? null,
+                            ]);
+                        }
+                    }
                 } else {
-                    $newField = ProductField::create([
-                        'product_id' => $product->id,
-                        'name'       => $fieldData['name'],
-                        'type'       => $fieldData['type'],
-                        'options'    => $fieldData['type'] === 'select' ? $fieldData['options'] ?? '' : null,
+                    // إنشاء حقل جديد
+                    $newField = $product->fields()->create([
+                        'name' => $fieldData['name'],
+                        'type' => $fieldData['type'],
                     ]);
+    
                     $existingFieldIds[] = $newField->id;
+    
+                    // إضافة الخيارات إذا كان الحقل من النوع "select"
+                    if ($fieldData['type'] === 'select' && isset($fieldData['options'])) {
+                        foreach ($fieldData['options'] as $optionData) {
+                            $newField->options()->create([
+                                'name' => $optionData['name'],
+                                'description' => $optionData['description'] ?? null,
+                                'extra_info' => $optionData['extra_info'] ?? null,
+                            ]);
+                        }
+                    }
                 }
             }
     
@@ -108,13 +159,18 @@ class ProductController extends Controller
     
             DB::commit();
     
-            return response()->json(['message' => 'Product updated', 'product' => $product], 200);
+            return response()->json([
+                'message' => 'Product updated',
+                'product' => $product->load('fields.options'),
+            ], 200);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Failed to update product', 'details' => $e->getMessage()], 500);
+            return response()->json([
+                'error' => 'Failed to update product',
+                'details' => $e->getMessage(),
+            ], 500);
         }
     }
-
 
     public function destroy($id)
     {

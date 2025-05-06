@@ -13,6 +13,10 @@ use App\Http\Controllers\API\CustomerHistoryController;
 
 use App\Http\Controllers\API\UserController;
 
+
+
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -35,7 +39,8 @@ Route::middleware(['auth:sanctum', 'role:operator,admin,manager'])->group(functi
 });
 
 
-Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {});
+
 
 
 
@@ -74,17 +79,6 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::post('/customer-groups/close-session', [CustomerGroupController::class, 'closeSession']);
 
     //products
-    Route::prefix('products')->group(function () {
-        Route::get('/', [ProductController::class, 'index']);
-        Route::post('/', [ProductController::class, 'store']);
-        Route::get('{id}', [ProductController::class, 'show']);
-        Route::put('{id}', [ProductController::class, 'update']);
-        Route::delete('{id}', [ProductController::class, 'destroy']);
-
-        // Nested routes for fields
-        Route::get('{id}/fields', [ProductFieldController::class, 'index']);
-        Route::post('{id}/fields', [ProductFieldController::class, 'store']);
-    });
 
     // Fields (update, delete)
     Route::put('fields/{id}', [ProductFieldController::class, 'update']);
@@ -109,4 +103,18 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('show-user/{id}', [UserController::class, 'show']);
     Route::put('update-user/{id}', [UserController::class, 'update']);
     Route::delete('delete-user/{id}', [UserController::class, 'destroy']);
-});
+
+
+    
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index']);
+        Route::post('/', [ProductController::class, 'store']);
+        Route::get('{id}', [ProductController::class, 'show']);
+        Route::put('{id}', [ProductController::class, 'update']);
+        Route::delete('{id}', [ProductController::class, 'destroy']);
+    
+        // Nested routes for fields
+        Route::get('{id}/fields', [ProductFieldController::class, 'index']);
+        Route::post('{id}/fields', [ProductFieldController::class, 'store']);
+    });
+    

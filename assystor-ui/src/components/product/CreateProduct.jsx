@@ -20,17 +20,22 @@ const CreateProduct = () => {
         setFields(updatedFields);
     };
 
-    const handleOptionAdd = (index, optionValue) => {
+    const handleOptionChange = (fieldIndex, optionIndex, e) => {
+        const { name, value } = e.target;
         const updatedFields = [...fields];
-        if (optionValue.trim() !== "") {
-            updatedFields[index].options = [...updatedFields[index].options, optionValue.trim()];
-            setFields(updatedFields);
-        }
+        updatedFields[fieldIndex].options[optionIndex][name] = value;
+        setFields(updatedFields);
     };
 
-    const handleOptionRemove = (index, optionIndex) => {
+    const handleOptionAdd = (index) => {
         const updatedFields = [...fields];
-        updatedFields[index].options = updatedFields[index].options.filter((_, i) => i !== optionIndex);
+        updatedFields[index].options.push({ name: "", description: "", extra_info: "" });
+        setFields(updatedFields);
+    };
+
+    const handleOptionRemove = (fieldIndex, optionIndex) => {
+        const updatedFields = [...fields];
+        updatedFields[fieldIndex].options = updatedFields[fieldIndex].options.filter((_, i) => i !== optionIndex);
         setFields(updatedFields);
     };
 
@@ -51,9 +56,10 @@ const CreateProduct = () => {
                 ...product,
                 fields: fields.map(field => ({
                     ...field,
-                    options: field.options.join(", "), // تحويل الخيارات إلى نص مفصول بفاصلة
+                    options: field.type === "select" ? field.options : null,  // إزالة JSON.stringify هنا
                 })),
             });
+
             swal("Product created!", "Your product has been successfully created.", "success");
         } catch (err) {
             if (err.response?.status === 422) {
@@ -105,90 +111,107 @@ const CreateProduct = () => {
                 <h5 className="text-secondary mb-3">Fields</h5>
 
                 {fields.map((field, index) => (
-    <div className="row mb-3 align-items-start" key={index}>
-        <div className="col-md-4 mb-2">
-            <input
-                type="text"
-                className="form-control"
-                name="name"
-                placeholder="Field name"
-                value={field.name}
-                onChange={(e) => handleFieldChange(index, e)}
-                required
-            />
-        </div>
+                    <div className="border p-3 mb-4 rounded" key={index}>
+                        <div className="row mb-2">
+                            <div className="col-md-4">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    name="name"
+                                    placeholder="Field name"
+                                    value={field.name}
+                                    onChange={(e) => handleFieldChange(index, e)}
+                                    required
+                                />
+                            </div>
 
-        <div className="col-md-3 mb-2">
-            <select
-                className="form-select"
-                name="type"
-                value={field.type}
-                onChange={(e) => handleFieldChange(index, e)}
-                required
-            >
-                <option value="text">Text</option>
-                <option value="number">Number</option>
-                <option value="select">Select</option>
-            </select>
-        </div>
+                            <div className="col-md-3">
+                                <select
+                                    className="form-select"
+                                    name="type"
+                                    value={field.type}
+                                    onChange={(e) => handleFieldChange(index, e)}
+                                    required
+                                >
+                                    <option value="text">Text</option>
+                                    <option value="number">Number</option>
+                                    <option value="select">Select</option>
+                                </select>
+                            </div>
 
-        {field.type === "select" && (
-            <div className="col-md-5 mb-2">
-                <div className="d-flex align-items-center">
-                    <input
-                        type="text"
-                        className="form-control me-2"
-                        placeholder="Add option"
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                e.preventDefault();
-                                handleOptionAdd(index, e.target.value);
-                                e.target.value = "";
-                            }
-                        }}
-                    />
-                    <button
-                        type="button"
-                        className="btn btn-outline-primary"
-                        onClick={(e) => {
-                            const input = e.target.previousSibling;
-                            handleOptionAdd(index, input.value);
-                            input.value = "";
-                        }}
-                    >
-                        Add
-                    </button>
-                </div>
-                <ul className="mt-2">
-                    {field.options.map((option, optionIndex) => (
-                        <li key={optionIndex} className="d-flex align-items-center">
-                            {option}
-                            <button
-                                type="button"
-                                className="btn btn-sm btn-danger ms-2"
-                                onClick={() => handleOptionRemove(index, optionIndex)}
-                            >
-                                &times;
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        )}
+                            <div className="col-md-2">
+                                {index > 0 && (
+                                    <button
+                                        type="button"
+                                        className="btn btn-danger"
+                                        onClick={() => handleRemoveField(index)}
+                                    >
+                                        Remove Field
+                                    </button>
+                                )}
+                            </div>
+                        </div>
 
-        <div className="col-md-1 text-end">
-            {index > 0 && (
-                <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={() => handleRemoveField(index)}
-                >
-                    &times;
-                </button>
-            )}
-        </div>
-    </div>
-))}
+                        {field.type === "select" && (
+                            <div>
+                                <div className="mb-2">
+                                    <button
+                                        type="button"
+                                        className="btn btn-sm btn-outline-primary"
+                                        onClick={() => handleOptionAdd(index)}
+                                    >
+                                        + Add Option
+                                    </button>
+                                </div>
+
+                                {field.options.map((option, optionIndex) => (
+                                    <div className="row mb-2" key={optionIndex}>
+                                        <div className="col-md-3">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                name="name"
+                                                placeholder="Option Name"
+                                                value={option.name}
+                                                onChange={(e) => handleOptionChange(index, optionIndex, e)}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                name="description"
+                                                placeholder="Option Description"
+                                                value={option.description}
+                                                onChange={(e) => handleOptionChange(index, optionIndex, e)}
+                                            />
+                                        </div>
+                                        <div className="col-md-4">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                name="extra_info"
+                                                placeholder="Extra Info"
+                                                value={option.extra_info}
+                                                onChange={(e) => handleOptionChange(index, optionIndex, e)}
+                                            />
+                                        </div>
+                                        <div className="col-md-1 d-flex align-items-center">
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm btn-danger"
+                                                onClick={() => handleOptionRemove(index, optionIndex)}
+                                            >
+                                                &times;
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                ))}
 
                 <div className="mb-4">
                     <button

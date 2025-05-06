@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import swal from "sweetalert";
 
-function EditProductForm({ productId, onUpdated, onCancel }) {
+const EditProductForm = ({ productId, onUpdate }) => {
     const [product, setProduct] = useState({ name: "", description: "" });
     const [fields, setFields] = useState([]);
 
@@ -20,222 +19,201 @@ function EditProductForm({ productId, onUpdated, onCancel }) {
         setProduct({ ...product, [e.target.name]: e.target.value });
     };
 
-    const handleFieldChange = (index, e) => {
-        const { name, value } = e.target;
+    const handleFieldChange = (index, key, value) => {
         const updatedFields = [...fields];
-        updatedFields[index][name] = value;
-
-        if (name === "type" && value !== "select") {
-            updatedFields[index].options = [];
-        }
-
+        updatedFields[index][key] = value;
         setFields(updatedFields);
     };
 
-    const handleOptionAdd = (index, optionValue) => {
-        if (optionValue.trim() === "") return;
+    const handleOptionChange = (fieldIndex, optionIndex, key, value) => {
         const updatedFields = [...fields];
-        const currentOptions = Array.isArray(updatedFields[index].options)
-            ? updatedFields[index].options
-            : (updatedFields[index].options || "").split(",").map(opt => opt.trim());
-
-        updatedFields[index].options = [...currentOptions, optionValue.trim()];
+        updatedFields[fieldIndex].options[optionIndex][key] = value;
         setFields(updatedFields);
     };
 
-    const handleOptionRemove = (index, optionIndex) => {
-        const updatedFields = [...fields];
-        let currentOptions = updatedFields[index].options;
-
-        if (!Array.isArray(currentOptions)) {
-            currentOptions = typeof currentOptions === "string"
-                ? currentOptions.split(",").map(opt => opt.trim())
-                : [];
-        }
-
-        updatedFields[index].options = currentOptions.filter((_, i) => i !== optionIndex);
-        setFields(updatedFields);
-    };
-
-    const addField = () => {
+    const handleAddField = () => {
         setFields([...fields, { name: "", type: "text", options: [] }]);
     };
 
     const handleRemoveField = (index) => {
-        if (fields.length > 1) {
-            const updatedFields = fields.filter((_, i) => i !== index);
-            setFields(updatedFields);
-        }
+        const updatedFields = [...fields];
+        updatedFields.splice(index, 1);
+        setFields(updatedFields);
     };
 
-    const handleUpdate = async (e) => {
-        e.preventDefault();
+    const handleOptionAdd = (fieldIndex) => {
+        const updatedFields = [...fields];
+        const newOption = { name: "", description: "", extra_info: "" };
+        updatedFields[fieldIndex].options = [...(updatedFields[fieldIndex].options || []), newOption];
+        setFields(updatedFields);
+    };
+
+    const handleOptionRemove = (fieldIndex, optionIndex) => {
+        const updatedFields = [...fields];
+        updatedFields[fieldIndex].options.splice(optionIndex, 1);
+        setFields(updatedFields);
+    };
+
+    const handleUpdate = async () => {
         try {
-            const payload = {
-                ...product,
-                fields: fields.map(field => ({
+            const updatedProduct = {
+                name: product.name,
+                description: product.description,
+                fields: fields.map((field) => ({
+                    id: field.id || null, // إضافة `id` إذا كان موجودًا
                     name: field.name,
                     type: field.type,
-                    options: field.type === "select" && Array.isArray(field.options)
-                        ? field.options.join(", ")
-                        : "",
+                    options: field.type === "select" ? field.options : [],
                 })),
             };
-
-            await axios.put(`/api/products/${productId}`, payload);
+    
+            const response = await axios.put(`/api/products/${productId}`, updatedProduct);
+    
+            // عرض رسالة نجاح باستخدام swal
             swal("Success", "Product updated successfully!", "success");
-            if (onUpdated) onUpdated();
+    
+            // استدعاء الدالة onUpdate إذا كانت موجودة
+            if (onUpdate) onUpdate(response.data);
         } catch (error) {
-            if (error.response?.status === 422) {
-                const errors = error.response.data.errors;
-                const errorMessages = Object.values(errors).flat().join(", ");
-                swal("Validation Error", errorMessages, "error");
-            } else {
-                swal("Error", "Something went wrong while updating the product.", "error");
-            }
+            console.error("Error updating product:", error);
+    
+            // عرض رسالة خطأ باستخدام swal
+            swal("Error", "Failed to update product. Please try again.", "error");
         }
     };
-
-    if (!product) return <p>Loading...</p>;
-
     return (
-        <div className="container mt-5">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2 className="text-primary">Edit Product</h2>
-                <button
-                    className="btn btn-secondary"
-                    onClick={onCancel}
-                >
-                    <i className="bi bi-arrow-left me-1"></i> Cancel
-                </button>
+        <div className="container">
+            <h4 className="mb-3">Edit Product</h4>
+
+            <div className="mb-3">
+                <label className="form-label">Product Name</label>
+                <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={product.name}
+                    onChange={handleChange}
+                />
             </div>
 
-            <form onSubmit={handleUpdate} className="shadow p-4 rounded bg-light">
-                <div className="mb-4">
-                    <label className="form-label">Product Name</label>
-                    <input
-                        className="form-control"
-                        type="text"
-                        name="name"
-                        value={product.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+            <div className="mb-3">
+                <label className="form-label">Description</label>
+                <textarea
+                    className="form-control"
+                    name="description"
+                    value={product.description}
+                    onChange={handleChange}
+                />
+            </div>
 
-                <div className="mb-4">
-                    <label className="form-label">Description</label>
-                    <textarea
-                        className="form-control"
-                        name="description"
-                        value={product.description}
-                        onChange={handleChange}
-                        rows="4"
-                        required
-                    />
-                </div>
+            <hr />
 
-                <h5 className="text-secondary mb-3">Fields</h5>
-                {fields.map((field, index) => (
-                    <div className="row mb-3 align-items-start" key={index}>
-                        <div className="col-md-4 mb-2">
+            <h5>Fields</h5>
+            {fields.map((field, index) => (
+                <div key={index} className="border rounded p-3 mb-3">
+                    <div className="row mb-2">
+                        <div className="col-md-5">
                             <input
                                 type="text"
                                 className="form-control"
-                                name="name"
                                 placeholder="Field name"
                                 value={field.name}
-                                onChange={(e) => handleFieldChange(index, e)}
-                                required
+                                onChange={(e) => handleFieldChange(index, "name", e.target.value)}
                             />
                         </div>
-
-                        <div className="col-md-3 mb-2">
+                        <div className="col-md-5">
                             <select
                                 className="form-select"
-                                name="type"
                                 value={field.type}
-                                onChange={(e) => handleFieldChange(index, e)}
-                                required
+                                onChange={(e) => handleFieldChange(index, "type", e.target.value)}
                             >
                                 <option value="text">Text</option>
                                 <option value="number">Number</option>
                                 <option value="select">Select</option>
                             </select>
                         </div>
-
-                        {field.type === "select" && (
-                            <div className="col-md-5 mb-2">
-                                <div className="d-flex align-items-center">
-                                    <input
-                                        type="text"
-                                        className="form-control me-2"
-                                        placeholder="Add option"
-                                        onKeyDown={(e) => {
-                                            if (e.key === "Enter") {
-                                                e.preventDefault();
-                                                handleOptionAdd(index, e.target.value);
-                                                e.target.value = "";
-                                            }
-                                        }}
-                                    />
-                                    <button
-                                        type="button"
-                                        className="btn btn-outline-primary"
-                                        onClick={(e) => {
-                                            const input = e.target.closest('.d-flex').querySelector("input");
-                                            handleOptionAdd(index, input.value);
-                                            input.value = "";
-                                        }}
-                                    >
-                                        Add
-                                    </button>
-                                </div>
-                                <ul className="mt-2 list-unstyled">
-                                    {(Array.isArray(field.options) ? field.options : field.options?.split(",") || []).map((option, optionIndex) => (
-                                        <li key={optionIndex} className="d-flex align-items-center">
-                                            <span>{option.trim()}</span>
-                                            <button
-                                                type="button"
-                                                className="btn btn-sm btn-danger ms-2"
-                                                onClick={() => handleOptionRemove(index, optionIndex)}
-                                            >
-                                                &times;
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-
-                        <div className="col-md-1 text-end">
-                            {index > 0 && (
-                                <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={() => handleRemoveField(index)}
-                                >
-                                    &times;
-                                </button>
-                            )}
+                        <div className="col-md-2">
+                            <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={() => handleRemoveField(index)}
+                            >
+                                &times;
+                            </button>
                         </div>
                     </div>
-                ))}
 
-                <div className="mb-4">
-                    <button
-                        type="button"
-                        className="btn btn-outline-primary"
-                        onClick={addField}
-                    >
-                        + Add Field
-                    </button>
+                    {field.type === "select" && (
+                        <div className="mb-2">
+                            <button
+                                type="button"
+                                className="btn btn-sm btn-outline-primary mb-2"
+                                onClick={() => handleOptionAdd(index)}
+                            >
+                                + Add Option
+                            </button>
+                            {(field.options || []).map((option, optionIndex) => (
+                                <div key={optionIndex} className="row align-items-end mb-2">
+                                    <div className="col-md-3">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Option name"
+                                            value={option.name || ""}
+                                            onChange={(e) =>
+                                                handleOptionChange(index, optionIndex, "name", e.target.value)
+                                            }
+                                        />
+                                    </div>
+                                    <div className="col-md-4">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Description"
+                                            value={option.description || ""}
+                                            onChange={(e) =>
+                                                handleOptionChange(index, optionIndex, "description", e.target.value)
+                                            }
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            placeholder="Extra Info"
+                                            value={option.extra_info || ""}
+                                            onChange={(e) =>
+                                                handleOptionChange(index, optionIndex, "extra_info", e.target.value)
+                                            }
+                                        />
+                                    </div>
+                                    <div className="col-md-2 text-end">
+                                        <button
+                                            type="button"
+                                            className="btn btn-sm btn-danger"
+                                            onClick={() => handleOptionRemove(index, optionIndex)}
+                                        >
+                                            &times;
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
+            ))}
 
-                <button type="submit" className="btn btn-success w-100">Save Changes</button>
-            </form>
+            <button type="button" className="btn btn-secondary mb-3" onClick={handleAddField}>
+                + Add Field
+            </button>
+
+            <div className="text-end">
+                <button className="btn btn-primary" onClick={handleUpdate}>
+                    Save Changes
+                </button>
+            </div>
         </div>
     );
-}
+};
 
 export default EditProductForm;

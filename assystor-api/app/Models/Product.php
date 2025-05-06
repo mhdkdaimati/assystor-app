@@ -17,4 +17,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductFieldValue::class);
     }
+
+    public function fieldOptions()
+    {
+        return $this->hasManyThrough(ProductFieldOption::class, ProductField::class);
+    }
 }

@@ -95,21 +95,34 @@ function ProductList({ onEdit }) {
                                                 <table className="table table-sm table-bordered">
                                                     <thead>
                                                         <tr>
-                                                            <th>Name</th>
+                                                            <th>Field Name</th>
                                                             <th>Type</th>
+                                                            <th>Options</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {product.fields.map(field => (
                                                             <tr key={field.id}>
                                                                 <td>{field.name}</td>
+                                                                <td>{field.type}</td>
                                                                 <td>
-                                                                    {field.type}
-                                                                    {field.type === 'select' && field.options ? (
-                                                                        <div className="text-muted small mt-1">
-                                                                            Options: {field.options}
-                                                                        </div>
-                                                                    ) : null}
+                                                                    {field.type === 'select' && field.options.length > 0 ? (
+                                                                        <ul className="mb-0 ps-3">
+                                                                            {field.options.map(option => (
+                                                                                <li key={option.id}>
+                                                                                    <strong>{option.name}</strong>
+                                                                                    {option.description && (
+                                                                                        <> – <em>{option.description}</em></>
+                                                                                    )}
+                                                                                    {option.extra_info && (
+                                                                                        <> – <span className="text-muted">{option.extra_info}</span></>
+                                                                                    )}
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    ) : (
+                                                                        <span className="text-muted">–</span>
+                                                                    )}
                                                                 </td>
                                                             </tr>
                                                         ))}

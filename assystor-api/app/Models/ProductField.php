@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class ProductField extends Model
 {
     protected $fillable = [
-        'product_id', 'name', 'type', 'options'
+        'product_id',
+        'name',
+        'type',
+        'options'
     ];
-    
+
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -18,5 +21,10 @@ class ProductField extends Model
     public function values()
     {
         return $this->hasMany(ProductFieldValue::class);
+    }
+
+    public function options()
+    {
+        return $this->hasMany(ProductFieldOption::class);
     }
 }

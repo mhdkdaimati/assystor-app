@@ -256,29 +256,29 @@ const ProcessCustomerGroup = () => {
                                 <div key={field.id} className="mb-2">
                                     <label>{field.name}</label>
                                     {field.type === 'select' ? (
-                                        <select
-                                            className="form-control"
-                                            value={fieldValues[field.id] || ''}
-                                            onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                                        >
-                                            <option value="" disabled>
-                                                Select {field.name}
-                                            </option>
-                                            {field.options.split(',').map((option) => (
-                                                <option key={option.trim()} value={option.trim()}>
-                                                    {option.trim()}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    ) : (
-                                        <input
-                                            type={field.type === 'number' ? 'number' : 'text'}
-                                            className="form-control"
-                                            placeholder={`Enter ${field.name}`}
-                                            value={fieldValues[field.id] || ''}
-                                            onChange={(e) => handleFieldChange(field.id, e.target.value)}
-                                        />
-                                    )}                                </div>
+  <select
+    className="form-control"
+    value={fieldValues[field.id] || ''}
+    onChange={(e) => handleFieldChange(field.id, e.target.value)}
+  >
+    <option value="" disabled>
+      Select {field.name}
+    </option>
+    {field.options.map((option) => (
+      <option key={option.id} value={option.name}>
+        {option.name}
+      </option>
+    ))}
+  </select>
+) : (
+  <input
+    type={field.type}
+    className="form-control"
+    value={fieldValues[field.id] || ''}
+    onChange={(e) => handleFieldChange(field.id, e.target.value)}
+  />
+)}
+</div>
                             ))}
                         </div>
                     )}
@@ -405,7 +405,7 @@ const CustomerHistory = ({ history }) => (
                         <div className="timeline-panel">
                             <div className="timeline-heading">
                                 <h6 className="text-primary">
-                                    <strong>Group:</strong> {entry.group.name}
+                                    <strong>Group:</strong> {entry.group?.name ||''}
                                 </h6>
                                 <p className="text-muted">
                                     <strong>Created At:</strong> {entry.created_at ? new Date(entry.created_at).toLocaleString() : 'N/A'}
@@ -415,7 +415,7 @@ const CustomerHistory = ({ history }) => (
                                 <p><strong>Status:</strong> {entry.status}</p>
                                 <p><strong>Comment:</strong> {entry.comment || 'No comment provided'}</p>
                                 <p><strong>Employee:</strong> {entry.employee.name}</p>
-                                <p><strong>Group:</strong> {entry.group.name}</p>
+                                <p><strong>Group:</strong> {entry.group?.name ||''}</p>
                             </div>
                         </div>
                     </div>
