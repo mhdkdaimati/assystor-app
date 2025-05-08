@@ -27,6 +27,8 @@ import IncompletedCustomerGroups from './components/handleCustomerGroups/Incompl
 import ProcessCustomerGroup from './components/handleCustomerGroups/ProcessCustomerGroupe';
 import ProductList from './components/product/ProductList';
 import ProductPage from './components/product/ProductPage';
+import PendingCustomerProducts from './components/customerProduct/PendingCustomerProducts';
+
 import { useState, useEffect } from 'react';
 
 
@@ -107,6 +109,8 @@ function App() {
           <Route path="create-product" element={auth.role === 'admin' ? <CreateProduct /> : <Navigate to="/" />}/>
           
           <Route path="product-page" element={auth.role === 'admin' ? <ProductPage /> : <Navigate to="/" />}/>
+          
+          <Route path="pending-customer-products" element={auth.role === 'admin' ? <PendingCustomerProducts /> : <Navigate to="/" />}/>
 
           {/* إضافة المزيد من الصفحات هنا حسب الحاجة */}
 

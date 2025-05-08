@@ -93,8 +93,7 @@ const AddCustomer = () => {
 
 
                 swal("Operation is completed", res.data.message, "success");
-                // document.getElementById('CATEGORY_FORM').reset();
-                // navigate('/view-customer');
+                navigate('/view-customer');
             } else if (res.data.status === 400) {
 
                 swal("Operation is incompleted", res.data.message, "error");
@@ -120,7 +119,7 @@ const AddCustomer = () => {
 
                         </div>
                         <div className="card-body p-4">
-                            <form onSubmit={customerSubmit} id="CATEGORY_FORM" encType="multipart/form-data">
+                            <form onSubmit={customerSubmit} encType="multipart/form-data">
                                 <div className="mb-3">
                                     <label htmlFor="email" className="form-label fw-semibold">Email</label>
                                     <div className="input-group">

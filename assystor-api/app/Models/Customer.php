@@ -27,15 +27,28 @@ class Customer extends Model
         return $this->belongsTo(Company::class);
     }
 
-    // public function groups()
-    // {
-    //     return $this->belongsToMany(Group::class, 'customer_group');
-    // }
+
+    public function customerHistory()
+    {
+        return $this->hasMany(CustomerHistory::class);
+    }
+
+
 
     public function customerGroups()
     {
         return $this->belongsToMany(CustomerGroup::class, 'customer_customer_group')
-                    ->withPivot('status');
+            ->withPivot('status');
     }
-        }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'customer_product')
+            ->withTimestamps()
+            ->withPivot('employee_id')
+            ->withPivot('status') // تضمين عمود status
+            ->withPivot(['status', 'comment']);
+
+    }
+}
 //

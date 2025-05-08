@@ -9,16 +9,16 @@ use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
-    public function index()
+    public function getAllCompanies()
     {
-        $companies = Company::orderBy('created_at', 'desc')->get(); // ترتيب البيانات
+        $companies = Company::orderBy('created_at', 'desc')->get(); // Data sorting
         return response()->json([
             'status' => 200,
             'companies' => $companies,
         ]);
     }
 
-    public function store(Request $request)
+    public function storeCompany(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:4|max:191|unique:companies,name',
@@ -37,8 +37,7 @@ class CompanyController extends Controller
             'name' => $request->name,
             'responsible_person' => $request->responsible_person,
             'tel_number' => $request->tel_number,
-            'status' => $request->status ?? 'active', // استخدام قيمة من الفورم أو "active" افتراضياً
-
+            'status' => $request->status ?? 'active', // Use a value from the form or "active" by default
         ]);
 
         return response()->json([
@@ -48,7 +47,7 @@ class CompanyController extends Controller
         ]);
     }
 
-    public function show($id) // تغيير اسم الدالة من edit إلى show
+    public function getCompany($id) 
     {
         $company = Company::find($id);
         if ($company) {
@@ -64,7 +63,7 @@ class CompanyController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function updateCompany(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:4|max:191|unique:companies,name,' . $id,
@@ -91,7 +90,7 @@ class CompanyController extends Controller
             'name' => $request->name,
             'responsible_person' => $request->responsible_person,
             'tel_number' => $request->tel_number,
-            'status' => $request->status ?? 'active', // استخدام قيمة من الفورم أو "active" افتراضياً
+            'status' => $request->status ?? 'active', // Use a value from the form or "active" by default
         ]);
 
         return response()->json([
@@ -101,7 +100,7 @@ class CompanyController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function deleteCompany($id)
     {
         $company = Company::find($id);
         if (!$company) {

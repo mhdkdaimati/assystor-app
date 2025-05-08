@@ -2,45 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Models\ProductFieldValue;
 use Illuminate\Http\Request;
+use App\Models\ProductFieldValue;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 
 class ProductFieldValueController extends Controller
 {
-    public function index()
-    {
-        return ProductFieldValue::with(['product', 'field', 'customer', 'employee'])->get();
-    }
-
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'product_field_id' => 'required|exists:product_fields,id',
-            'customer_id' => 'required|exists:customers,id',
-            'employee_id' => 'required|exists:users,id',
-            'value' => 'nullable|string',
-        ]);
-
-        $value = ProductFieldValue::create($data);
-        return response()->json($value, 201);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $fieldValue = ProductFieldValue::findOrFail($id);
-        $fieldValue->update($request->only('value'));
-        return response()->json($fieldValue);
-    }
-
-    public function destroy($id)
-    {
-        ProductFieldValue::destroy($id);
-        return response()->json(['message' => 'Deleted']);
-    }
 
 
     public function bulkStore(Request $request)
@@ -53,9 +23,24 @@ class ProductFieldValueController extends Controller
         ]);
 
         $customerId = $data['customer_id'];
-        $productId  = $data['product_id'];
-        $userId     = Auth::id();
+        $productId = $data['product_id'];
+        $userId = auth()->id();
 
+        // حفظ العلاقة في جدول customer_product مع employee_id و status (إن لم تكن موجودة)
+        DB::table('customer_product')->updateOrInsert(
+            [
+                'customer_id' => $customerId,
+                'product_id'  => $productId,
+            ],
+            [
+                'employee_id' => $userId,
+                'status'      => 'pending', 
+                'updated_at'  => now(),
+                'created_at'  => now(), // ملاحظة: updateOrInsert لا يحفظ created_at تلقائياً
+            ]
+        );
+
+        // حفظ القيم في جدول ProductFieldValue
         foreach ($data['fields'] as $fieldId => $value) {
             ProductFieldValue::updateOrCreate(
                 [
@@ -71,9 +56,7 @@ class ProductFieldValueController extends Controller
         }
 
         return response()->json([
-            'message' => 'Field values saved successfully.',
+            'message' => 'Field values and product-customer relation saved successfully.',
         ], 200);
     }
-
-    
 }

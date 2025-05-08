@@ -6,7 +6,7 @@ const EditProductForm = ({ productId, onUpdate }) => {
     const [fields, setFields] = useState([]);
 
     useEffect(() => {
-        axios.get(`/api/products/${productId}`).then((res) => {
+        axios.get(`/api/get-product/${productId}`).then((res) => {
             setProduct({
                 name: res.data.name,
                 description: res.data.description,
@@ -60,24 +60,22 @@ const EditProductForm = ({ productId, onUpdate }) => {
                 name: product.name,
                 description: product.description,
                 fields: fields.map((field) => ({
-                    id: field.id || null, // إضافة `id` إذا كان موجودًا
+                    id: field.id || null, // Add `id` if it exists
                     name: field.name,
                     type: field.type,
                     options: field.type === "select" ? field.options : [],
                 })),
             };
     
-            const response = await axios.put(`/api/products/${productId}`, updatedProduct);
+            const response = await axios.put(`/api/update-product/${productId}`, updatedProduct);
     
-            // عرض رسالة نجاح باستخدام swal
             swal("Success", "Product updated successfully!", "success");
     
-            // استدعاء الدالة onUpdate إذا كانت موجودة
+// Call the onUpdate function if it exists
             if (onUpdate) onUpdate(response.data);
         } catch (error) {
             console.error("Error updating product:", error);
     
-            // عرض رسالة خطأ باستخدام swal
             swal("Error", "Failed to update product. Please try again.", "error");
         }
     };

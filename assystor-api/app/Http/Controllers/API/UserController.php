@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index()
+    public function getAllUsers()
     {
         //
-        
-        $users = User::orderBy('created_at', 'desc')->get(); // ترتيب البيانات
+
+        $users = User::orderBy('created_at', 'desc')->get(); // Data sorting
         return response()->json([
             'status' => 200,
             'users' => $users,
@@ -23,14 +23,14 @@ class UserController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function storeUser(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3|max:191',
             'email' => 'required|email|max:191|unique:users,email',
             'password' => 'required|min:5',
-            'role' => 'required|in:admin,manager,operator', 
+            'role' => 'required|in:admin,manager,operator',
 
         ]);
 
@@ -57,7 +57,7 @@ class UserController extends Controller
 
 
 
-    public function show($id) // تغيير اسم الدالة من edit إلى show
+    public function getUser($id)
     {
         $user = User::find($id);
         if ($user) {
@@ -73,7 +73,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $id)
+    public function updateUser(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:191|unique:users,email,' . $id,
@@ -95,20 +95,18 @@ class UserController extends Controller
                 'message' => 'User not found',
             ]);
         }
-
-        // تحضير بيانات التحديث
+        //Prepare update data
         $updateData = [
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
         ];
 
-        // إذا تم إرسال كلمة مرور جديدة، نقوم بتحديثها
+        // If a new password is sent, we update it.
         if (!empty($request->password)) {
             $updateData['password'] = Hash::make($request->password);
         }
-
-        // تنفيذ التحديث
+        // Execute the update
         $user->update($updateData);
 
         return response()->json([
@@ -118,7 +116,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function deleteUser($id)
     {
         $user = User::find($id);
         if (!$user) {

@@ -9,7 +9,7 @@ function ProductList({ onEdit }) {
     const [filteredProducts, setFilteredProducts] = useState([]);
 
     useEffect(() => {
-        axios.get("/api/products")
+        axios.get(`/api/products-with-fields`)
             .then(res => {
                 setProducts(res.data);
                 setFilteredProducts(res.data); // تعيين البيانات المفلترة
@@ -29,7 +29,7 @@ function ProductList({ onEdit }) {
 
     const deleteProduct = (id) => {
         if (window.confirm("Are you sure you want to delete this product?")) {
-            axios.delete(`/api/products/${id}`)
+            axios.delete(`/api/delete-product/${id}`)
                 .then(() => {
                     setProducts(products.filter(p => p.id !== id));
                 })

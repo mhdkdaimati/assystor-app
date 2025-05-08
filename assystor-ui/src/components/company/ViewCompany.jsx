@@ -17,7 +17,7 @@ const ViewCompany = () => {
         axios.get(`/api/all-companies`).then(res => {
             if (res.status === 200) {
                 setCompanyList(res.data.companies);
-                setFilteredCompanies(res.data.companies); // تعيين البيانات المفلترة
+                setFilteredCompanies(res.data.companies); // Set filtered data
             }
             setLoading(false);
         });

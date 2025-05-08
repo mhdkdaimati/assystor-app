@@ -16,7 +16,7 @@ function ProductPage() {
                         setEditingId(null);
                         setRefresh(!refresh);
                     }}
-                    onCancel={() => setEditingId(null)} // تحديث الحالة عند الإلغاء
+                    onCancel={() => setEditingId(null)} // Update status when canceled
                 />
             ) : (
                 <ProductList

@@ -14,7 +14,7 @@ const IncompletedCustomerGroups = () => {
         axios.get(`/api/customer-groups/incomplete`).then(res => {
             if (res.data.customer_groups) {
                 setCustomerGroupList(res.data.customer_groups);
-                setFilteredCustomerGroups(res.data.customer_groups); // تعيين البيانات المفلترة
+                setFilteredCustomerGroups(res.data.customer_groups); // Set filtered data
             }
             setLoading(false);
         });

@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import swal from 'sweetalert';
-import './Login.css'; // استيراد ملف CSS
+import './Login.css'; 
 
 function Login() {
   const navigate = useNavigate();
   const [loginInput, setLoginInput] = useState({ email: '', password: '' });
 
-  // منع الدخول لصفحة تسجيل الدخول إذا كان المستخدم مسجل دخول
+  // Check if user is already logged in
   useEffect(() => {
     const authName = localStorage.getItem('auth_name');
     const authToken = localStorage.getItem('auth_token');
@@ -29,10 +29,10 @@ function Login() {
     try {
       const res = await axios.post('/api/login', data);
       if (res.data.status === 200) {
-        // تخزين 
+        // store user data in local storage 
         localStorage.setItem('auth_token', res.data.token);
         localStorage.setItem('auth_name', res.data.username);
-        localStorage.setItem('auth_role', res.data.role); // تخزين دور المستخدم
+        localStorage.setItem('auth_role', res.data.role); // store role
         window.dispatchEvent(new Event("authChanged"));
 
 

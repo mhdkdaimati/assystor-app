@@ -52,11 +52,11 @@ const CreateProduct = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("/api/products", {
+            const res = await axios.post(`/api/store-product`, {
                 ...product,
                 fields: fields.map(field => ({
                     ...field,
-                    options: field.type === "select" ? field.options : null,  // إزالة JSON.stringify هنا
+                    options: field.type === "select" ? field.options : null,  // Only include options if the field type is 'select'
                 })),
             });
 

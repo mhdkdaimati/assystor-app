@@ -17,7 +17,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 const EditUser = () => {
 
     const navigate = useNavigate();
-    const { id } = useParams(); // استخدام useParams للحصول على المعرف
+    const { id } = useParams(); // Use useParams to get the identifier
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState([]);
     const [userInput, setUser] = useState({
@@ -31,7 +31,7 @@ const EditUser = () => {
     useEffect(() => {
         document.title = 'Edit User';
 
-        axios.get(`/api/show-user/${id}`).then((res) => {
+        axios.get(`/api/get-user/${id}`).then((res) => {
             if (res.data.status === 200) {
                 setUser(res.data.user);
             } else if (res.data.status === 404) {

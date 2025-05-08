@@ -22,4 +22,12 @@ class Product extends Model
     {
         return $this->hasManyThrough(ProductFieldOption::class, ProductField::class);
     }
+    public function customers()
+    {
+        return $this->belongsToMany(Customer::class, 'customer_product')
+            ->withPivot('status') // تضمين عمود status
+            ->withPivot('employee_id')
+            ->withPivot(['status', 'comment'])
+            ->withTimestamps();
+    }
 }

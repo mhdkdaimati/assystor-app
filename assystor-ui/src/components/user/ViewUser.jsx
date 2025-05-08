@@ -17,7 +17,7 @@ const ViewUser = () => {
         axios.get(`/api/all-users`).then(res => {
             if (res.status === 200) {
                 setUserList(res.data.users);
-                setFilteredUsers(res.data.users); // تعيين البيانات المفلترة
+                setFilteredUsers(res.data.users); // Set filtered data
             }
             setLoading(false);
         });

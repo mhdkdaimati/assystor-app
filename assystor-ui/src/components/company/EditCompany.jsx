@@ -6,7 +6,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 const EditCompany = () => {
 
     const navigate = useNavigate();
-    const { id } = useParams(); // استخدام useParams للحصول على المعرف
+    const { id } = useParams(); // Use useParams to get the identifier
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState([]);
     const [companyInput, setCompany] = useState({
@@ -20,7 +20,7 @@ const EditCompany = () => {
     useEffect(() => {
         document.title = 'Edit Company';
 
-        axios.get(`/api/show-company/${id}`).then((res) => {
+        axios.get(`/api/get-company/${id}`).then((res) => {
             if (res.data.status === 200) {
                 setCompany(res.data.company);
             } else if (res.data.status === 404) {

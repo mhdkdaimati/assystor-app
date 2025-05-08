@@ -14,10 +14,10 @@ const ViewCustomer = () => {
     useEffect(() => {
         document.title = 'View Customer';
 
-        axios.get(`/api/all-customers`).then(res => {
+        axios.get(`/api/customers-with-companies`).then(res => {
             if (res.status === 200) {
                 setCustomerList(res.data.customers);
-                setFilteredCustomers(res.data.customers); // تعيين البيانات المفلترة
+                setFilteredCustomers(res.data.customers); // Set filtered data
             }
             setLoading(false);
         });
@@ -132,7 +132,7 @@ const ViewCustomer = () => {
                                     <i className="bi bi-file-earmark-excel me-1"></i> Export to Excel
                                 </button>
                                 <Link to="/upload-customers" className="btn btn-primary rounded-pill shadow-sm me-2">
-                                    <i className="bi bi-upload me-1"></i> Upload Customers
+                                    <i className="bi bi-upload me-1"></i> Import Customers
                                 </Link>
                                 <Link to="/add-customer" className="btn btn-primary rounded-pill shadow-sm ">
                                     <i className="bi bi-plus-circle me-1"></i> Add Customer

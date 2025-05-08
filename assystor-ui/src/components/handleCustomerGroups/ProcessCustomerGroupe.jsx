@@ -14,7 +14,7 @@ const ProcessCustomerGroup = () => {
     const [fieldValues, setFieldValues] = useState({});
     const [customerProduct, setCustomerProduct] = useState({});
     const [showModal, setShowModal] = useState(false);
-    const [showSessionModal, setShowSessionModal] = useState(false); // حالة جديدة للمودال الخاص بـ End Session
+    const [showSessionModal, setShowSessionModal] = useState(false); // New state for End Session module
     const [customerHistory, setCustomerHistory] = useState({});
     // Define session status and comment
     const [sessionStatus, setSessionStatus] = useState('');
@@ -27,7 +27,7 @@ const ProcessCustomerGroup = () => {
                     setCustomerList(res.data);
                     res.data.forEach(customer => {
                         loadCustomerProducts(customer.id);
-                        loadCustomerHistory(customer.id); // تحميل تاريخ الزبون
+                        loadCustomerHistory(customer.id); // Download customer history
                     });
                 }
                 setLoading(false);
@@ -39,7 +39,7 @@ const ProcessCustomerGroup = () => {
     }, [id]);
 
     useEffect(() => {
-        axios.get(`/api/products`)
+        axios.get(`/api/products-with-fields`)
             .then(res => {
                 if (res.status === 200) {
                     setProducts(res.data);
@@ -52,7 +52,7 @@ const ProcessCustomerGroup = () => {
 
     const loadCustomerHistory = async (customerId) => {
         try {
-            const res = await axios.get(`/api/customers/${customerId}/history`);
+            const res = await axios.get(`/api/get-customer-history/${customerId}`);
             setCustomerHistory(prev => ({
                 ...prev,
                 [customerId]: res.data
@@ -64,7 +64,7 @@ const ProcessCustomerGroup = () => {
 
     const loadCustomerProducts = async (customerId) => {
         try {
-            const res = await axios.get(`/api/customers/${customerId}/customer-products`);
+            const res = await axios.get(`/api/customer-products/${customerId}`);
             setCustomerProduct(prev => ({
                 ...prev,
                 [customerId]: res.data
@@ -140,18 +140,20 @@ const ProcessCustomerGroup = () => {
                 comment: sessionComment,
             };
 
-            // إرسال الطلب الأول لإغلاق الجلسة
+            // Send the first request to close the session
+
+            //in close session we need only customer_id and group_id
             await axios.post(`/api/customer-groups/close-session`, payload);
 
-            // إرسال الطلب الثاني لتسجيل الهيستوري
-            await axios.post(`/api/customers/history`, payload);
+            // Send the second request to record the history
+            await axios.post(`/api/store-history`, payload);
 
             swal("Session closed and history saved successfully.");
 
-            // تصفية القائمة لإزالة الزبون الذي تم إغلاق جلسته
+            // Filter the list to remove the customer whose session was closed
             setCustomerList(prev => prev.filter(c => c.id !== selectedCustomer));
 
-            // تصفير القيم
+            //Reset values
             setSessionStatus('');
             setSessionComment('');
             handleCloseSessionModal();
@@ -256,29 +258,29 @@ const ProcessCustomerGroup = () => {
                                 <div key={field.id} className="mb-2">
                                     <label>{field.name}</label>
                                     {field.type === 'select' ? (
-  <select
-    className="form-control"
-    value={fieldValues[field.id] || ''}
-    onChange={(e) => handleFieldChange(field.id, e.target.value)}
-  >
-    <option value="" disabled>
-      Select {field.name}
-    </option>
-    {field.options.map((option) => (
-      <option key={option.id} value={option.name}>
-        {option.name}
-      </option>
-    ))}
-  </select>
-) : (
-  <input
-    type={field.type}
-    className="form-control"
-    value={fieldValues[field.id] || ''}
-    onChange={(e) => handleFieldChange(field.id, e.target.value)}
-  />
-)}
-</div>
+                                        <select
+                                            className="form-control"
+                                            value={fieldValues[field.id] || ''}
+                                            onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                                        >
+                                            <option value="" disabled>
+                                                Select {field.name}
+                                            </option>
+                                            {field.options.map((option) => (
+                                                <option key={option.id} value={option.name}>
+                                                    {option.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            type={field.type}
+                                            className="form-control"
+                                            value={fieldValues[field.id] || ''}
+                                            onChange={(e) => handleFieldChange(field.id, e.target.value)}
+                                        />
+                                    )}
+                                </div>
                             ))}
                         </div>
                     )}
@@ -327,7 +329,7 @@ const ProcessCustomerGroup = () => {
                             rows="3"
                             value={sessionComment}
                             onChange={(e) => setSessionComment(e.target.value)}
-                            placeholder="Enter your comment here..." 
+                            placeholder="Enter your comment here..."
                             required
                         />
                     </div>
@@ -405,7 +407,7 @@ const CustomerHistory = ({ history }) => (
                         <div className="timeline-panel">
                             <div className="timeline-heading">
                                 <h6 className="text-primary">
-                                    <strong>Group:</strong> {entry.group?.name ||''}
+                                    <strong>Group:</strong> {entry.group?.name || ''}
                                 </h6>
                                 <p className="text-muted">
                                     <strong>Created At:</strong> {entry.created_at ? new Date(entry.created_at).toLocaleString() : 'N/A'}
@@ -414,8 +416,8 @@ const CustomerHistory = ({ history }) => (
                             <div className="timeline-body">
                                 <p><strong>Status:</strong> {entry.status}</p>
                                 <p><strong>Comment:</strong> {entry.comment || 'No comment provided'}</p>
-                                <p><strong>Employee:</strong> {entry.employee.name}</p>
-                                <p><strong>Group:</strong> {entry.group?.name ||''}</p>
+                                <p><strong>Employee:</strong> {entry.employee?.name || ''}</p>
+                                <p><strong>Group:</strong> {entry.group?.name || ''}</p>
                             </div>
                         </div>
                     </div>
@@ -431,23 +433,33 @@ const CustomerHistory = ({ history }) => (
 );
 
 const CustomerProduct = ({ customer_products }) => (
-    customer_products && Object.keys(customer_products).length > 0 && (
+    customer_products && customer_products.length > 0 ? (
         <div className="mt-4">
             <h5 className="mb-3">
                 <i className="bi bi-box-seam me-2"></i>
                 Customer Products
-            </h5>            {Object.entries(customer_products).map(([productId, entries]) => (
-                <div key={productId} className="card mb-3 shadow-sm">
+            </h5>
+            {customer_products.map((product, productIndex) => (
+                <div key={productIndex} className="card mb-3 shadow-sm">
                     <div className="card-header bg-secondary text-white">
-                        <strong>{entries[0]?.product?.name || `Product ID: ${productId}`}</strong>
+                        <strong>{product.product_name || `Product ${productIndex + 1}`}</strong>
+                    </div>
+                    <div className="card-body">
+                        <p><strong>Description:</strong> {product.product_description || 'N/A'}</p>
+                        <p><strong>Status:</strong> {product.status || 'N/A'}</p>
+                        <p><strong>Employee:</strong> {product.employee_name || 'N/A'}</p>
+                        <p><strong>Created At:</strong> {product.created_at ? new Date(product.created_at).toLocaleString() : 'N/A'}</p>
+                        <p><strong>Last Updated:</strong> {product.updated_at ? new Date(product.updated_at).toLocaleString() : 'N/A'}</p>
                     </div>
                     <ul className="list-group list-group-flush">
-                        {entries.map(entry => (
-                            <li key={entry.id} className="list-group-item d-flex justify-content-between align-items-start">
+                        {product.fields.map((field, fieldIndex) => (
+                            <li key={fieldIndex} className="list-group-item d-flex justify-content-between align-items-start">
                                 <div>
-                                    <div><strong>{entry.field?.name}:</strong> {entry.value}</div>
+                                    <div><strong>{field.field_name}:</strong> {field.value}</div>
                                     <small className="text-muted">
-                                        Created at: {new Date(entry.created_at).toLocaleString()}
+                                        <strong>Created At:</strong> {field.created_at ? new Date(field.created_at).toLocaleString() : 'N/A'}
+                                        <br />
+                                        <strong>Last Updated:</strong> {field.updated_at ? new Date(field.updated_at).toLocaleString() : 'N/A'}
                                     </small>
                                 </div>
                             </li>
@@ -456,7 +468,11 @@ const CustomerProduct = ({ customer_products }) => (
                 </div>
             ))}
         </div>
+    ) : (
+        <div className="alert alert-info mt-4">
+            <i className="bi bi-info-circle me-2"></i>
+            No products available for this customer.
+        </div>
     )
 );
-
 export default ProcessCustomerGroup;

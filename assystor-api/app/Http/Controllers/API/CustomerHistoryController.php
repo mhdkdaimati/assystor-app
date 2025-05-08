@@ -8,10 +8,9 @@ use App\Http\Controllers\Controller;
 
 class CustomerHistoryController extends Controller
 {
-    public function store(Request $request)
+    public function storeHistory(Request $request)
     {
 
-        //logger(dd(auth()->user()));
 
         logger('Authenticated user:', [auth()->user()]);
 
@@ -33,10 +32,10 @@ class CustomerHistoryController extends Controller
         return response()->json(['message' => 'History record created successfully']);
     }
     
-    public function index($customerId)
+    public function getCustomerHistory($customerId)
     {
         $histories = CustomerHistory::where('customer_id', $customerId)
-            ->with(['group', 'employee']) // نفترض عامل علاقات
+            ->with(['group', 'employee']) 
             ->orderByDesc('created_at')
             ->get();
 

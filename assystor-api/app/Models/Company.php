@@ -11,11 +11,15 @@ class Company extends Model
 
     // App\Models\Company.php
 
-protected $fillable = [
-    'name',
-    'responsible_person',
-    'tel_number',
-    'status',
-];
-
+    protected $fillable = [
+        'name',
+        'responsible_person',
+        'tel_number',
+        'status',
+    ];
+    
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }
