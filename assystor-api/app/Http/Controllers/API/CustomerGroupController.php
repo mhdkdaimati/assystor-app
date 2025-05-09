@@ -22,7 +22,7 @@ class CustomerGroupController extends Controller
                 'message' => 'No customer groups found',
             ]);
         }
-//added this to get the incomplete customers count
+        //added this to get the incomplete customers count
         $customerGroups->each(function ($group) {
             $group->incomplete_customers_count = $group->customers()
                 ->wherePivot('status', 'incomplete')
@@ -31,7 +31,7 @@ class CustomerGroupController extends Controller
 
         return response()->json([
             'status' => 200,
-            'customer_groups' => $customerGroups, 
+            'customer_groups' => $customerGroups,
         ]);
     }
 
@@ -63,7 +63,7 @@ class CustomerGroupController extends Controller
             'customer_group' => $customerGroup,
         ]);
     }
-    public function showCustomerGroup($id) 
+    public function showCustomerGroup($id)
     {
         $customerGroup = CustomerGroup::find($id);
         if ($customerGroup) {
@@ -132,7 +132,7 @@ class CustomerGroupController extends Controller
     public function getCustomersInGroup($id)
     {
         $group = CustomerGroup::with(['customers.company'])->findOrFail($id);
-    
+
         $customers = $group->customers->map(function ($customer) {
             return [
                 'id' => $customer->id,
@@ -140,11 +140,11 @@ class CustomerGroupController extends Controller
                 'last_name' => $customer->last_name,
                 'email' => $customer->email,
                 'contact_number' => $customer->contact_number,
-                'company_name' => $customer->company->name ?? 'N/A', 
+                'company_name' => $customer->company->name ?? 'N/A',
                 'status' => $customer->pivot->status ?? 'N/A',
             ];
         });
-    
+
         return response()->json($customers);
     }
 
@@ -154,30 +154,30 @@ class CustomerGroupController extends Controller
             'customer_ids' => 'nullable|array',
             'customer_ids.*' => 'exists:customers,id',
         ]);
-    
+
         $group = CustomerGroup::findOrFail($id);
-    
-// Sync customers with the group
+
+        // Sync customers with the group
         $group->customers()->sync($request->input('customer_ids', []));
-    
-// Check the status of customers in the group
+
+        // Check the status of customers in the group
         $incompleteCount = $group->customers()
             ->wherePivot('status', 'incomplete')
             ->count();
-    
-// Update group status based on customer status
+
+        // Update group status based on customer status
         if ($incompleteCount > 0) {
             $group->update(['status' => 'incomplete']);
         } else {
             $group->update(['status' => 'complete']);
         }
-    
+
         return response()->json(['message' => 'Customers assigned to group successfully.']);
     }
 
     public function getIncompleteGroups()
     {
-// Fetch incomplete groups
+        // Fetch incomplete groups
         $incompleteGroups = CustomerGroup::withCount('customers')
             ->where('status', 'incomplete')
             ->having('customers_count', '>=', 1)
@@ -190,7 +190,7 @@ class CustomerGroupController extends Controller
             ]);
         }
 
-// Add the number of incomplete customers for each group
+        // Add the number of incomplete customers for each group
         $incompleteGroups->each(function ($group) {
             $group->incomplete_customers_count = $group->customers()
                 ->wherePivot('status', 'incomplete')
@@ -207,7 +207,7 @@ class CustomerGroupController extends Controller
     public function getIncompleteCustomersInGroup($id)
     {
         $group = CustomerGroup::with(['customers' => function ($query) {
-// Filter only clients with incomplete status
+            // Filter only clients with incomplete status
             $query->wherePivot('status', 'incomplete');
         }])->findOrFail($id);
 
@@ -225,10 +225,10 @@ class CustomerGroupController extends Controller
             'customer_id' => 'required|exists:customers,id',
             'group_id' => 'required|exists:customer_groups,id',
         ]);
-    
+
         $employeeId = auth()->id(); // Make sure the user is logged in
-    
-// Update customer status to Complete
+
+        // Update customer status to Complete
         DB::table('customer_customer_group')
             ->where('customer_group_id', $validated['group_id'])
             ->where('customer_id', $validated['customer_id'])
@@ -236,18 +236,18 @@ class CustomerGroupController extends Controller
                 'status' => 'complete',
                 'employee_id' => $employeeId,
             ]);
-    
-// Check the number of incomplete customers in the group
+
+        // Check the number of incomplete customers in the group
         $incompleteCount = DB::table('customer_customer_group')
             ->where('customer_group_id', $validated['group_id'])
             ->where('status', 'incomplete')
             ->count();
-    
-// If there are no incomplete customers, update the group's status to Complete
+
+        // If there are no incomplete customers, update the group's status to Complete
         if ($incompleteCount === 0) {
             CustomerGroup::where('id', $validated['group_id'])->update(['status' => 'complete']);
         }
-    
+
         return response()->json(['message' => 'Session closed successfully']);
     }
 }

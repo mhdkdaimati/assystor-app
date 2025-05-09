@@ -95,6 +95,15 @@ const Sidebar = () => {
                 Pending customer products
               </Link>
             </li>
+            <li>
+              <Link
+                to="/all-customer-products"
+                style={location.pathname === '/all-customer-products' ? activeLinkStyle : linkStyle}
+              >
+                All customer products
+              </Link>
+            </li>
+
           </>
         )}
       </ul>

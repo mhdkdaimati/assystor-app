@@ -30,4 +30,8 @@ class Product extends Model
             ->withPivot(['status', 'comment'])
             ->withTimestamps();
     }
+    public function customerProducts()
+    {
+        return $this->hasMany(CustomerProduct::class);
+    }
 }

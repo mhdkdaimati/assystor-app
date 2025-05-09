@@ -16,12 +16,11 @@ class CustomerController extends Controller
     //
     public function getAllCustomers()
     {
-        $customers = Customer::with('company') // تحميل العلاقة مع الشركة
+        $customers = Customer::with('company') // load the relationship with the company
             ->with('customerGroups')
-            ->with('customerHistory') // تحميل العلاقة مع تاريخ العملاء
-            ->with('products') // تحميل العلاقة مع المنتجات
-            ->with('products.fieldValues') // تحميل العلاقة مع قيم الحقول
-
+            ->with('customerHistory') // Load relationship with customer history
+            ->with('products') // Load the relationship with the products
+            ->with('products.fieldValues') // Load the relationship with field values
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -33,7 +32,7 @@ class CustomerController extends Controller
 
     public function getCustomersWithCompanies()
     {
-        $customers = Customer::with('company') // تحميل العلاقة مع الشركة
+        $customers = Customer::with('company') // load the relationship with the company
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -58,7 +57,7 @@ class CustomerController extends Controller
             'street' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
             'place' => 'nullable|string|max:255',
-            'iban' => 'nullable|string|max:34', // حسب تنسيق الـ IBAN الأوروبي
+            'iban' => 'nullable|string|max:34', // International Bank Account 
             'contact_number' => 'nullable|string|max:20',
             'pkk' => 'nullable|string|max:50',
             'customer_groups' => 'nullable|array',

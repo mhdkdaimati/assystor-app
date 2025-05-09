@@ -26,35 +26,28 @@ class ProductFieldValueController extends Controller
         $productId = $data['product_id'];
         $userId = auth()->id();
 
-        // حفظ العلاقة في جدول customer_product مع employee_id و status (إن لم تكن موجودة)
-        DB::table('customer_product')->updateOrInsert(
-            [
-                'customer_id' => $customerId,
-                'product_id'  => $productId,
-            ],
-            [
-                'employee_id' => $userId,
-                'status'      => 'pending', 
-                'updated_at'  => now(),
-                'created_at'  => now(), // ملاحظة: updateOrInsert لا يحفظ created_at تلقائياً
-            ]
-        );
-
-        // حفظ القيم في جدول ProductFieldValue
+        // Save the relationship in the customer_product table with employee_id and status (if it doesn't exist)
+        $customerProductId = DB::table('customer_product')->insertGetId([
+            'customer_id' => $customerId,
+            'product_id'  => $productId,
+            'employee_id' => $userId,
+            'status'      => 'pending',
+            'created_at'  => now(),
+            'updated_at'  => now(),
+        ]);
+        
+        // Save the values ​​in the ProductFieldValue table
         foreach ($data['fields'] as $fieldId => $value) {
-            ProductFieldValue::updateOrCreate(
-                [
-                    'customer_id'       => $customerId,
-                    'product_id'        => $productId,
-                    'product_field_id'  => $fieldId,
-                ],
-                [
-                    'employee_id'       => $userId,
-                    'value'             => $value,
-                ]
-            );
+            ProductFieldValue::create([
+                'customer_product_id' => $customerProductId,
+                'customer_id'         => $customerId,
+                'product_id'          => $productId,
+                'product_field_id'    => $fieldId,
+                'employee_id'         => $userId,
+                'value'               => $value,
+            ]);
         }
-
+        
         return response()->json([
             'message' => 'Field values and product-customer relation saved successfully.',
         ], 200);

@@ -78,8 +78,10 @@ Route::post('store-product', [ProductController::class, 'storeProduct']);
 Route::get('get-product/{id}', [ProductController::class, 'getProduct']);
 Route::put('update-product/{id}', [ProductController::class, 'updateProduct']);
 Route::delete('delete-product/{id}', [ProductController::class, 'deleteProduct']);
-Route::get('get-pending-products', [ProductController::class, 'getPendingProducts']);
-Route::put('products/{productId}/customers/{customerId}/status', [ProductController::class, 'updateProductStatus']);
+Route::get('get-pending-customer-products', [ProductController::class, 'getPendingCustomersProducts']);
+Route::put('update-customer-product-status/{cstomerProductID}', [ProductController::class, 'updateCustomerProductStatus']);
+
+Route::get('get-all-customer-products', [ProductController::class, 'getAllCustomersProducts']);
 
 // Field values section
 Route::post('field-values/bulk', [ProductFieldValueController::class, 'bulkStore']);

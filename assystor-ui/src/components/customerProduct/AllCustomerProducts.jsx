@@ -3,18 +3,15 @@ import axios from "axios";
 import DataTable from "react-data-table-component";
 import { Modal, Button, Form } from "react-bootstrap";
 
-const PendingCustomerProducts = () => {
+const AllCustomerProducts = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [search, setSearch] = useState("");
-  const [openModal, setOpenModal] = useState(false);
-  const [selectedRow, setSelectedRow] = useState(null);
-  const [comment, setComment] = useState("");
 
   // Fetch data from API
   const fetchData = () => {
     axios
-      .get(`api/get-pending-customer-products`)
+      .get(`api/get-all-customer-products`)
       .then((response) => {
         setData(response.data);
         setFilteredData(response.data);
@@ -37,38 +34,7 @@ const PendingCustomerProducts = () => {
   }, [search, data]);
 
   // Handle modal open
-  const handleOpenModal = (row) => {
-    setSelectedRow(row);
-    setComment("");
-    setOpenModal(true);
-  };
 
-  // Handle modal close
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedRow(null);
-  };
-
-  // Handle comment submission
-  const handleSubmitComment = () => {
-    if (!selectedRow) return;
-
-    axios
-      .put(`api/update-customer-product-status/${selectedRow.customer_product_id}`, {
-        comment,
-      })
-      .then((response) => {
-        console.log("Comment submitted:", response.data);
-
-        // Reload the data to get the latest updates
-        fetchData();
-
-        handleCloseModal();
-      })
-      .catch((error) => {
-        console.error("Error submitting comment:", error);
-      });
-  };
 
   const columns = [
     {
@@ -100,14 +66,6 @@ const PendingCustomerProducts = () => {
       name: "Comment",
       selector: (row) => row.comment || "N/A",
     },
-    {
-      name: "Actions",
-      cell: (row) => (
-        <Button variant="primary" onClick={() => handleOpenModal(row)}>
-          Process
-        </Button>
-      ),
-    },
   ];
 
   return (
@@ -117,7 +75,7 @@ const PendingCustomerProducts = () => {
           <div className="card shadow-sm border-0 mb-4">
             <div className="card-body bg-light rounded-4 d-flex justify-content-between align-items-center px-4 py-3">
               <h4 className="mb-0 fw-bold text-primary">
-                <i className="bi bi-box-seam me-2"></i> Pending Customer Products
+                <i className="bi bi-box-seam me-2"></i> Customers Products
               </h4>
               <input
                 type="text"
@@ -142,35 +100,8 @@ const PendingCustomerProducts = () => {
         </div>
       </div>
 
-      {/* Modal for adding comment */}
-      <Modal show={openModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Comment</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="comment">
-              <Form.Label>Comment</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-          <Button variant="primary" onClick={handleSubmitComment}>
-            Submit
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };
 
-export default PendingCustomerProducts;
+export default AllCustomerProducts;

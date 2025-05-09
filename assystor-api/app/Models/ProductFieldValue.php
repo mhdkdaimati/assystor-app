@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductFieldValue extends Model
 {
     protected $fillable = [
+        'customer_product_id',
         'product_id',
         'product_field_id',
         'customer_id',
@@ -33,4 +34,9 @@ class ProductFieldValue extends Model
     {
         return $this->belongsTo(User::class, 'employee_id');
     }
+    public function customerProduct()
+{
+    return $this->belongsTo(CustomerProduct::class);
+}
+
 }

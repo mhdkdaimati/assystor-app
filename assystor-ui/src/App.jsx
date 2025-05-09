@@ -29,6 +29,8 @@ import ProductList from './components/product/ProductList';
 import ProductPage from './components/product/ProductPage';
 import PendingCustomerProducts from './components/customerProduct/PendingCustomerProducts';
 
+import AllCustomerProducts from './components/customerProduct/AllCustomerProducts';
+
 import { useState, useEffect } from 'react';
 
 
@@ -73,10 +75,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* صفحة تسجيل الدخول */}
+{/* Login Page */}
         <Route path="/login" element={<Login />} />
 
-        {/* الصفحات المحمية */}
+{/* Protected Pages */}
         <Route path="/" element={ <ProtectedRoute> <MasterLayout /> </ProtectedRoute> }>
           <Route index element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
@@ -112,11 +114,11 @@ function App() {
           
           <Route path="pending-customer-products" element={auth.role === 'admin' ? <PendingCustomerProducts /> : <Navigate to="/" />}/>
 
-          {/* إضافة المزيد من الصفحات هنا حسب الحاجة */}
-
+          <Route path="all-customer-products" element={auth.role === 'admin' ? <AllCustomerProducts /> : <Navigate to="/" />}/>
+{/* Add more pages here as needed */}
 
         </Route>
-        {/* إعادة توجيه جميع المسارات الأخرى */}
+{/* Redirect all other paths */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

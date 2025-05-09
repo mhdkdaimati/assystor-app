@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\ProductField;
 use Illuminate\Http\Request;
+use App\Models\CustomerProduct;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
@@ -192,75 +193,135 @@ class ProductController extends Controller
         }
     }
 
-    public function getPendingProducts()
+    public function getPendingCustomersProducts()
     {
-        $products = Product::whereHas('customers', function ($query) {
-            $query->where('customer_product.status', 'pending');
-        })->with([
-            'customers' => function ($query) {
-                $query->where('customer_product.status', 'pending');
-            },
-            'fields', // تحميل الحقول المرتبطة بالمنتج
-            'fieldValues' // تحميل قيم الحقول المرتبطة بالمنتج
-        ])->get();
-
-        $data = [];
-
-        foreach ($products as $product) {
-            foreach ($product->customers as $customer) {
-                $productData = [
-                    'product_name' => $product->name,
-                    'product_description' => $product->description,
-                    'status' => $customer->pivot->status,
-                    'added_user' => $customer->pivot->employee_id ? User::find($customer->pivot->employee_id)->name : null,
-                    'created_at' => $customer->pivot->created_at,
-                    'updated_at' => $customer->pivot->updated_at,
-                    'customer_details' => [
-                        'customer_name' => $customer->first_name . ' ' . $customer->last_name,
-                        'email' => $customer->email,
-                        'contact_number' => $customer->contact_number,
-                        'address' => $customer->street . ', ' . $customer->place . ', ' . $customer->zip_code,
-                    ],
-                    'fields' => []
-                ];
-
-                foreach ($product->fields as $field) {
-                    $fieldValue = $product->fieldValues
+        $pendingProducts = CustomerProduct::where('status', 'pending')
+            ->with([
+                'customer' => function ($query) {
+                    $query->with('company'); // جلب تفاصيل الشركة المرتبطة بالزبون
+                },
+                'product' => function ($query) {
+                    $query->with(['fields', 'fieldValues']); // جلب الحقول وقيم الحقول المرتبطة بالمنتج
+                },
+                'employee' // جلب تفاصيل الموظف المرتبط
+            ])
+            ->get();
+    
+        $data = $pendingProducts->map(function ($customerProduct) {
+            return [
+                'product_name' => $customerProduct->product->name,
+                'product_description' => $customerProduct->product->description,
+                'status' => $customerProduct->status,
+                'comment' => $customerProduct->comment,
+                'customer_product_id' => $customerProduct->id,
+                'added_user' => $customerProduct->employee ? $customerProduct->employee->name : 'N/A',
+                'created_at' => $customerProduct->created_at,
+                'updated_at' => $customerProduct->updated_at,
+                'customer_details' => [
+                    'customer_name' => $customerProduct->customer->first_name . ' ' . $customerProduct->customer->last_name,
+                    'email' => $customerProduct->customer->email,
+                    'contact_number' => $customerProduct->customer->contact_number,
+                    'address' => $customerProduct->customer->street . ', ' . $customerProduct->customer->place . ', ' . $customerProduct->customer->zip_code,
+                    'company' => $customerProduct->customer->company ? $customerProduct->customer->company->name : 'N/A',
+                ],
+                'fields' => $customerProduct->product->fields->map(function ($field) use ($customerProduct) {
+                    $fieldValue = $customerProduct->product->fieldValues
                         ->where('product_field_id', $field->id)
+                        ->where('customer_id', $customerProduct->customer_id)
                         ->first();
-
-                    $productData['fields'][] = [
+    
+                    return [
                         'field_name' => $field->name,
-                        'value' => $fieldValue?->value ?? null,
-                        'created_at' => $fieldValue?->created_at,
-                        'updated_at' => $fieldValue?->updated_at,
+                        'value' => $fieldValue ? $fieldValue->value : null,
+                        'created_at' => $fieldValue ? $fieldValue->created_at : null,
+                        'updated_at' => $fieldValue ? $fieldValue->updated_at : null,
                     ];
-                }
-
-                $data[] = $productData;
-            }
-        }
-
-        return response()->json($data);
+                }),
+            ];
+        });
+    
+        return response()->json($data, 200);
     }
 
-    public function updateProductStatus(Request $request, $productId, $customerId)
+
+
+    public function updateCustomerProductStatus(Request $request, $customer_product_id)
     {
+        // Validate the incoming request
         $validated = $request->validate([
-            'status' => 'required|string|in:completed,pending',
-            'comment' => 'nullable|string|max:255',
+            'comment' => 'nullable|string|max:255', // Optional comment
         ]);
-
-        $product = Product::findOrFail($productId);
-        $customer = $product->customers()->where('customer_id', $customerId)->firstOrFail();
-
-        $customer->pivot->status = $validated['status'];
-        $customer->pivot->comment = $validated['comment'];
-        $customer->pivot->save();
-
-        return response()->json([
-            'message' => 'Product status updated successfully',
-            'product' => $product->load('customers'),
-        ]);
+    
+        try {
+            // Find the record in the customer_product table
+            $customerProduct = CustomerProduct::findOrFail($customer_product_id);
+    
+            // Update the status and comment
+            $customerProduct->update([
+                'status' => 'completed',
+                'comment' => $validated['comment'] ?? null,
+            ]);
+    
+            return response()->json([
+                'message' => 'Product status updated successfully',
+                'customer_product' => $customerProduct,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to update product status',
+                'details' => $e->getMessage(),
+            ], 500);
+        }
     }
+    //getAllCustomersProducts
+    public function getAllCustomersProducts()
+    {
+        $customerProducts = CustomerProduct::with([
+                'customer' => function ($query) {
+                    $query->with('company'); // جلب تفاصيل الشركة المرتبطة بالزبون
+                },
+                'product' => function ($query) {
+                    $query->with(['fields', 'fieldValues']); // جلب الحقول وقيم الحقول المرتبطة بالمنتج
+                },
+                'employee' // جلب تفاصيل الموظف المرتبط
+            ])
+            ->get();
+    
+        $data = $customerProducts->map(function ($customerProduct) {
+            return [
+                'product_name' => $customerProduct->product->name,
+                'product_description' => $customerProduct->product->description,
+                'status' => $customerProduct->status,
+                'comment' => $customerProduct->comment,
+                'customer_product_id' => $customerProduct->id,
+                'added_user' => $customerProduct->employee ? $customerProduct->employee->name : 'N/A',
+                'created_at' => $customerProduct->created_at,
+                'updated_at' => $customerProduct->updated_at,
+                'customer_details' => [
+                    'customer_name' => $customerProduct->customer->first_name . ' ' . $customerProduct->customer->last_name,
+                    'email' => $customerProduct->customer->email,
+                    'contact_number' => $customerProduct->customer->contact_number,
+                    'address' => $customerProduct->customer->street . ', ' . $customerProduct->customer->place . ', ' . $customerProduct->customer->zip_code,
+                    'company' => $customerProduct->customer->company ? $customerProduct->customer->company->name : 'N/A',
+                ],
+                'fields' => $customerProduct->product->fields->map(function ($field) use ($customerProduct) {
+                    $fieldValue = $customerProduct->product->fieldValues
+                        ->where('product_field_id', $field->id)
+                        ->where('customer_id', $customerProduct->customer_id)
+                        ->first();
+    
+                    return [
+                        'field_name' => $field->name,
+                        'value' => $fieldValue ? $fieldValue->value : null,
+                        'created_at' => $fieldValue ? $fieldValue->created_at : null,
+                        'updated_at' => $fieldValue ? $fieldValue->updated_at : null,
+                    ];
+                }),
+            ];
+        });
+    
+        return response()->json($data, 200);
+    }
+
+
 }
