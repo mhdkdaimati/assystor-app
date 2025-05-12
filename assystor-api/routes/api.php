@@ -3,14 +3,15 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\QuarantineController;
 use App\Http\Controllers\API\CompanyController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\CustomerGroupController;
-use App\Http\Controllers\Api\ProductController;
-use App\Http\Controllers\Api\ProductFieldValueController;
-use App\Http\Controllers\API\CustomerHistoryController;
 
-use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\CustomerHistoryController;
+use App\Http\Controllers\Api\ProductFieldValueController;
 
 
 //Auth section
@@ -59,6 +60,7 @@ Route::delete('delete-company/{id}', [CompanyController::class, 'deleteCompany']
 
 /* not used in frontend */Route::get('all-customers', [CustomerController::class, 'getAllCustomers']);
 Route::get('customers-with-companies', [CustomerController::class, 'getCustomersWithCompanies']);
+Route::get('valid-customers-with-companies', [CustomerController::class, 'getCustomersWithCompanies']);
 Route::post('store-customer', [CustomerController::class, 'storeCustomer']);
 Route::delete('delete-customer/{id}', [CustomerController::class, 'deleteCustomer']);
 Route::get('get-customer/{id}', [CustomerController::class, 'getCustomer']);
@@ -115,3 +117,7 @@ Route::post('/customer-groups/close-session', [CustomerGroupController::class, '
 
 
 
+    Route::get('/quarantines', [QuarantineController::class, 'index']);
+    Route::post('/quarantines', [QuarantineController::class, 'store']);
+    Route::delete('/quarantines/{id}', [QuarantineController::class, 'destroy']);
+    Route::get('/quarantines/check/{customer_id}', [QuarantineController::class, 'check']);

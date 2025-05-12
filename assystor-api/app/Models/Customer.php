@@ -48,10 +48,16 @@ class Customer extends Model
             ->withPivot('employee_id')
             ->withPivot('status') // تضمين عمود status
             ->withPivot(['status', 'comment']);
+
     }
     public function customerProducts()
-    {
-        return $this->hasMany(CustomerProduct::class);
-    }
+{
+    return $this->hasMany(CustomerProduct::class);
+}
+public function quarantine()
+{
+    return $this->hasOne(Quarantine::class);
+}
+
 }
 //

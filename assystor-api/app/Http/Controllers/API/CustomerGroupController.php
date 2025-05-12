@@ -7,6 +7,7 @@ use App\Models\CustomerGroup;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Quarantine;
 
 
 class CustomerGroupController extends Controller
@@ -154,24 +155,36 @@ class CustomerGroupController extends Controller
             'customer_ids' => 'nullable|array',
             'customer_ids.*' => 'exists:customers,id',
         ]);
-
+    
+        $customerIds = $request->input('customer_ids', []);
+    
+        // Check if any customer is in quarantine
+        $quarantinedCustomers = Quarantine::whereIn('customer_id', $customerIds)->pluck('customer_id');
+    
+        if ($quarantinedCustomers->isNotEmpty()) {
+            return response()->json([
+                'message' => 'Some customers are quarantined and cannot be added to the group',
+                'quarantined_customers' => $quarantinedCustomers,
+            ], 403);
+        }
+    
         $group = CustomerGroup::findOrFail($id);
-
+    
         // Sync customers with the group
-        $group->customers()->sync($request->input('customer_ids', []));
-
+        $group->customers()->sync($customerIds);
+    
         // Check the status of customers in the group
         $incompleteCount = $group->customers()
             ->wherePivot('status', 'incomplete')
             ->count();
-
+    
         // Update group status based on customer status
         if ($incompleteCount > 0) {
             $group->update(['status' => 'incomplete']);
         } else {
             $group->update(['status' => 'complete']);
         }
-
+    
         return response()->json(['message' => 'Customers assigned to group successfully.']);
     }
 

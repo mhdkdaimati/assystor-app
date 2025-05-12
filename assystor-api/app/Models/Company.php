@@ -9,7 +9,6 @@ class Company extends Model
 {
     use HasFactory;
 
-    // App\Models\Company.php
 
     protected $fillable = [
         'name',

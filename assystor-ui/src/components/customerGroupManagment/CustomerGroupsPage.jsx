@@ -30,7 +30,7 @@ const CustomerGroupsPage = () => {
 
     const fetchAllCustomers = async () => {
         try {
-            const res = await axios.get('/api/customers-with-companies');
+            const res = await axios.get('/api/valid-customers-with-companies');
             setAllCustomers(res.data.customers);
         } catch (error) {
             console.error(error);
@@ -83,7 +83,7 @@ const CustomerGroupsPage = () => {
         }
 
         try {
-// Update customers in the group
+            // Update customers in the group
             const updatedCustomerIds = [
                 ...groupCustomers.map(c => c.id).filter(id => !selectedRemoveIds.includes(id)), // Delete the selected customers for deletion
                 ...selectedCustomerIds,// Add the specified customers to the add-on
@@ -96,7 +96,7 @@ const CustomerGroupsPage = () => {
             if (res.status === 200) {
                 swal("Success", "Changes saved successfully!", "success");
 
-// Update the number of customers in the group
+                // Update the number of customers in the group
                 setGroups(prevGroups =>
                     prevGroups.map(group =>
                         group.id === selectedGroup.id
@@ -147,6 +147,9 @@ const CustomerGroupsPage = () => {
                         ) : (
                             <p className="text-muted">No groups available.</p>
                         )}
+                        <li className="list-group-item bg-light">
+
+                        </li>
                     </ul>
                 </div>
 
@@ -155,7 +158,7 @@ const CustomerGroupsPage = () => {
                         <>
                             <h4 className="mb-4">Manage Customers in Group: <span className="text-primary">{selectedGroup.name}</span></h4>
 
-{/* Add Customers Section */}                            <div className="mb-5">
+                            {/* Add Customers Section */}                            <div className="mb-5">
                                 <h5 className="text-success">Add Customers to Group</h5>
                                 <p className="text-muted">Select customers from the cards below to add them to the group.</p>
                                 {availableCustomers.length > 0 ? (

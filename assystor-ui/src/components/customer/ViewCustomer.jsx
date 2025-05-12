@@ -14,7 +14,7 @@ const ViewCustomer = () => {
     useEffect(() => {
         document.title = 'View Customer';
 
-        axios.get(`/api/customers-with-companies`).then(res => {
+        axios.get(`/api/all-customers`).then(res => {
             if (res.status === 200) {
                 setCustomerList(res.data.customers);
                 setFilteredCustomers(res.data.customers); // Set filtered data

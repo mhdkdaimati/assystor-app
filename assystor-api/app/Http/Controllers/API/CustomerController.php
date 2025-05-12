@@ -21,6 +21,9 @@ class CustomerController extends Controller
             ->with('customerHistory') // Load relationship with customer history
             ->with('products') // Load the relationship with the products
             ->with('products.fieldValues') // Load the relationship with field values
+            ->with('quarantine')
+
+            ->with('quarantine') // Load the relationship with quarantine
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -33,6 +36,7 @@ class CustomerController extends Controller
     public function getCustomersWithCompanies()
     {
         $customers = Customer::with('company') // load the relationship with the company
+        ->whereDoesntHave('quarantine') // Ensure the customer is not in quarantine
             ->orderBy('created_at', 'desc')
             ->get();
 
