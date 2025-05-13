@@ -9,19 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-public function up(): void
+    public function up(): void
     {
-        if (Schema::hasColumn('customer_customer_group', 'comment')) {
-            Schema::table('customer_customer_group', function (Blueprint $table) {
-                $table->dropColumn('comment');
-            });
-        }
-    }    
-public function down(): void
+        Schema::table('customer_customer_group', function (Blueprint $table) {
+            $table->string('status')->nullable();
+            $table->text('comment')->nullable();
+            $table->unsignedBigInteger('employee')->nullable();
+        });
+    }
+
+    public function down(): void
     {
-        if (!Schema::hasColumn('customer_customer_group', 'comment')) {
-            Schema::table('customer_customer_group', function (Blueprint $table) {
-                $table->text('comment')->nullable();
-            });
-        }
-    }    };
+        Schema::table('customer_customer_group', function (Blueprint $table) {
+            $table->dropColumn(['status', 'comment', 'employee']);
+        });
+    }
+};
