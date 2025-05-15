@@ -36,7 +36,8 @@ import { useState, useEffect } from 'react';
 
 import CreateProduct from './components/product/CreateProduct';
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://127.0.0.1:8000/";
+axios.defaults.baseURL = "http://192.168.178.37:8000/";
+//http://192.168.178.37:8000/api/all-users
 axios.defaults.headers.post['Accept'] = 'application/json';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('auth_token')}`;
