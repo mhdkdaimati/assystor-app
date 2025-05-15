@@ -20,7 +20,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('customer_group', function (Blueprint $table) {
+        Schema::table('customer_groups', function (Blueprint $table) {
             $table->dropColumn('status');
         });
     }};
