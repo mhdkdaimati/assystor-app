@@ -6,21 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up()
+    public function up(): void
     {
         Schema::create('customer_customer_group', function (Blueprint $table) {
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->foreignId('customer_group_id')->constrained()->onDelete('cascade');
-            $table->primary(['customer_id', 'customer_group_id']); // لمنع التكرار
+            $table->string('status')->nullable();
+            $table->foreignId('employee_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->primary(['customer_id', 'customer_group_id']); // 
         });
     }
-    
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
         Schema::dropIfExists('customer_customer_group');
