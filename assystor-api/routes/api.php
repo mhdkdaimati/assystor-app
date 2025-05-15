@@ -6,12 +6,12 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\QuarantineController;
 use App\Http\Controllers\API\CompanyController;
-use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\CustomerGroupController;
 
 use App\Http\Controllers\API\CustomerHistoryController;
-use App\Http\Controllers\Api\ProductFieldValueController;
+use App\Http\Controllers\API\ProductFieldValueController;
 
 
 //Auth section
