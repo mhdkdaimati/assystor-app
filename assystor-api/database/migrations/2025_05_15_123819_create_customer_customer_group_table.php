@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('customer_customer_group', function (Blueprint $table) {
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->foreignId('customer_group_id')->constrained()->onDelete('cascade');
-            $table->string('status')->nullable();
+            $table->string('status')->default('incomplete');
             $table->foreignId('employee_id')->nullable()->constrained('users')->onDelete('set null');
             $table->primary(['customer_id', 'customer_group_id']); // 
         });
