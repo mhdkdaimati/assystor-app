@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('customer_customer_group', function (Blueprint $table) {
+        Schema::table('customer_groups', function (Blueprint $table) {
             $table->string('status')->default('incomplete')->after('customer_id'); 
         });
     }
@@ -20,7 +20,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('customer_customer_group', function (Blueprint $table) {
+        Schema::table('customer_groups', function (Blueprint $table) {
             $table->dropColumn('status');
         });
     }};
