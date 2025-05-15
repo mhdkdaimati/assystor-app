@@ -16,9 +16,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_field_id')->constrained()->onDelete('cascade');
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade'); // ربط مع الزبون
-            $table->foreignId('employee_id')->nullable()->constrained('users')->onDelete('set null'); // الموظف
-            $table->text('value'); // القيمة الفعلية للحقل
+            $table->foreignId('customer_id')->constrained()->onDelete('cascade'); //   
+            $table->foreignId('employee_id')->nullable()->constrained('users')->onDelete('set null'); // 
+            $table->text('value'); // v
             $table->timestamps();
         });
     }
