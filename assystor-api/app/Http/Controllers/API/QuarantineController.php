@@ -10,25 +10,13 @@ use App\Http\Controllers\Controller;
 
 class QuarantineController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         $quarantined = Quarantine::with('customer')->latest()->get();
         return response()->json($quarantined);
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -59,38 +47,59 @@ class QuarantineController extends Controller
             'quarantine' => $quarantine,
         ]);
     }
-    /**
-     * Display the specified resource.
-     */
-    public function show(Quarantine $quarantine)
+    public function bulkStore(Request $request)
     {
-        //
+        $request->validate([
+            'customer_ids' => 'required|array',
+            'customer_ids.*' => 'exists:customers,id',
+            'reason' => 'nullable|string',
+        ]);
+
+        $added = [];
+        foreach ($request->customer_ids as $customerId) {
+            if (!Quarantine::where('customer_id', $customerId)->exists()) {
+                $customer = Customer::findOrFail($customerId);
+                $customer->customerGroups()->detach();
+
+                $quarantine = Quarantine::create([
+                    'customer_id' => $customerId,
+                    'reason' => $request->reason,
+                    'added_by' => auth()->id(),
+                ]);
+                $added[] = $quarantine;
+            }
+        }
+
+        return response()->json([
+            'message' => 'Customers quarantined successfully',
+            'added' => $added,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Quarantine $quarantine)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Quarantine $quarantine)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $quarantine = Quarantine::findOrFail($id);
         $quarantine->delete();
 
         return response()->json(['message' => 'Customer removed from quarantine']);
+    }
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'quarantine_ids' => 'required|array',
+            'quarantine_ids.*' => 'exists:quarantines,id',
+        ]);
+        $deleted = [];
+        foreach ($request->quarantine_ids as $id) {
+            $quarantine = Quarantine::find($id);
+            if ($quarantine) {
+                $quarantine->delete();
+                $deleted[] = $id;
+            }
+        }
+        return response()->json([
+            'message' => 'Customers removed from quarantine',
+            'deleted' => $deleted,
+        ]);
     }
 }

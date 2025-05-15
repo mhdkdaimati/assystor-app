@@ -58,7 +58,8 @@ Route::delete('delete-company/{id}', [CompanyController::class, 'deleteCompany']
 
 
 
-/* not used in frontend */Route::get('all-customers', [CustomerController::class, 'getAllCustomers']);
+/* not used in frontend */
+Route::get('all-customers', [CustomerController::class, 'getAllCustomers']);
 Route::get('customers-with-companies', [CustomerController::class, 'getCustomersWithCompanies']);
 Route::get('valid-customers-with-companies', [CustomerController::class, 'getCustomersWithCompanies']);
 Route::post('store-customer', [CustomerController::class, 'storeCustomer']);
@@ -117,7 +118,10 @@ Route::post('/customer-groups/close-session', [CustomerGroupController::class, '
 
 
 
-    Route::get('/quarantines', [QuarantineController::class, 'index']);
-    Route::post('/quarantines', [QuarantineController::class, 'store']);
-    Route::delete('/quarantines/{id}', [QuarantineController::class, 'destroy']);
-    Route::get('/quarantines/check/{customer_id}', [QuarantineController::class, 'check']);
+Route::get('/quarantines', [QuarantineController::class, 'index']);
+Route::post('/quarantines', [QuarantineController::class, 'store']);
+Route::delete('/quarantines/{id}', [QuarantineController::class, 'destroy']);
+Route::get('/quarantines/check/{customer_id}', [QuarantineController::class, 'check']);
+
+Route::post('/quarantines/bulk', [QuarantineController::class, 'bulkStore']);
+Route::post('/quarantines/bulk-delete', [QuarantineController::class, 'bulkDestroy']);

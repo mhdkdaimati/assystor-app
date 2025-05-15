@@ -310,15 +310,16 @@ const ProcessCustomerGroup = () => {
                             onChange={(e) => setSessionStatus(e.target.value)}
                         >
                             <option value="customer_completed">customer_completed</option>
-                            <option value="quarantine_repeat_later">quarantine_repeat_later</option>
-                            <option value="quarantine_not_answer">quarantine_not_answer</option>
-                            <option value="quarantine_not_interested">quarantine_not_interested</option>
-                            <option value="quarantine_not_want_to_be_contacted">quarantine_not_want_to_be_contacted</option>
-                            <option value="quarantine_mailbox_comes">quarantine_mailbox_comes</option>
-                            <option value="quarantine_cacs">quarantine_cacs</option>
-                            <option value="quarantine_rnv">quarantine_rnv</option>
-                            <option value="quarantine_n_months">quarantine_n_months</option>
-                            <option value="quarantine_data_cards">quarantine_data_cards</option>
+                            <option value="repeat_later">repeat_later</option>
+                            <option value="not_answer">not_answer</option>
+                            <option value="quarantine">quarantine</option>
+                            <option value="not_interested">not_interested</option>
+                            <option value="not_want_to_be_contacted">not_want_to_be_contacted</option>
+                            <option value="mailbox_comes">mailbox_comes</option>
+                            {/* <option value="cacs">cacs</option>
+                            <option value="rnv">rnv</option>
+                            <option value="n_months">n_months</option>
+                            <option value="data_cards">data_cards</option> */}
                         </select>
                     </div>
                     <div className="mb-3">

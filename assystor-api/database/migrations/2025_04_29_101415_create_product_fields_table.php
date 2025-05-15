@@ -15,8 +15,8 @@ public function up()
     Schema::create('product_fields', function (Blueprint $table) {
         $table->id();
         $table->foreignId('product_id')->constrained()->onDelete('cascade');
-        $table->string('name'); // مثال: color, size
-        $table->string('type'); // مثال: text, number, select
+        $table->string('name'); 
+        $table->string('type'); 
         $table->timestamps();
     });
 }
