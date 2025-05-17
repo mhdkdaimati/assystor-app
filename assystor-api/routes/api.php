@@ -125,3 +125,6 @@ Route::get('/quarantines/check/{customer_id}', [QuarantineController::class, 'ch
 
 Route::post('/quarantines/bulk', [QuarantineController::class, 'bulkStore']);
 Route::post('/quarantines/bulk-delete', [QuarantineController::class, 'bulkDestroy']);
+Route::get('/test', function () {
+    return response()->json(['message' => 'API Working!']);
+});
