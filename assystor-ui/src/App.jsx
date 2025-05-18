@@ -35,6 +35,7 @@ import { useState, useEffect } from 'react';
 
 
 import CreateProduct from './components/product/CreateProduct';
+import Feedback from './components/feedback/Feedback';
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://192.168.176.245:8000/";
 // axios.defaults.baseURL = "http://127.0.0.1:8000/";
@@ -68,59 +69,60 @@ function App() {
         role: localStorage.getItem('auth_role'),
       });
     };
-  
+
     window.addEventListener('authChanged', handleAuthChange);
     return () => window.removeEventListener('authChanged', handleAuthChange);
   }, []);
-  
+
 
   return (
     <Router>
       <Routes>
-{/* Login Page */}
+        {/* Login Page */}
         <Route path="/login" element={<Login />} />
 
-{/* Protected Pages */}
-        <Route path="/" element={ <ProtectedRoute> <MasterLayout /> </ProtectedRoute> }>
+        {/* Protected Pages */}
+        <Route path="/" element={<ProtectedRoute> <MasterLayout /> </ProtectedRoute>}>
           <Route index element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
 
-          <Route path="add-user" element={auth.role === 'admin' ? <AddUser /> : <Navigate to="/" />}/>
-          <Route path="view-user" element={auth.role === 'admin' ? <ViewUser /> : <Navigate to="/" />}/>
-          <Route path="edit-user/:id" element={auth.role === 'admin' ? <EditUser /> : <Navigate to="/" />}/>
+          <Route path="add-user" element={auth.role === 'admin' ? <AddUser /> : <Navigate to="/" />} />
+          <Route path="view-user" element={auth.role === 'admin' ? <ViewUser /> : <Navigate to="/" />} />
+          <Route path="edit-user/:id" element={auth.role === 'admin' ? <EditUser /> : <Navigate to="/" />} />
 
 
-          <Route path="add-company" element={auth.role === 'admin' ? <AddCompany /> : <Navigate to="/" />}/>
-          <Route path="view-company" element={auth.role === 'admin' ? <ViewCompany /> : <Navigate to="/" />}/>
-          <Route path="edit-company/:id" element={auth.role === 'admin' ? <EditCompany /> : <Navigate to="/" />}/>
+          <Route path="add-company" element={auth.role === 'admin' ? <AddCompany /> : <Navigate to="/" />} />
+          <Route path="view-company" element={auth.role === 'admin' ? <ViewCompany /> : <Navigate to="/" />} />
+          <Route path="edit-company/:id" element={auth.role === 'admin' ? <EditCompany /> : <Navigate to="/" />} />
 
-          <Route path="add-customer" element={auth.role === 'admin' ? <AddCustomer /> : <Navigate to="/" />}/>
-          <Route path="view-customer" element={auth.role === 'admin' ? <ViewCustomer /> : <Navigate to="/" />}/>
-          <Route path="edit-customer/:id" element={auth.role === 'admin' ? <EditCustomer /> : <Navigate to="/" />}/>
-          <Route path="upload-customers" element={auth.role === 'admin' ? <UploadCustomers /> : <Navigate to="/" />}/>
-          
-          <Route path="add-customer-group" element={auth.role === 'admin' ? <AddCustomerGroup /> : <Navigate to="/" />}/>
-          <Route path="view-customer-group" element={auth.role === 'admin' ? <ViewCustomerGroup /> : <Navigate to="/" />}/>
-          <Route path="edit-customer-group/:id" element={auth.role === 'admin' ? <EditCustomerGroup /> : <Navigate to="/" />}/>
+          <Route path="add-customer" element={auth.role === 'admin' ? <AddCustomer /> : <Navigate to="/" />} />
+          <Route path="view-customer" element={auth.role === 'admin' ? <ViewCustomer /> : <Navigate to="/" />} />
+          <Route path="edit-customer/:id" element={auth.role === 'admin' ? <EditCustomer /> : <Navigate to="/" />} />
+          <Route path="upload-customers" element={auth.role === 'admin' ? <UploadCustomers /> : <Navigate to="/" />} />
 
-          <Route path="customer-group-page" element={auth.role === 'admin' ? <CustomerGroupsPage /> : <Navigate to="/" />}/>
-          <Route path="incompleted-customer-groups" element={auth.role === 'admin' ? <IncompletedCustomerGroups /> : <Navigate to="/" />}/>
-          <Route path="process-customer-group/:id" element={auth.role === 'admin' ? <ProcessCustomerGroup /> : <Navigate to="/" />}/>
+          <Route path="add-customer-group" element={auth.role === 'admin' ? <AddCustomerGroup /> : <Navigate to="/" />} />
+          <Route path="view-customer-group" element={auth.role === 'admin' ? <ViewCustomerGroup /> : <Navigate to="/" />} />
+          <Route path="edit-customer-group/:id" element={auth.role === 'admin' ? <EditCustomerGroup /> : <Navigate to="/" />} />
+
+          <Route path="customer-group-page" element={auth.role === 'admin' ? <CustomerGroupsPage /> : <Navigate to="/" />} />
+          <Route path="incompleted-customer-groups" element={auth.role === 'admin' ? <IncompletedCustomerGroups /> : <Navigate to="/" />} />
+          <Route path="process-customer-group/:id" element={auth.role === 'admin' ? <ProcessCustomerGroup /> : <Navigate to="/" />} />
 
           {/* ProductList */}
-          <Route path="product-list" element={auth.role === 'admin' ? <ProductList /> : <Navigate to="/" />}/>
-          
-          <Route path="create-product" element={auth.role === 'admin' ? <CreateProduct /> : <Navigate to="/" />}/>
-          
-          <Route path="product-page" element={auth.role === 'admin' ? <ProductPage /> : <Navigate to="/" />}/>
-          
-          <Route path="pending-customer-products" element={auth.role === 'admin' ? <PendingCustomerProducts /> : <Navigate to="/" />}/>
+          <Route path="product-list" element={auth.role === 'admin' ? <ProductList /> : <Navigate to="/" />} />
 
-          <Route path="all-customer-products" element={auth.role === 'admin' ? <AllCustomerProducts /> : <Navigate to="/" />}/>
-{/* Add more pages here as needed */}
+          <Route path="create-product" element={auth.role === 'admin' ? <CreateProduct /> : <Navigate to="/" />} />
+
+          <Route path="product-page" element={auth.role === 'admin' ? <ProductPage /> : <Navigate to="/" />} />
+
+          <Route path="pending-customer-products" element={auth.role === 'admin' ? <PendingCustomerProducts /> : <Navigate to="/" />} />
+
+          <Route path="all-customer-products" element={auth.role === 'admin' ? <AllCustomerProducts /> : <Navigate to="/" />} />
+          <Route path="feedback" element={auth.role === 'admin' ? <Feedback /> : <Navigate to="/" />} />
+          {/* Add more pages here as needed */}
 
         </Route>
-{/* Redirect all other paths */}
+        {/* Redirect all other paths */}
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </Router>

@@ -9,6 +9,7 @@ use App\Http\Controllers\API\CompanyController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\CustomerController;
 use App\Http\Controllers\API\CustomerGroupController;
+use App\Http\Controllers\API\FeedbackController;
 
 use App\Http\Controllers\API\CustomerHistoryController;
 use App\Http\Controllers\API\ProductFieldValueController;
@@ -128,3 +129,5 @@ Route::post('/quarantines/bulk-delete', [QuarantineController::class, 'bulkDestr
 Route::get('/test', function () {
     return response()->json(['message' => 'API Working!']);
 });
+Route::get('/feedbacks', [FeedbackController::class, 'index']);
+Route::post('/feedbacks', [FeedbackController::class, 'store']);
