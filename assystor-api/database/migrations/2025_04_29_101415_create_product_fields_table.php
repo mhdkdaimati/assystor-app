@@ -9,17 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-// database/migrations/xxxx_xx_xx_create_product_fields_table.php
-public function up()
-{
-    Schema::create('product_fields', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('product_id')->constrained()->onDelete('cascade');
-        $table->string('name'); 
-        $table->string('type'); 
-        $table->timestamps();
-    });
-}
+    // database/migrations/xxxx_xx_xx_create_product_fields_table.php
+    public function up()
+    {
+        Schema::create('product_fields', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->string('type');
+            $table->text('options')->nullable();
+
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

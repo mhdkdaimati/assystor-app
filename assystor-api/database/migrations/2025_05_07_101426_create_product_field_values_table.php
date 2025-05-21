@@ -19,6 +19,13 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained()->onDelete('cascade'); //   
             $table->foreignId('employee_id')->nullable()->constrained('users')->onDelete('set null'); // 
             $table->text('value'); // v
+            $table->unsignedBigInteger('customer_product_id')->nullable();
+
+            $table->foreign('customer_product_id')
+                ->references('id')
+                ->on('customer_product')
+                ->onDelete('cascade');
+
             $table->timestamps();
         });
     }
