@@ -13,6 +13,11 @@ use App\Http\Controllers\API\CustomerGroupController;
 use App\Http\Controllers\API\CustomerHistoryController;
 use App\Http\Controllers\API\ProductFieldValueController;
 
+use App\Http\Controllers\API\EntityTypeController;
+use App\Http\Controllers\API\EntityController;
+use App\Http\Controllers\API\EntityFieldController;
+use App\Http\Controllers\API\EntityFieldOptionController;
+
 
 //Auth section
 
@@ -125,6 +130,12 @@ Route::get('/quarantines/check/{customer_id}', [QuarantineController::class, 'ch
 
 Route::post('/quarantines/bulk', [QuarantineController::class, 'bulkStore']);
 Route::post('/quarantines/bulk-delete', [QuarantineController::class, 'bulkDestroy']);
+
+
 Route::get('/test', function () {
     return response()->json(['message' => 'API Working!']);
 });
+
+Route::apiResource('entities', EntityController::class);
+Route::apiResource('entity-fields', EntityFieldController::class)->only(['store', 'update', 'destroy']);
+Route::apiResource('entity-field-options', EntityFieldOptionController::class)->only(['store', 'update', 'destroy']);

@@ -103,16 +103,6 @@ const Sidebar = () => {
                 All customer products
               </Link>
             </li>
-            <li><b>Feedback</b></li>
-            <li>
-              <Link
-                to="/feedback"
-                style={location.pathname === '/feedback' ? activeLinkStyle : linkStyle}
-              >
-                Feedback
-              </Link>
-            </li>
-
           </>
         )}
       </ul>

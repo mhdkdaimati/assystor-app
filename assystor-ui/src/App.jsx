@@ -31,11 +31,15 @@ import PendingCustomerProducts from './components/customerProduct/PendingCustome
 
 import AllCustomerProducts from './components/customerProduct/AllCustomerProducts';
 
+
+
+// EntityPage
+import EntityPage from './components/entity/EntityPage';
+
 import { useState, useEffect } from 'react';
 
 
 import CreateProduct from './components/product/CreateProduct';
-import Feedback from './components/feedback/Feedback';
 axios.defaults.withCredentials = true;
 //axios.defaults.baseURL = "http://192.168.176.245:8000/";
  axios.defaults.baseURL = "http://127.0.0.1:8000/";
@@ -118,7 +122,7 @@ function App() {
           <Route path="pending-customer-products" element={auth.role === 'admin' ? <PendingCustomerProducts /> : <Navigate to="/" />} />
 
           <Route path="all-customer-products" element={auth.role === 'admin' ? <AllCustomerProducts /> : <Navigate to="/" />} />
-          <Route path="feedback" element={auth.role === 'admin' ? <Feedback /> : <Navigate to="/" />} />
+          <Route path="entity-page" element={auth.role === 'admin' ? <EntityPage /> : <Navigate to="/" />} />
           {/* Add more pages here as needed */}
 
         </Route>

@@ -13,20 +13,18 @@ return new class extends Migration
     public function up()
     {
         Schema::create('product_field_values', function (Blueprint $table) {
+
+
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_field_id')->constrained()->onDelete('cascade');
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade'); //   
-            $table->foreignId('employee_id')->nullable()->constrained('users')->onDelete('set null'); // 
-            $table->text('value'); // v
-            $table->unsignedBigInteger('customer_product_id')->nullable();
-
-            $table->foreign('customer_product_id')
-                ->references('id')
-                ->on('customer_product')
-                ->onDelete('cascade');
-
+            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_product_id')->nullable()->constrained('customer_product')->onDelete('cascade');
+            $table->foreignId('employee_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->text('value');
             $table->timestamps();
+
+
         });
     }
     /**

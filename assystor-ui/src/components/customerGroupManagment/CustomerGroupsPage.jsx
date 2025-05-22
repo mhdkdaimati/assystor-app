@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import swal from 'sweetalert';
 import { Modal, Button, Form } from "react-bootstrap";
-
+//fix bug: if there are no groups the customer will not be displayed in the quarantine tab
 const CustomerGroupsPage = () => {
     const [groups, setGroups] = useState([]);
     const [selectedGroup, setSelectedGroup] = useState(null);

@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::create('customer_product', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('employee_id')->nullable();
-            $table->foreign('employee_id')->references('id')->on('users')->nullOnDelete();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('employee_id')->nullable()->constrained('users')->nullOnDelete();
             $table->text('status')->nullable();
             $table->text('comment')->nullable();
-
             $table->timestamps();
         });
     }
