@@ -13,10 +13,10 @@ const footerStyle = {
   padding: '1rem 1rem',
   textAlign: 'center',
   borderTop: '4px solid #1abc9c',
-  position: 'fixed', // يجعل الفوتر ثابتًا
-  bottom: 0, // يضع الفوتر في أسفل الصفحة
+  position: 'fixed', // Makes the footer fixed
+  bottom: 0, // Places the footer at the bottom of the page
   left: 0,
-  width: '100%', // يجعل الفوتر يمتد بعرض الصفحة بالكامل
+  width: '100%', // Makes the footer span the full width of the page
 };
 
 const iconStyle = {

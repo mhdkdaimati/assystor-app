@@ -6,12 +6,9 @@ import Sidebar from './Sidebar';
 const MasterLayout = () => {
     return (
         <div style={{ display: 'flex' }}>
-            <Sidebar /> {/* Sidebar يظهر في جميع الصفحات المحمية */}
-            <div style={{ flex: 1, marginLeft: '200px' }}> {/* تعويض عرض Sidebar */}
-                <Navbar /> {/* Navbar يظهر في جميع الصفحات المحمية */}
-                <main style={{ padding: '1rem' }}>
-                    <Outlet /> {/* عرض المحتوى الفرعي هنا */}
-                </main>
+            <Sidebar /> {/* Sidebar appears on all protected pages */}            <div style={{ flex: 1, marginLeft: '200px' }}> {/* تعويض عرض Sidebar */}
+                <Navbar /> {/* Navbar appears on all protected pages */}                <main style={{ padding: '1rem' }}>
+                    <Outlet /> {/* Show sub-content here */}                </main>
             </div>
         </div>);
 };
