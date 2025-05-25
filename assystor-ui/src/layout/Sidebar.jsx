@@ -2,8 +2,8 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 const Sidebar = () => {
-  const location = useLocation(); // الحصول على المسار الحالي
-  const authRole = localStorage.getItem('auth_role'); // تخزين دور المستخدم
+  const location = useLocation(); // Get the current path
+  const authRole = localStorage.getItem('auth_role'); // Store user role
 
   return (
     <aside style={sidebarStyle}>
@@ -26,48 +26,6 @@ const Sidebar = () => {
         </li>
         {authRole === 'admin' && (
           <>
-            <hr />
-            <li><b>Management</b></li>
-            <li>
-              <Link
-                to="/view-user"
-                style={location.pathname === '/view-user' ? activeLinkStyle : linkStyle}
-              >
-                Users
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/view-company"
-                style={location.pathname === '/view-company' ? activeLinkStyle : linkStyle}
-              >
-                Companies
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/view-customer"
-                style={location.pathname === '/view-customer' ? activeLinkStyle : linkStyle}
-              >
-                Customers
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/product-page"
-                style={location.pathname === '/product-page' ? activeLinkStyle : linkStyle}
-              >
-                Products
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/view-customer-group"
-                style={location.pathname === '/view-customer-group' ? activeLinkStyle : linkStyle}
-              >
-                Customer Groups
-              </Link>
-            </li>
             <hr />
             <li>
               <Link
@@ -103,6 +61,15 @@ const Sidebar = () => {
                 All customer products
               </Link>
             </li>
+            <hr />
+            <li><b>Entities</b></li>
+              <Link
+                to="/entity-tabs"
+                style={location.pathname === '/entity-tabs' ? activeLinkStyle : linkStyle}
+              >
+                All customer entities
+              </Link>
+
           </>
         )}
       </ul>
@@ -113,24 +80,23 @@ const Sidebar = () => {
 // CSS Styles
 const sidebarStyle = {
   width: '200px',
-  background: '#6c757d', // لون Bootstrap الرمادي (bg-secondary)
-  color: '#ffffff', // لون النص الأبيض
+  background: '#6c757d', // Bootstrap gray color (bg-secondary)
+  color: '#ffffff', // White text color
   height: '100vh',
   padding: '1rem',
-  position: 'fixed', // تثبيت Sidebar
+  position: 'fixed', // set Sidebar position to fixed
   top: 0,
   left: 0,
-  overflowY: 'auto', // تفعيل التمرير العمودي
-};
-
+  overflowY: 'auto', // Enable vertical scrolling if content overflows
+}
 const listStyle = {
   listStyle: 'none',
   padding: 0,
-  margin: 0, // إزالة الهوامش
+  margin: 0, // Remove default margin
 };
 
 const linkStyle = {
-  color: '#ffffff', // لون النص الأبيض
+  color: '#ffffff', // White text color
   textDecoration: 'none',
   display: 'block',
   padding: '0.5rem 0.5rem',
@@ -139,8 +105,7 @@ const linkStyle = {
 
 const activeLinkStyle = {
   ...linkStyle,
-  backgroundColor: '#495057', // لون أغمق للصفحة النشطة
-  borderRadius: '4px', // إضافة زوايا مستديرة
-};
-
+  backgroundColor: '#495057', // Bootstrap dark gray color (bg-secondary-dark)
+  borderRadius: '4px', // Rounded corners
+}
 export default Sidebar;

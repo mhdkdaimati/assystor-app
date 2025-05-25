@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('entity_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique(); // مثل: product, feedback
+            $table->timestamps();
+        });
 
         Schema::create('entities', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('entity_type_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->text('description')->nullable();
             $table->timestamps();
@@ -33,8 +39,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('entity_field_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            // $table->text('description')->nullable();
-            // $table->text('extra_info')->nullable();
+            $table->text('description')->nullable();
+            $table->text('extra_info')->nullable();
             $table->timestamps();
         });
 
@@ -67,6 +73,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('entity_types');
         Schema::dropIfExists('entities');
         Schema::dropIfExists('entity_fields');
         Schema::dropIfExists('entity_field_options');

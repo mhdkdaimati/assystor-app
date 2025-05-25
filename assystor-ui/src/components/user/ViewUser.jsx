@@ -4,12 +4,14 @@ import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
 import * as XLSX from 'xlsx';
+import { useNavigate } from 'react-router-dom';
 
 const ViewUser = () => {
     const [loading, setLoading] = useState(true);
     const [userList, setUserList] = useState([]);
     const [search, setSearch] = useState('');
     const [filteredUsers, setFilteredUsers] = useState([]);
+const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'View Users';
@@ -107,6 +109,9 @@ const ViewUser = () => {
 
     return (
         <div className="container py-5">
+            <button className="btn btn-outline-secondary mb-3" onClick={() => navigate('/dashboard')}>
+      &larr; Back to Dashboard
+    </button>
             <div className="row justify-content-center">
                 <div className="col-12">
                     <div className="card shadow-sm border-0 mb-4">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DataTable from 'react-data-table-component';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate} from 'react-router-dom';
 import swal from 'sweetalert';
 import * as XLSX from 'xlsx';
 
@@ -10,6 +10,7 @@ const ViewCustomerGroup = () => {
     const [customerGroupList, setCustomerGroupList] = useState([]);
     const [search, setSearch] = useState('');
     const [filteredCustomerGroups, setFilteredCustomerGroups] = useState([]);
+const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'View Customer Groups';
@@ -100,6 +101,9 @@ const ViewCustomerGroup = () => {
 
     return (
         <div className="container py-5">
+             <button className="btn btn-outline-secondary mb-3" onClick={() => navigate('/dashboard')}>
+      &larr; Back to Dashboard
+    </button>
             <div className="row justify-content-center">
                 <div className="col-12">
                     <div className="card shadow-sm border-0 mb-4">

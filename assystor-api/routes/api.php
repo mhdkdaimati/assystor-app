@@ -17,7 +17,7 @@ use App\Http\Controllers\API\EntityTypeController;
 use App\Http\Controllers\API\EntityController;
 use App\Http\Controllers\API\EntityFieldController;
 use App\Http\Controllers\API\EntityFieldOptionController;
-
+use App\Http\Controllers\API\EntityFieldValueController;
 
 //Auth section
 
@@ -139,3 +139,8 @@ Route::get('/test', function () {
 Route::apiResource('entities', EntityController::class);
 Route::apiResource('entity-fields', EntityFieldController::class)->only(['store', 'update', 'destroy']);
 Route::apiResource('entity-field-options', EntityFieldOptionController::class)->only(['store', 'update', 'destroy']);
+
+Route::post('field-values/bulk', [EntityFieldValueController::class, 'bulkStore']);
+Route::get('entity-types', [\App\Http\Controllers\API\EntityTypeController::class, 'index']);
+
+Route::get('entity-field-values', [\App\Http\Controllers\API\EntityFieldValueController::class, 'index']);

@@ -40,8 +40,8 @@ class ProductController extends Controller
             'fields.*.type' => 'required|in:text,number,select',
             'fields.*.options' => 'nullable|array',  // Ensure that the options are an array
             'fields.*.options.*.name' => 'required|string',  // Ensure each option has a name
-            'fields.*.options.*.description' => 'required|string',  // Ensure each option has a name
-            'fields.*.options.*.extra_info' => 'required|string',  // Ensure each option has a name
+            // 'fields.*.options.*.description' => 'required|string',  // Ensure each option has a name
+            // 'fields.*.options.*.extra_info' => 'required|string',  // Ensure each option has a name
         ]);
 
         $product = Product::create([
@@ -59,8 +59,8 @@ class ProductController extends Controller
                 foreach ($fieldData['options'] as $optionData) {
                     $field->options()->create([
                         'name' => $optionData['name'],
-                        'description' => $optionData['description'] ?? null,
-                        'extra_info' => $optionData['extra_info'] ?? null,
+                        // 'description' => $optionData['description'] ?? null,
+                        // 'extra_info' => $optionData['extra_info'] ?? null,
                     ]);
                 }
             }
@@ -101,8 +101,8 @@ class ProductController extends Controller
             'fields.*.type' => 'required|in:text,number,select',
             'fields.*.options' => 'nullable|array',
             'fields.*.options.*.name' => 'required|string',
-            'fields.*.options.*.description' => 'nullable|string',
-            'fields.*.options.*.extra_info' => 'nullable|string',
+            // 'fields.*.options.*.description' => 'nullable|string',
+            // 'fields.*.options.*.extra_info' => 'nullable|string',
         ]);
 
         DB::beginTransaction();
@@ -134,8 +134,8 @@ class ProductController extends Controller
                         foreach ($fieldData['options'] as $optionData) {
                             $field->options()->create([
                                 'name' => $optionData['name'],
-                                'description' => $optionData['description'] ?? null,
-                                'extra_info' => $optionData['extra_info'] ?? null,
+                                // 'description' => $optionData['description'] ?? null,
+                                // 'extra_info' => $optionData['extra_info'] ?? null,
                             ]);
                         }
                     }
@@ -153,8 +153,8 @@ class ProductController extends Controller
                         foreach ($fieldData['options'] as $optionData) {
                             $newField->options()->create([
                                 'name' => $optionData['name'],
-                                'description' => $optionData['description'] ?? null,
-                                'extra_info' => $optionData['extra_info'] ?? null,
+                                // 'description' => $optionData['description'] ?? null,
+                                // 'extra_info' => $optionData['extra_info'] ?? null,
                             ]);
                         }
                     }

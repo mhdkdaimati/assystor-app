@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Button, Form, Card, Modal, ListGroup } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
 
 function EntityPage() {
   const [entities, setEntities] = useState([]);
@@ -9,6 +10,7 @@ function EntityPage() {
   const [editEntity, setEditEntity] = useState(null);
   const [form, setForm] = useState({ name: "", description: "" });
   const [fields, setFields] = useState([{ name: "", label: "", type: "text", required: false, options: [] }]);
+const navigate = useNavigate();
 
   useEffect(() => {
     fetchEntities();
@@ -109,6 +111,9 @@ function EntityPage() {
 
   return (
     <div className="container py-4">
+       <button className="btn btn-outline-secondary mb-3" onClick={() => navigate('/dashboard')}>
+      &larr; Back to Dashboard
+    </button>
       <Card className="mb-4">
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center mb-3">
@@ -212,7 +217,7 @@ function EntityPage() {
                         className="btn btn-danger"
                         onClick={() => handleRemoveField(index)}
                       >
-                        Remove Field
+                        x
                       </button>
                     )}
                   </div>
@@ -239,26 +244,6 @@ function EntityPage() {
                             value={option.name}
                             onChange={e => handleOptionChange(index, optionIndex, e)}
                             required
-                          />
-                        </div>
-                        <div className="col-md-4">
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="description"
-                            placeholder="Option Description"
-                            value={option.description}
-                            onChange={e => handleOptionChange(index, optionIndex, e)}
-                          />
-                        </div>
-                        <div className="col-md-4">
-                          <input
-                            type="text"
-                            className="form-control"
-                            name="extra_info"
-                            placeholder="Extra Info"
-                            value={option.extra_info}
-                            onChange={e => handleOptionChange(index, optionIndex, e)}
                           />
                         </div>
                         <div className="col-md-1 d-flex align-items-center">

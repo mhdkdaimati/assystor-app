@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Entity extends Model
 {
-// protected $fillable = ['entity_type_id', 'name', 'description'];
-protected $fillable = ['name', 'description'];
+protected $fillable = ['entity_type_id', 'name', 'description'];
 
-    // public function type()
-    // {
-    //     return $this->belongsTo(EntityType::class, 'entity_type_id');
-    // }
+    public function type()
+    {
+        return $this->belongsTo(EntityType::class, 'entity_type_id');
+    }
 
     public function fields()
     {
@@ -24,5 +23,6 @@ protected $fillable = ['name', 'description'];
     {
         return $this->hasMany(EntityFieldValue::class);
     }
+
 
 }

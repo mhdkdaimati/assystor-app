@@ -25,12 +25,11 @@ import CustomerGroupsPage from './components/customerGroupManagment/CustomerGrou
 
 import IncompletedCustomerGroups from './components/handleCustomerGroups/IncompletedCustomerGroups';
 import ProcessCustomerGroup from './components/handleCustomerGroups/ProcessCustomerGroupe';
-import ProductList from './components/product/ProductList';
 import ProductPage from './components/product/ProductPage';
 import PendingCustomerProducts from './components/customerProduct/PendingCustomerProducts';
 
 import AllCustomerProducts from './components/customerProduct/AllCustomerProducts';
-
+import EntityTabs from './components/showEntities/EntityTabs';
 
 
 // EntityPage
@@ -39,7 +38,6 @@ import EntityPage from './components/entity/EntityPage';
 import { useState, useEffect } from 'react';
 
 
-import CreateProduct from './components/product/CreateProduct';
 axios.defaults.withCredentials = true;
 //axios.defaults.baseURL = "http://192.168.176.245:8000/";
  axios.defaults.baseURL = "http://127.0.0.1:8000/";
@@ -113,9 +111,7 @@ function App() {
           <Route path="process-customer-group/:id" element={auth.role === 'admin' ? <ProcessCustomerGroup /> : <Navigate to="/" />} />
 
           {/* ProductList */}
-          <Route path="product-list" element={auth.role === 'admin' ? <ProductList /> : <Navigate to="/" />} />
 
-          <Route path="create-product" element={auth.role === 'admin' ? <CreateProduct /> : <Navigate to="/" />} />
 
           <Route path="product-page" element={auth.role === 'admin' ? <ProductPage /> : <Navigate to="/" />} />
 
@@ -123,6 +119,15 @@ function App() {
 
           <Route path="all-customer-products" element={auth.role === 'admin' ? <AllCustomerProducts /> : <Navigate to="/" />} />
           <Route path="entity-page" element={auth.role === 'admin' ? <EntityPage /> : <Navigate to="/" />} />
+          {/* EntityTabs */}
+          <Route path="entity-tabs" element={auth.role === 'admin' ? <EntityTabs /> : <Navigate to="/" />} />
+
+          {/* Add more protected routes here */}
+          {/* Example: <Route path="settings" element={<Settings />} /> */}
+          {/* Example: <Route path="profile" element={<Profile />} /> */}
+
+          {/* Add more pages here as needed */}
+          {/* Example: <Route path="about" element={<About />} /> */}
           {/* Add more pages here as needed */}
 
         </Route>
