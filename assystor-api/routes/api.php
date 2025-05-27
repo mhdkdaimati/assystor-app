@@ -18,7 +18,8 @@ use App\Http\Controllers\API\EntityController;
 use App\Http\Controllers\API\EntityFieldController;
 use App\Http\Controllers\API\EntityFieldOptionController;
 use App\Http\Controllers\API\EntityFieldValueController;
-
+// use App\Http\Controllers\API\EntityFieldValueController;
+use App\Http\Controllers\API\CustomerFieldValueController;
 //Auth section
 
 
@@ -92,7 +93,7 @@ Route::put('update-customer-product-status/{cstomerProductID}', [ProductControll
 Route::get('get-all-customer-products', [ProductController::class, 'getAllCustomersProducts']);
 
 // Field values section
-Route::post('field-values/bulk', [ProductFieldValueController::class, 'bulkStore']);
+Route::post('product-field-values/bulk', [ProductFieldValueController::class, 'bulkStore']);
 
 //customer history section
 Route::post('store-history', [CustomerHistoryController::class, 'storeHistory']);
@@ -141,6 +142,8 @@ Route::apiResource('entity-fields', EntityFieldController::class)->only(['store'
 Route::apiResource('entity-field-options', EntityFieldOptionController::class)->only(['store', 'update', 'destroy']);
 
 Route::post('field-values/bulk', [EntityFieldValueController::class, 'bulkStore']);
-Route::get('entity-types', [\App\Http\Controllers\API\EntityTypeController::class, 'index']);
+Route::get('entity-types', [EntityTypeController::class, 'index']);
 
-Route::get('entity-field-values', [\App\Http\Controllers\API\EntityFieldValueController::class, 'index']);
+Route::get('entity-field-values', [EntityFieldValueController::class, 'index']);
+
+Route::get('entity-field-values/by-entity', [EntityFieldValueController::class, 'getEntityFieldValuesByEntity']);

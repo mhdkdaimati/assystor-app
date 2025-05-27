@@ -45,6 +45,8 @@ class EntityFieldValueController extends Controller
 
         return response()->json($result);
     }
+
+
     public function bulkStore(Request $request)
     {
         $data = $request->validate([
@@ -58,7 +60,7 @@ class EntityFieldValueController extends Controller
         $entityId = $data['entity_id'];
         $userId = auth()->id();
 
-        // Save the relationship in the customer_product table with employee_id and status (if it doesn't exist)
+        // Save the relationship in the customer_entity table with employee_id and status (if it doesn't exist)
         $customerEntityId = DB::table('customer_entity')->insertGetId([
             'customer_id' => $customerId,
             'entity_id'  => $entityId,
@@ -68,7 +70,7 @@ class EntityFieldValueController extends Controller
             'updated_at'  => now(),
         ]);
 
-        // Save the values ​​in the ProductFieldValue table
+        // Save the values ​​in the entityFieldValue table
         foreach ($data['fields'] as $fieldId => $value) {
             EntityFieldValue::create([
                 'customer_entity_id' => $customerEntityId,
@@ -84,4 +86,44 @@ class EntityFieldValueController extends Controller
             'message' => 'Field values and entity-customer relation saved successfully.',
         ], 200);
     }
+
+
+public function getEntityFieldValuesByEntity(Request $request)
+{
+    $entityId = $request->query('entity_id');
+    if (!$entityId) {
+        return response()->json(['message' => 'entity_id is required'], 400);
+    }
+
+    // جلب الحقول الخاصة بالكيان
+    $fields = \App\Models\EntityField::where('entity_id', $entityId)->get();
+
+    // جلب كل customer_entity لهذا الكيان (قد يكون هناك أكثر من واحد لنفس الزبون)
+    $customerEntities = DB::table('customer_entity')
+        ->where('entity_id', $entityId)
+        ->get();
+
+    $customers = \App\Models\Customer::whereIn('id', $customerEntities->pluck('customer_id'))->get()->keyBy('id');
+
+    $rows = [];
+    foreach ($customerEntities as $customerEntity) {
+        $row = [
+            'customer_entity_id' => $customerEntity->id,
+            'customer_id' => $customerEntity->customer_id,
+            'customer_name' => $customers[$customerEntity->customer_id]->first_name . ' ' . $customers[$customerEntity->customer_id]->last_name,
+        ];
+
+        // جلب القيم لهذا customer_entity
+        $values = \App\Models\EntityFieldValue::where('customer_entity_id', $customerEntity->id)->get()->keyBy('entity_field_id');
+
+        foreach ($fields as $field) {
+            $row[$field->name] = $values[$field->id]->value ?? null;
+        }
+
+        $rows[] = $row;
+    }
+
+    return response()->json($rows);
+}
+
 }

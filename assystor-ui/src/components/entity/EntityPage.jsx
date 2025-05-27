@@ -10,7 +10,7 @@ function EntityPage() {
   const [editEntity, setEditEntity] = useState(null);
   const [form, setForm] = useState({ name: "", description: "" });
   const [fields, setFields] = useState([{ name: "", label: "", type: "text", required: false, options: [] }]);
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchEntities();
@@ -20,12 +20,12 @@ const navigate = useNavigate();
     axios.get("/api/entities").then(res => setEntities(res.data));
   };
 
-  // فتح المودال للإضافة أو التعديل
+  // Open the modal to add or edit
   const openModal = (entity = null) => {
     setEditEntity(entity);
     if (entity) {
       setForm({ name: entity.name, description: entity.description || "" });
-      // جلب الحقول من الـ API إذا أردت التعديل
+      // Get fields from the API if you want to modify them
       axios.get(`/api/entities/${entity.id}`).then(res => {
         setFields(
           (res.data.fields || []).map(f => ({
@@ -41,7 +41,7 @@ const navigate = useNavigate();
     setShowModal(true);
   };
 
-  // تغيير بيانات الحقل
+  // Change field data
   const handleFieldChange = (index, e) => {
     const { name, value, type, checked } = e.target;
     const updatedFields = [...fields];
@@ -49,7 +49,7 @@ const navigate = useNavigate();
     setFields(updatedFields);
   };
 
-  // تغيير بيانات خيار الحقل
+  // Change field option data
   const handleOptionChange = (fieldIndex, optionIndex, e) => {
     const { name, value } = e.target;
     const updatedFields = [...fields];
@@ -57,21 +57,21 @@ const navigate = useNavigate();
     setFields(updatedFields);
   };
 
-  // إضافة خيار جديد لحقل
+  // Add a new option to a field
   const handleOptionAdd = (fieldIndex) => {
     const updatedFields = [...fields];
     updatedFields[fieldIndex].options.push({ name: "", description: "", extra_info: "" });
     setFields(updatedFields);
   };
 
-  // حذف خيار من حقل
+  // Delete an option from a field
   const handleOptionRemove = (fieldIndex, optionIndex) => {
     const updatedFields = [...fields];
     updatedFields[fieldIndex].options = updatedFields[fieldIndex].options.filter((_, i) => i !== optionIndex);
     setFields(updatedFields);
   };
 
-  // إضافة حقل جديد
+  // Add a new field
   const addField = () => {
     setFields([...fields, { name: "", label: "", type: "text", required: false, options: [] }]);
   };
@@ -83,7 +83,7 @@ const navigate = useNavigate();
     }
   };
 
-  // حفظ (إضافة أو تعديل)
+  // Save (add or edit)
   const handleSave = async (e) => {
     e.preventDefault();
     const payload = {
@@ -102,7 +102,7 @@ const navigate = useNavigate();
     fetchEntities();
   };
 
-  // حذف كيان
+  // Delete entity
   const handleDelete = (id) => {
     if (window.confirm("Delete this entity?")) {
       axios.delete(`/api/entities/${id}`).then(fetchEntities);
@@ -111,9 +111,9 @@ const navigate = useNavigate();
 
   return (
     <div className="container py-4">
-       <button className="btn btn-outline-secondary mb-3" onClick={() => navigate('/dashboard')}>
-      &larr; Back to Dashboard
-    </button>
+      <button className="btn btn-outline-secondary mb-3" onClick={() => navigate('/dashboard')}>
+        &larr; Back to Dashboard
+      </button>
       <Card className="mb-4">
         <Card.Body>
           <div className="d-flex justify-content-between align-items-center mb-3">
@@ -198,6 +198,7 @@ const navigate = useNavigate();
                       <option value="text">Text</option>
                       <option value="number">Number</option>
                       <option value="select">Select</option>
+                      <option value="date">Date</option>
                       <option value="radio">Radio</option>
                     </select>
                   </div>

@@ -8,12 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class EntityFieldValue extends Model
 {
     protected $fillable = [
-    'entity_id', //
-    'entity_field_id', //
-    'customer_id',//
-    'employee_id', //
-    'value'//
-];
+        'customer_entity_id',
+
+        'entity_id', //
+        'entity_field_id', //
+        'customer_id', //
+        'employee_id', //
+        'value' //
+    ];
 
 
     public function entity()

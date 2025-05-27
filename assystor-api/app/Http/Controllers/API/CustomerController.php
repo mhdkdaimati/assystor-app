@@ -36,7 +36,7 @@ class CustomerController extends Controller
     public function getCustomersWithCompanies()
     {
         $customers = Customer::with('company') // load the relationship with the company
-        ->whereDoesntHave('quarantine') // Ensure the customer is not in quarantine
+            ->whereDoesntHave('quarantine') // Ensure the customer is not in quarantine
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -207,43 +207,36 @@ class CustomerController extends Controller
             }
         }
     }
+
     public function getCustomerProducts($customerId)
     {
-        $customer = Customer::with([
-            'products.fields',
-            'products.fieldValues' => function ($q) use ($customerId) {
-                $q->where('customer_id', $customerId);
-            }
-        ])->findOrFail($customerId);
-    
-        // Collect all employee_ids in Pivot
-        $employeeIds = $customer->products->pluck('pivot.employee_id')->unique()->filter();
-    
-        //Get all employees at once
-        $employees = User::whereIn('id', $employeeIds)->get()->keyBy('id');
-    
+        $customerProducts = \App\Models\CustomerProduct::with([
+            'product.fields',
+            'fieldValues',
+            'product'
+        ])->where('customer_id', $customerId)->get();
+
         $data = [];
-    
-        foreach ($customer->products as $product) {
-            $employeeId = $product->pivot->employee_id;
-            $employeeName = $employees[$employeeId]->name ?? null;
-    
+
+        foreach ($customerProducts as $customerProduct) {
+            $product = $customerProduct->product;
+            $fieldValues = $customerProduct->fieldValues->keyBy('product_field_id');
+
             $productData = [
+                'customer_id' => $customerId,
+                'product_id' => $product->id,
                 'product_name' => $product->name,
                 'product_description' => $product->description,
-                'status' => $product->pivot->status,
-                
-                'added_user' => $employeeName, // Use the employee name from the collection
-                'created_at' => $product->pivot->created_at,
-                'updated_at' => $product->pivot->updated_at,
+                'status' => $customerProduct->status,
+                'added_user' => $customerProduct->employee_id,
+                'created_at' => $customerProduct->created_at,
+                'updated_at' => $customerProduct->updated_at,
                 'fields' => []
             ];
-    
+
             foreach ($product->fields as $field) {
-                $fieldValue = $product->fieldValues
-                    ->where('product_field_id', $field->id)
-                    ->first();
-    
+                $fieldValue = $fieldValues->get($field->id);
+
                 $productData['fields'][] = [
                     'field_name' => $field->name,
                     'value' => $fieldValue?->value ?? null,
@@ -251,15 +244,14 @@ class CustomerController extends Controller
                     'updated_at' => $fieldValue?->updated_at,
                 ];
             }
-    
+
             $data[] = $productData;
         }
-    
+
         return response()->json($data);
     }
 
-    
-    
+
     public function importCustomers(Request $request)
     {
         $request->validate([

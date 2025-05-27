@@ -35,4 +35,15 @@ class CustomerProduct extends Model
     {
         return $this->belongsTo(User::class, 'employee_id');
     }
+public function fieldValues()
+{
+    return $this->hasMany(\App\Models\ProductFieldValue::class, 'customer_product_id');
+}
+
+
+
+public function customerProducts()
+{
+    return $this->hasMany(CustomerProduct::class);
+}
 }

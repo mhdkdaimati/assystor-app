@@ -109,9 +109,9 @@ const ProcessCustomerGroup = () => {
 
     const handleSaveProduct = async () => {
         if (!selectedProduct) return;
-
+// product-field-values/bulk
         try {
-            await axios.post(`/api/field-values/bulk`, {
+            await axios.post(`/api/product-field-values/bulk`, {
                 customer_id: selectedCustomer,
                 product_id: selectedProduct.id,
                 fields: fieldValues
@@ -440,10 +440,10 @@ const CustomerProduct = ({ customer_products }) => (
                 <i className="bi bi-box-seam me-2"></i>
                 Customer Products
             </h5>
-            {customer_products.map((product, productIndex) => (
-                <div key={productIndex} className="card mb-3 shadow-sm">
+            {customer_products.map((product, idx) => (
+                <div key={idx} className="card mb-3 shadow-sm">
                     <div className="card-header bg-secondary text-white">
-                        <strong>{product.product_name || `Product ${productIndex + 1}`}</strong>
+                        <strong>{product.product_name || `Product ${idx}`}</strong>
                     </div>
                     <div className="card-body">
                         <p><strong>Description:</strong> {product.product_description || 'N/A'}</p>
@@ -453,8 +453,8 @@ const CustomerProduct = ({ customer_products }) => (
                         <p><strong>Last Updated:</strong> {product.updated_at ? new Date(product.updated_at).toLocaleString() : 'N/A'}</p>
                     </div>
                     <ul className="list-group list-group-flush">
-                        {product.fields.map((field, fieldIndex) => (
-                            <li key={fieldIndex} className="list-group-item d-flex justify-content-between align-items-start">
+                        {product.fields.map((field, idx) => (
+                            <li key={idx} className="list-group-item d-flex justify-content-between align-items-start">
                                 <div>
                                     <div><strong>{field.field_name}:</strong> {field.value}</div>
                                     <small className="text-muted">
