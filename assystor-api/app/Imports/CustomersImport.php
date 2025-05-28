@@ -11,11 +11,13 @@ class CustomersImport implements ToModel
     {
         return new Customer([
             //
-            'first_name'  => $row[0],
-            'email' => $row[1],
-            'contact_number' => $row[2],
-            'last_name	'  => $row[3],
+            'contact_number'  => $row[0],
+            'first_name' => $row[1],
+            'last_name' => $row[2],
 
         ]);
     }
 }
+            // $table->string('contact_number')->unique();
+            // $table->string('first_name');
+            // $table->string('last_name');

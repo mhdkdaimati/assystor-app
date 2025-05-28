@@ -16,7 +16,27 @@ class QuarantineController extends Controller
         $quarantined = Quarantine::with('customer')->latest()->get();
         return response()->json($quarantined);
     }
+    public function check($customer_id)
+    {
+        $quarantine = \App\Models\Quarantine::with('addedBy')->where('customer_id', $customer_id)->first();
 
+        if (!$quarantine) {
+            return response()->json([
+                'status' => 200,
+                'quarantined' => false,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 200,
+            'quarantined' => true,
+            'reason' => $quarantine->reason,
+            'added_by' => $quarantine->addedBy ? $quarantine->addedBy->name : null,
+            'added_by_id' => $quarantine->added_by,
+            'quarantine_id' => $quarantine->id,
+            'created_at' => $quarantine->created_at,
+        ]);
+    }
     public function store(Request $request)
     {
         $request->validate([

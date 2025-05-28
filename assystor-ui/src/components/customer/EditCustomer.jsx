@@ -83,18 +83,19 @@ const EditCustomer = () => {
 
 
     const data = {
-      email: customerInput.email,
-      company_id: customerInput.company_id,
-      gender: customerInput.gender,//
       first_name: customerInput.first_name,
       last_name: customerInput.last_name,
+            contact_number: customerInput.contact_number,
+
       birth_day: customerInput.birth_day,
       street: customerInput.street,
       zip_code: customerInput.zip_code,
       place: customerInput.place,
       iban: customerInput.iban,
-      contact_number: customerInput.contact_number,
       pkk: customerInput.pkk,
+      email: customerInput.email,
+      company_id: customerInput.company_id,
+      gender: customerInput.gender,//
 
     }
 
@@ -149,6 +150,54 @@ const EditCustomer = () => {
             </div>
             <div className="card-body p-4">
               <form onSubmit={customerUpdate} id="CUSTOMER_FORM" encType="multipart/form-data">
+
+
+                              <div className="form-floating mb-3">
+                  <input
+                    type="text"
+                    name="first_name"
+                    onChange={handleInput}
+                    value={customerInput.first_name || ''}
+                    className="form-control"
+                    id="floatingFirstName"
+                    placeholder="First Name"
+                  />
+                  <label htmlFor="floatingFirstName">First Name</label>
+                  <div className="text-danger mt-1">{error.first_name}</div>
+                </div>
+
+
+
+                <div className="form-floating mb-3">
+                  <input
+                    type="text"
+                    name="last_name"
+                    onChange={handleInput}
+                    value={customerInput.last_name || ''}
+                    className="form-control"
+                    id="floatingLastName"
+                    placeholder="Last Name"
+                  />
+                  <label htmlFor="floatingLastName">Last Name</label>
+                  <div className="text-danger mt-1">{error.last_name}</div>
+                </div>
+
+
+
+                <div className="form-floating mb-3">
+                  <input
+                    type="text"
+                    name="contact_number"
+                    onChange={handleInput}
+                    value={customerInput.contact_number || ''}
+                    className="form-control"
+                    id="floatingContactNumber"
+                    placeholder="Contact Number"
+                  />
+                  <label htmlFor="floatingContactNumber">Contact Number</label>
+                  <div className="text-danger mt-1">{error.contact_number}</div>
+                </div>
+
                 <div className="form-floating mb-3">
                   <input
                     type="email"
@@ -194,33 +243,7 @@ const EditCustomer = () => {
                   <label htmlFor="floatingGender">Gender</label>
                 </div>
 
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    name="first_name"
-                    onChange={handleInput}
-                    value={customerInput.first_name || ''}
-                    className="form-control"
-                    id="floatingFirstName"
-                    placeholder="First Name"
-                  />
-                  <label htmlFor="floatingFirstName">First Name</label>
-                  <div className="text-danger mt-1">{error.first_name}</div>
-                </div>
 
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    name="last_name"
-                    onChange={handleInput}
-                    value={customerInput.last_name || ''}
-                    className="form-control"
-                    id="floatingLastName"
-                    placeholder="Last Name"
-                  />
-                  <label htmlFor="floatingLastName">Last Name</label>
-                  <div className="text-danger mt-1">{error.last_name}</div>
-                </div>
 
                 <div className="form-floating mb-3">
                   <input
@@ -292,19 +315,6 @@ const EditCustomer = () => {
                   <div className="text-danger mt-1">{error.iban}</div>
                 </div>
 
-                <div className="form-floating mb-3">
-                  <input
-                    type="text"
-                    name="contact_number"
-                    onChange={handleInput}
-                    value={customerInput.contact_number || ''}
-                    className="form-control"
-                    id="floatingContactNumber"
-                    placeholder="Contact Number"
-                  />
-                  <label htmlFor="floatingContactNumber">Contact Number</label>
-                  <div className="text-danger mt-1">{error.contact_number}</div>
-                </div>
 
                 <div className="form-floating mb-4">
                   <input

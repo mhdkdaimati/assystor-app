@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
-            $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('set null');
-            $table->enum('gender', ['male', 'female'])->nullable();
+            $table->string('contact_number')->unique();
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('email')->nullable();
+            $table->foreignId('company_id')->nullable()->constrained('companies')->onDelete('set null');
+            $table->enum('gender', ['male', 'female'])->nullable();
             $table->date('birth_day')->nullable();
             $table->string('street')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('place')->nullable();
             $table->string('iban')->nullable();
-            $table->string('contact_number')->nullable();
             $table->string('pkk')->nullable();
             $table->timestamps();
         });

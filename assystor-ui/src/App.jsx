@@ -31,6 +31,7 @@ import PendingCustomerProducts from './components/customerProduct/PendingCustome
 import AllCustomerProducts from './components/customerProduct/AllCustomerProducts';
 import EntityTabs from './components/showEntities/EntityTabs';
 
+import CustomerDetails from './components/customer/CustomerDetails';
 
 // EntityPage
 import EntityPage from './components/entity/EntityPage';
@@ -121,6 +122,7 @@ function App() {
           <Route path="entity-page" element={auth.role === 'admin' ? <EntityPage /> : <Navigate to="/" />} />
           {/* EntityTabs */}
           <Route path="entity-tabs" element={auth.role === 'admin' ? <EntityTabs /> : <Navigate to="/" />} />
+          <Route path="customer-details/:id" element={auth.role === 'admin' ? <CustomerDetails /> : <Navigate to="/" />} />
 
           {/* Add more protected routes here */}
           {/* Example: <Route path="settings" element={<Settings />} /> */}

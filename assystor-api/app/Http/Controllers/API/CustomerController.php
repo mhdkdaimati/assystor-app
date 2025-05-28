@@ -51,8 +51,9 @@ class CustomerController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
+            'email' => 'nullable|string|max:20',
 
-            'email' => 'required|email|unique:customers,email',
+            'contact_number' => 'required|string|unique:customers,contact_number',
             'company_id' => 'nullable|exists:companies,id',
             'gender' => 'nullable|in:male,female',
             'first_name' => 'required|string|max:255',
@@ -62,7 +63,6 @@ class CustomerController extends Controller
             'zip_code' => 'nullable|string|max:20',
             'place' => 'nullable|string|max:255',
             'iban' => 'nullable|string|max:34', // International Bank Account 
-            'contact_number' => 'nullable|string|max:20',
             'pkk' => 'nullable|string|max:50',
             'customer_groups' => 'nullable|array',
             'customer_groups.*' => 'exists:customer_groups,id',
@@ -145,7 +145,8 @@ class CustomerController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:customers,email,' . $id . ',id',
+            'email' => 'nullable|string|max:20',
+            'contact_number' => 'required|string|unique:customers,contact_number' . (isset($id) ? ',' . $id . ',id' : ''),
             'company_id' => 'nullable|exists:companies,id',
             'gender' => 'nullable|in:male,female',
             'first_name' => 'required|string|max:255',
@@ -155,7 +156,6 @@ class CustomerController extends Controller
             'zip_code' => 'nullable|string|max:20',
             'place' => 'nullable|string|max:255',
             'iban' => 'nullable|string|max:34',
-            'contact_number' => 'nullable|string|max:20',
             'pkk' => 'nullable|string|max:50',
             'customer_groups' => 'nullable|array',
             'customer_groups.*' => 'exists:customer_groups,id',
@@ -258,11 +258,42 @@ class CustomerController extends Controller
             'file' => 'required|file|mimes:xlsx,csv',
         ]);
 
-        Excel::import(new CustomersImport, $request->file('file'));
+        try {
+            Excel::import(new CustomersImport, $request->file('file'));
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Customers imported successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 422,
+                'message' => 'Import failed: ' . $e->getMessage(),
+            ], 422);
+        }
+    }
+
+
+    public function getCustomerGroups($customerId)
+    {
+        $customer = \App\Models\Customer::with('customerGroups')->find($customerId);
+
+        if (!$customer) {
+            return response()->json([
+                'status' => 404,
+                'message' => 'Customer not found',
+            ]);
+        }
 
         return response()->json([
             'status' => 200,
-            'message' => 'Customers imported successfully',
+            'groups' => $customer->customerGroups->map(function ($group) {
+                return [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                    'status' => $group->status,
+                ];
+            }),
         ]);
     }
 }

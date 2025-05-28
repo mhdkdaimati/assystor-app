@@ -48,7 +48,13 @@ export default function EntityDetailsPage({ entity, customers, onBack }) {
             selector: row => row.customer_name || row.customer_id,
             sortable: true,
             width: "200px",
-        },
+        }, 
+        // {
+        //     name: "Customer contact number",
+        //     selector: row => row.customer_contact_number || row.customer_id,
+        //     sortable: true,
+        //     width: "200px",
+        // },
         ...entity.fields.map(field => ({
             name: field.label,
             selector: row => row[field.name] ?? "-",

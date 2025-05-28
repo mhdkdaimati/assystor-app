@@ -28,17 +28,19 @@ const AddCustomer = () => {
     const navigate = useNavigate();
 
     const [customerInput, setCustomer] = useState({
+        first_name: '',
+        last_name: '',
+        contact_number: '',
+
         email: '',
         company_id: '',
         gender: '',
-        first_name: '',
-        last_name: '',
+
         birth_day: '',
         street: '',
         zip_code: '',
         place: '',
         iban: '',
-        contact_number: '',
         pkk: '',
 
         error_list: [],
@@ -57,36 +59,42 @@ const AddCustomer = () => {
         e.preventDefault();
 
         const data = {
-            email: customerInput.email,
-            company_id: customerInput.company_id,
-            gender: customerInput.gender,
             first_name: customerInput.first_name,
             last_name: customerInput.last_name,
+            contact_number: customerInput.contact_number,
+
             birth_day: customerInput.birth_day,
             street: customerInput.street,
             zip_code: customerInput.zip_code,
             place: customerInput.place,
             iban: customerInput.iban,
-            contact_number: customerInput.contact_number,
             pkk: customerInput.pkk,
+            email: customerInput.email,
+            company_id: customerInput.company_id,
+            gender: customerInput.gender,
 
         }
         axios.post(`/api/store-customer`, data).then(res => {
             if (res.data.status === 200) {
 
                 setCustomer({
-                    email: '',
-                    company_id: '',
-                    gender: '',
                     first_name: '',
                     last_name: '',
+
+                    contact_number: '',
+
                     birth_day: '',
                     street: '',
                     zip_code: '',
                     place: '',
                     iban: '',
-                    contact_number: '',
                     pkk: '',
+
+
+                    email: '',
+                    company_id: '',
+                    gender: '',
+
                     error_list: [],
                 });
 
@@ -120,6 +128,61 @@ const AddCustomer = () => {
                         </div>
                         <div className="card-body p-4">
                             <form onSubmit={customerSubmit} encType="multipart/form-data">
+
+
+
+                                <div className="mb-3">
+                                    <label htmlFor="first_name" className="form-label fw-semibold">First Name</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text"><i className="bi bi-person-fill"></i></span>
+                                        <input
+                                            type="text"
+                                            name="first_name"
+                                            onChange={handleInput}
+                                            value={customerInput.first_name}
+                                            className="form-control"
+                                            id="first_name"
+                                            placeholder="Enter first name"
+                                        />
+                                    </div>
+                                    <small className="text-danger">{customerInput.error_list.first_name}</small>
+                                </div>
+
+
+                                <div className="mb-3">
+                                    <label htmlFor="last_name" className="form-label fw-semibold">Last Name</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text"><i className="bi bi-person-fill"></i></span>
+                                        <input
+                                            type="text"
+                                            name="last_name"
+                                            onChange={handleInput}
+                                            value={customerInput.last_name}
+                                            className="form-control"
+                                            id="last_name"
+                                            placeholder="Enter last name"
+                                        />
+                                    </div>
+                                    <small className="text-danger">{customerInput.error_list.last_name}</small>
+                                </div>
+                                <div className="mb-3">
+                                    <label htmlFor="contact_number" className="form-label fw-semibold">Contact Number</label>
+                                    <div className="input-group">
+                                        <span className="input-group-text"><i className="bi bi-telephone-fill"></i></span>
+                                        <input
+                                            type="text"
+                                            name="contact_number"
+                                            onChange={handleInput}
+                                            value={customerInput.contact_number}
+                                            className="form-control"
+                                            id="contact_number"
+                                            placeholder="Enter contact number"
+                                        />
+                                    </div>
+                                    <small className="text-danger">{customerInput.error_list.contact_number}</small>
+                                </div>
+
+
                                 <div className="mb-3">
                                     <label htmlFor="email" className="form-label fw-semibold">Email</label>
                                     <div className="input-group">
@@ -176,39 +239,7 @@ const AddCustomer = () => {
                                     <small className="text-danger">{customerInput.error_list.gender}</small>
                                 </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="first_name" className="form-label fw-semibold">First Name</label>
-                                    <div className="input-group">
-                                        <span className="input-group-text"><i className="bi bi-person-fill"></i></span>
-                                        <input
-                                            type="text"
-                                            name="first_name"
-                                            onChange={handleInput}
-                                            value={customerInput.first_name}
-                                            className="form-control"
-                                            id="first_name"
-                                            placeholder="Enter first name"
-                                        />
-                                    </div>
-                                    <small className="text-danger">{customerInput.error_list.first_name}</small>
-                                </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="last_name" className="form-label fw-semibold">Last Name</label>
-                                    <div className="input-group">
-                                        <span className="input-group-text"><i className="bi bi-person-fill"></i></span>
-                                        <input
-                                            type="text"
-                                            name="last_name"
-                                            onChange={handleInput}
-                                            value={customerInput.last_name}
-                                            className="form-control"
-                                            id="last_name"
-                                            placeholder="Enter last name"
-                                        />
-                                    </div>
-                                    <small className="text-danger">{customerInput.error_list.last_name}</small>
-                                </div>
 
                                 <div className="mb-3">
                                     <label htmlFor="street" className="form-label fw-semibold">street</label>
@@ -313,22 +344,6 @@ const AddCustomer = () => {
                                     <small className="text-danger">{customerInput.error_list.birth_day}</small>
                                 </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="contact_number" className="form-label fw-semibold">Contact Number</label>
-                                    <div className="input-group">
-                                        <span className="input-group-text"><i className="bi bi-telephone-fill"></i></span>
-                                        <input
-                                            type="text"
-                                            name="contact_number"
-                                            onChange={handleInput}
-                                            value={customerInput.contact_number}
-                                            className="form-control"
-                                            id="contact_number"
-                                            placeholder="Enter contact number"
-                                        />
-                                    </div>
-                                    <small className="text-danger">{customerInput.error_list.contact_number}</small>
-                                </div>
 
                                 <div className="mb-4">
                                     <button type="submit" className="btn btn-primary w-100 rounded-pill shadow-sm fw-bold">

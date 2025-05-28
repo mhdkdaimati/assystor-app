@@ -137,6 +137,7 @@ Route::get('/test', function () {
     return response()->json(['message' => 'API Working!']);
 });
 
+
 Route::apiResource('entities', EntityController::class);
 Route::apiResource('entity-fields', EntityFieldController::class)->only(['store', 'update', 'destroy']);
 Route::apiResource('entity-field-options', EntityFieldOptionController::class)->only(['store', 'update', 'destroy']);
@@ -147,3 +148,9 @@ Route::get('entity-types', [EntityTypeController::class, 'index']);
 Route::get('entity-field-values', [EntityFieldValueController::class, 'index']);
 
 Route::get('entity-field-values/by-entity', [EntityFieldValueController::class, 'getEntityFieldValuesByEntity']);
+Route::get('customers/{id}/groups', [CustomerController::class, 'getCustomerGroups']);
+
+Route::get('/quarantines/check/{customer_id}', [QuarantineController::class, 'check']);
+
+
+Route::get('customer-entity-field-values', [\App\Http\Controllers\API\EntityFieldValueController::class, 'getCustomerEntityFieldValues']);

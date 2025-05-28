@@ -63,12 +63,19 @@ const Sidebar = () => {
             </li>
             <hr />
             <li><b>Entities</b></li>
-              <Link
-                to="/entity-tabs"
-                style={location.pathname === '/entity-tabs' ? activeLinkStyle : linkStyle}
-              >
-                All customer entities
-              </Link>
+            <Link
+              to="/entity-tabs"
+              style={location.pathname === '/entity-tabs' ? activeLinkStyle : linkStyle}
+            >
+              All customer entities
+            </Link>
+            <li><b>Customers</b></li>
+            <Link
+              to="/view-customer"
+              style={location.pathname === '/view-customer' ? activeLinkStyle : linkStyle}
+            >
+              All customers details
+            </Link>
 
           </>
         )}

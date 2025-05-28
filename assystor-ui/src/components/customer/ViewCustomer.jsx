@@ -4,13 +4,13 @@ import DataTable from 'react-data-table-component';
 import { Link, useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
 import * as XLSX from 'xlsx';
-
+import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
 const ViewCustomer = () => {
     const [loading, setLoading] = useState(true);
     const [customerList, setCustomerList] = useState([]);
     const [search, setSearch] = useState('');
     const [filteredCustomers, setFilteredCustomers] = useState([]);
-const navigate = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         document.title = 'View Customer';
@@ -24,13 +24,14 @@ const navigate = useNavigate();
         });
     }, []);
 
+
     useEffect(() => {
         const result = customerList.filter(customer => {
             return (
-                customer.email.toLowerCase().includes(search.toLowerCase()) ||
-                customer.first_name.toLowerCase().includes(search.toLowerCase()) ||
-                customer.last_name.toLowerCase().includes(search.toLowerCase())
-            );
+                (customer.contact_number || "").toLowerCase().includes(search.toLowerCase()) ||
+                (customer.first_name || "").toLowerCase().includes(search.toLowerCase()) ||
+                (customer.last_name || "").toLowerCase().includes(search.toLowerCase()) ||
+                (customer.email || "").toLowerCase().includes(search.toLowerCase()));
         });
         setFilteredCustomers(result);
     }, [search, customerList]);
@@ -65,44 +66,52 @@ const navigate = useNavigate();
             sortable: false,
         },
         {
-            name: 'Email',
+            name: 'contact_number',
+            selector: row => row.contact_number,
+            sortable: true,
+        },
+        {
+            name: 'first_name',
+            selector: row => row.first_name ? row.first_name : 'N/A',
+            sortable: true,
+        },
+        {
+            name: 'last_name',
+            selector: row => row.last_name ? row.last_name : 'N/A',
+            sortable: true,
+        },
+        {
+            name: 'email',
             selector: row => row.email,
-            sortable: true,
-        },
-        {
-            name: 'Company',
-            selector: row => row.company ? row.company.name : 'N/A',
-            sortable: true,
-        },
-        {
-            name: 'Gender',
-            selector: row => row.gender,
-            sortable: true,
-        },
-        {
-            name: 'First Name',
-            selector: row => row.first_name,
-            sortable: true,
-        },
-        {
-            name: 'Last Name',
-            selector: row => row.last_name,
             sortable: true,
         },
         {
             name: 'Actions',
             cell: row => (
                 <>
-                    <Link to={`/edit-customer/${row.id}`} className="btn btn-outline-success btn-sm me-2">Edit</Link>
+                    <Link
+                        to={`/customer-details/${row.id}`}
+                        className="btn btn-outline-info btn-sm me-2"
+                        title="Details"
+                    >
+                        <FaEye />
+                    </Link>
+                    <Link
+                        to={`/edit-customer/${row.id}`}
+                        className="btn btn-outline-success btn-sm me-2"
+                        title="Edit"
+                    >
+                        <FaEdit />
+                    </Link>
                     <button
                         type="button"
                         onClick={(e) => deleteCustomer(e, row.id)}
                         className="btn btn-outline-danger btn-sm"
+                        title="Delete"
                     >
-                        Delete
+                        <FaTrash />
                     </button>
-                </>
-            ),
+                </>),
         },
     ];
 
@@ -119,8 +128,8 @@ const navigate = useNavigate();
     return (
         <div className="container py-5">
             <button className="btn btn-outline-secondary mb-3" onClick={() => navigate('/dashboard')}>
-      &larr; Back to Dashboard
-    </button>
+                &larr; Back to Dashboard
+            </button>
             <div className="row justify-content-center">
                 <div className="col-12">
                     <div className="card shadow-sm border-0 mb-4">
