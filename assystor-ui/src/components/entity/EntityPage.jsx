@@ -76,7 +76,7 @@ function EntityPage() {
     setFields([...fields, { name: "", label: "", type: "text", required: false, options: [] }]);
   };
 
-  // حذف حقل
+// Delete field
   const handleRemoveField = (index) => {
     if (fields.length > 1) {
       setFields(fields.filter((_, i) => i !== index));

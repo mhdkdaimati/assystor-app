@@ -20,7 +20,21 @@ export default function EntityDetailsPage({ entity, customers, onBack }) {
     }, [entity]);
 
     const getUniqueValues = (fieldName) => {
-        const values = entityValues.map(row => (row[fieldName] !== undefined && row[fieldName] !== null && row[fieldName] !== "" ? row[fieldName] : "-"));
+        let values = [];
+        entityValues.forEach(row => {
+            let val = row[fieldName];
+            if (val === undefined || val === null || val === "") return;
+            // if the value is jason(array)
+            try {
+                const parsed = JSON.parse(val);
+                if (Array.isArray(parsed)) {
+                    values = values.concat(parsed);
+                    return;
+                }
+            } catch { /* not Jason */ }
+            values.push(val);
+        });
+        // Remove duplicates
         return [...new Set(values)];
     };
 
@@ -29,14 +43,26 @@ export default function EntityDetailsPage({ entity, customers, onBack }) {
         if (search && !rowString.includes(search.toLowerCase())) return false;
 
         for (const key in columnFilters) {
-            if (columnFilters[key]?.length > 0 && !columnFilters[key].includes((row[key] ?? "-").toString())) {
-                return false;
+            if (columnFilters[key]?.length > 0) {
+                let cellValue = row[key];
+                let matched = false;
+                // Try to convert the value to an array if it is Jason
+                try {
+                    const parsed = JSON.parse(cellValue);
+                    if (Array.isArray(parsed)) {
+                        matched = parsed.some(val => columnFilters[key].includes(val));
+                    } else {
+                        matched = columnFilters[key].includes(cellValue);
+                    }
+                } catch {
+                    matched = columnFilters[key].includes(cellValue);
+                }
+                if (!matched) return false;
             }
         }
         return true;
     });
-
-    // إعداد الأعمدة
+    // Setting up columns
     const baseColumns = [
         {
             name: "#",
@@ -56,38 +82,38 @@ export default function EntityDetailsPage({ entity, customers, onBack }) {
         //     width: "200px",
         // },
         ...entity.fields.map(field => ({
-    name: field.label,
-    selector: row => {
-      let value = row[field.name];
-      // إذا كان نوع الحقل checkbox
-      if (field.type === "checkbox") {
-        let arr = [];
-        try {
-          arr = JSON.parse(value);
-        } catch {
-          arr = typeof value === "string" ? [value] : [];
-        }
-        if (Array.isArray(arr) && arr.length > 0) {
-          return (
-            <ul style={{ margin: 0, paddingLeft: 18 }}>
-              {arr.map((v, i) => <li key={i}>{v}</li>)}
-            </ul>
-          );
-        } else {
-          return <span className="text-muted">-</span>;
-        }
-      }
-      // باقي الأنواع
-      return value || <span className="text-muted">-</span>;
-    },
-    sortable: true,
-    width: "180px",
-  }))
+            name: field.label,
+            selector: row => {
+                let value = row[field.name];
+                // If the field type is checkbox
+                if (field.type === "checkbox") {
+                    let arr = [];
+                    try {
+                        arr = JSON.parse(value);
+                    } catch {
+                        arr = typeof value === "string" ? [value] : [];
+                    }
+                    if (Array.isArray(arr) && arr.length > 0) {
+                        return (
+                            <ul style={{ margin: 0, paddingLeft: 18 }}>
+                                {arr.map((v, i) => <li key={i}>{v}</li>)}
+                            </ul>
+                        );
+                    } else {
+                        return <span className="text-muted">-</span>;
+                    }
+                }
+                // Other types
+                return value || <span className="text-muted">-</span>;
+            },
+            sortable: true,
+            width: "180px",
+        }))
     ];
 
-    // مكون الفلاتر المتزامن مع الأعمدة باستخدام CSS Grid
+    // Synchronized filter component with columns using CSS Grid
     const FilterRow = () => {
-        const [filterSearch, setFilterSearch] = useState({}); // لتخزين النص الذي يُبحث به داخل Dropdown لكل عمود
+        const [filterSearch, setFilterSearch] = useState({}); // To store the text to be searched within the Dropdown for each column
 
         return (
             <div
@@ -113,7 +139,7 @@ export default function EntityDetailsPage({ entity, customers, onBack }) {
                             key={idx}
                             id={`dropdown-${fieldName}-filter`}
                             title="Filter"
-                            variant={isActive ? "primary" : "outline-secondary"} // لون مختلف عند التفعيل
+                            variant={isActive ? "primary" : "outline-secondary"} // Different color when activated
                             size="sm"
                         >
                             <div className="px-2 py-1">

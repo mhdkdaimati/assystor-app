@@ -17,8 +17,7 @@ class CustomerHistory extends Model
         'comment',
     ];
     
-    protected $table = 'customer_histories'; // تأكد من الاسم مطابق 100%
-
+protected $table = 'customer_histories'; // Make sure the name is 100% identical
 
     public function customer()
     {

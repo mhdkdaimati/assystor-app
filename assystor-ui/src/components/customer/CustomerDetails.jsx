@@ -41,14 +41,14 @@ const CustomerDetails = () => {
         });
     }, [id]);
 
-    // جلب أنواع الـ entity types
+    // Get entity types
     useEffect(() => {
         axios.get('/api/entity-types').then(res => {
             setEntityTypes(res.data || []);
         });
     }, []);
 
-    // زر المجموعات الحالية
+    //Current groups button
     const handleShowGroups = () => {
         setActiveTab("groups");
         setLoadingTab(true);
@@ -58,7 +58,7 @@ const CustomerDetails = () => {
         }).catch(() => setLoadingTab(false));
     };
 
-    // زر الهيستوري
+    // History button
     const handleShowHistory = () => {
         setActiveTab("history");
         setLoadingTab(true);
@@ -68,7 +68,7 @@ const CustomerDetails = () => {
         }).catch(() => setLoadingTab(false));
     };
 
-    // زر المنتجات
+    // Products button
     const handleShowProducts = () => {
         setActiveTab("products");
         setLoadingTab(true);
@@ -78,7 +78,7 @@ const CustomerDetails = () => {
         }).catch(() => setLoadingTab(false));
     };
 
-    // زر entity ديناميكي
+    // Dynamic entity button
     const handleShowEntity = (entityName, entityId) => {
         setActiveTab(entityName);
         setLoadingTab(true);
@@ -188,7 +188,7 @@ const CustomerDetails = () => {
                 </tbody>
             </table>
 
-            {/* أزرار التبويبات أسفل الجدول */}
+            {/* Tab buttons below the table */}
             <div className="mb-3 d-flex gap-2 flex-wrap">
                 <button
                     className={`btn btn${activeTab === "groups" ? "" : "-outline"}-primary`}
@@ -208,22 +208,18 @@ const CustomerDetails = () => {
                 >
                     Products
                 </button>
-                {/* أزرار الكيانات الديناميكية */}
-                <div className="mb-3 d-flex gap-2 flex-wrap">
-                    {/* ...other buttons... */}
-                    {entityTypes.map(entity => (
-                        <button
-                            key={entity.id}
-                            className={`btn btn${activeTab === entity.name ? "" : "-outline"}-dark`}
-                            onClick={() => handleShowEntity(entity.name, entity.id)}
-                        >
-                            {entity.name.charAt(0).toUpperCase() + entity.name.slice(1)}
-                        </button>
-                    ))}
-                </div>
+                {/* Dynamic entity buttons */}
+                {entityTypes.map(entity => (
+                    <button
+                        key={entity.id}
+                        className={`btn btn${activeTab === entity.name ? "" : "-outline"}-dark`}
+                        onClick={() => handleShowEntity(entity.name, entity.id)}
+                    >
+                        {entity.name.charAt(0).toUpperCase() + entity.name.slice(1)}
+                    </button>
+                ))}
             </div>
-
-            {/* محتوى التبويب المختار */}
+            {/* Selected tab content */}
             <div>
                 {activeTab === "groups" && (
                     <div>
@@ -320,7 +316,7 @@ const CustomerDetails = () => {
                     </div>
                 )}
 
-                {/* محتوى الكيانات الديناميكية */}
+                {/* Dynamic entity content */}
                 {entityTypes.map(entity => (
                     activeTab === entity.name && (
                         <div key={entity.id}>

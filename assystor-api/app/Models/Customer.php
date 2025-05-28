@@ -46,7 +46,7 @@ class Customer extends Model
         return $this->belongsToMany(Product::class, 'customer_product')
             ->withTimestamps()
             ->withPivot('employee_id')
-            ->withPivot('status') // تضمين عمود status
+            ->withPivot('status') // Include status column
             ->withPivot(['status', 'comment']);
     }
     public function customerProducts()

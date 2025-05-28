@@ -12,7 +12,7 @@ function ProductPage() {
   const [editProduct, setEditProduct] = useState(null);
   const [form, setForm] = useState({ name: "", description: "" });
   const [fields, setFields] = useState([{ name: "", type: "text", options: [] }]);
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProducts();
@@ -34,7 +34,7 @@ const navigate = useNavigate();
       });
   };
 
-  // فتح المودال للإضافة أو التعديل
+  // Open the module to add or edit
   const openModal = (product = null) => {
     setEditProduct(product);
     if (product) {
@@ -54,7 +54,7 @@ const navigate = useNavigate();
     setShowModal(true);
   };
 
-  // تغيير بيانات الحقل
+  // Change field data
   const handleFieldChange = (index, e) => {
     const { name, value } = e.target;
     const updatedFields = [...fields];
@@ -62,7 +62,7 @@ const navigate = useNavigate();
     setFields(updatedFields);
   };
 
-  // تغيير بيانات خيار الحقل
+  // Change field option data
   const handleOptionChange = (fieldIndex, optionIndex, e) => {
     const { name, value } = e.target;
     const updatedFields = [...fields];
@@ -70,33 +70,33 @@ const navigate = useNavigate();
     setFields(updatedFields);
   };
 
-  // إضافة خيار جديد لحقل
+  // Add a new option to a field
   const handleOptionAdd = (fieldIndex) => {
     const updatedFields = [...fields];
     updatedFields[fieldIndex].options.push({ name: "" });
     setFields(updatedFields);
   };
 
-  // حذف خيار من حقل
+  // Delete an option from a field
   const handleOptionRemove = (fieldIndex, optionIndex) => {
     const updatedFields = [...fields];
     updatedFields[fieldIndex].options = updatedFields[fieldIndex].options.filter((_, i) => i !== optionIndex);
     setFields(updatedFields);
   };
 
-  // إضافة حقل جديد
+  // Add a new field
   const addField = () => {
     setFields([...fields, { name: "", type: "text", options: [] }]);
   };
 
-  // حذف حقل
+  // Delete field
   const handleRemoveField = (index) => {
     if (fields.length > 1) {
       setFields(fields.filter((_, i) => i !== index));
     }
   };
 
-  // حفظ (إضافة أو تعديل)
+  // Save (add or edit)
   const handleSave = async (e) => {
     e.preventDefault();
     const payload = {
@@ -115,7 +115,7 @@ const navigate = useNavigate();
     fetchProducts();
   };
 
-  // حذف منتج
+  // Delete product
   const deleteProduct = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       axios.delete(`/api/delete-product/${id}`)
@@ -125,7 +125,7 @@ const navigate = useNavigate();
     }
   };
 
-  // تصدير للإكسل
+  // Export to Excel
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredProducts);
     const workbook = XLSX.utils.book_new();
@@ -135,9 +135,9 @@ const navigate = useNavigate();
 
   return (
     <div className="container py-5">
-        <button className="btn btn-outline-secondary mb-3" onClick={() => navigate('/dashboard')}>
-      &larr; Back to Dashboard
-    </button>
+      <button className="btn btn-outline-secondary mb-3" onClick={() => navigate('/dashboard')}>
+        &larr; Back to Dashboard
+      </button>
       <div className="row justify-content-center">
         <div className="col-12">
           <div className="card shadow-sm border-0 mb-4">
@@ -253,7 +253,7 @@ const navigate = useNavigate();
         </div>
       </div>
 
-      {/* Modal لإضافة/تعديل منتج مع الحقول وخياراتها */}
+      {/* Modal to add/edit a product with fields and their options */}
       <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>{editProduct ? "Edit Product" : "Create Product"}</Modal.Title>

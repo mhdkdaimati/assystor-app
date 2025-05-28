@@ -200,12 +200,9 @@ const CustomerGroupsPage = () => {
         return (
             (c.first_name?.toLowerCase() || "").includes(searchLower) ||
             (c.last_name?.toLowerCase() || "").includes(searchLower) ||
-            (c.email?.toLowerCase() || "").includes(searchLower) ||
-            (c.contact_number?.toLowerCase() || "").includes(searchLower) ||
-            (c.company.name?.toLowerCase() || "").includes(searchLower)
+            (c.contact_number?.toLowerCase() || "").includes(searchLower)
         );
     });
-
     return (
         <>
             <div className="container my-5">
@@ -230,7 +227,7 @@ const CustomerGroupsPage = () => {
                                         onClick={() => handleGroupClick(group)}
                                         style={{ cursor: "pointer" }}
                                     >
-                                        {group.name} 
+                                        {group.name}
                                         {/* ({group.customers_count}) */}
                                         <br />{group.status}
                                     </li>
@@ -328,7 +325,7 @@ const CustomerGroupsPage = () => {
                                             <input
                                                 type="text"
                                                 className="form-control mb-3"
-                                                placeholder="Search by name, email, phone, or company..."
+                                                placeholder="Search by name or phone..."
                                                 value={searchTerm}
                                                 onChange={(e) => setSearchTerm(e.target.value)}
                                             />

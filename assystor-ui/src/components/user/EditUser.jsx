@@ -9,7 +9,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
             'name' => 'required|min:3|max:191',
             'email' => 'required|email|max:191|unique:users,email',
             'password' => 'required|min:5',
-            'role' => 'required|in:admin,manager,operator', // حسب الصلاحيات
+            'role' => 'required|in:admin,manager,operator', 
 
 
 */

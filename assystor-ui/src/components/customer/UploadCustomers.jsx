@@ -9,37 +9,37 @@ function UploadCustomers() {
         setFile(e.target.files[0]);
     };
 
-const handleUpload = async () => {
-    if (!file) {
-        swal("Error", "Please select a file to upload", "error");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-        const res = await axios.post("/api/customers/import", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-
-        if (res.status === 200) {
-            swal("Success", "File uploaded successfully", "success");
-            setFile(null); // Reset the file input
-        } else {
-            swal("Error", res.data.message || "Failed to upload file.", "error");
+    const handleUpload = async () => {
+        if (!file) {
+            swal("Error", "Please select a file to upload", "error");
+            return;
         }
-    } catch (error) {
-// Get the error message from the server if any
-        const msg =
-            error.response?.data?.message ||
-            error.message ||
-            "Failed to upload file. Please try again.";
-        swal("Error", msg, "error");
-    }
-};
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await axios.post("/api/customers/import", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            if (res.status === 200) {
+                swal("Success", "File uploaded successfully", "success");
+                setFile(null); // Reset the file input
+            } else {
+                swal("Error", res.data.message || "Failed to upload file.", "error");
+            }
+        } catch (error) {
+            // Get the error message from the server if any
+            const msg =
+                error.response?.data?.message ||
+                error.message ||
+                "Failed to upload file. Please try again.";
+            swal("Error", msg, "error");
+        }
+    };
     return (
         <div className="container py-5">
             <div className="row justify-content-center">

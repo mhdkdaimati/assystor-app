@@ -85,7 +85,7 @@ const EditCustomer = () => {
     const data = {
       first_name: customerInput.first_name,
       last_name: customerInput.last_name,
-            contact_number: customerInput.contact_number,
+      contact_number: customerInput.contact_number,
 
       birth_day: customerInput.birth_day,
       street: customerInput.street,
@@ -152,7 +152,7 @@ const EditCustomer = () => {
               <form onSubmit={customerUpdate} id="CUSTOMER_FORM" encType="multipart/form-data">
 
 
-                              <div className="form-floating mb-3">
+                <div className="form-floating mb-3">
                   <input
                     type="text"
                     name="first_name"
