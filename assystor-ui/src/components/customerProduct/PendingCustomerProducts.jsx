@@ -76,7 +76,7 @@ const PendingCustomerProducts = () => {
       selector: (row) => row.product_name,
       sortable: true,
     },
-   
+
     {
       name: "Status",
       selector: (row) => row.status,
@@ -87,7 +87,7 @@ const PendingCustomerProducts = () => {
       selector: (row) => row.customer_details.customer_name,
       sortable: true,
     },
-    
+
     {
       name: "Actions",
       cell: (row) => (
