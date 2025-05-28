@@ -76,11 +76,7 @@ const PendingCustomerProducts = () => {
       selector: (row) => row.product_name,
       sortable: true,
     },
-    {
-      name: "Description",
-      selector: (row) => row.product_description,
-      sortable: true,
-    },
+   
     {
       name: "Status",
       selector: (row) => row.status,
@@ -91,15 +87,7 @@ const PendingCustomerProducts = () => {
       selector: (row) => row.customer_details.customer_name,
       sortable: true,
     },
-    {
-      name: "Company",
-      selector: (row) => row.customer_details.company,
-      sortable: true,
-    },
-    {
-      name: "Comment",
-      selector: (row) => row.comment || "N/A",
-    },
+    
     {
       name: "Actions",
       cell: (row) => (

@@ -43,11 +43,6 @@ const AllCustomerProducts = () => {
       sortable: true,
     },
     {
-      name: "Description",
-      selector: (row) => row.product_description,
-      sortable: true,
-    },
-    {
       name: "Status",
       selector: (row) => row.status,
       sortable: true,
@@ -55,11 +50,6 @@ const AllCustomerProducts = () => {
     {
       name: "Customer Name",
       selector: (row) => row.customer_details.customer_name,
-      sortable: true,
-    },
-    {
-      name: "Company",
-      selector: (row) => row.customer_details.company,
       sortable: true,
     },
     {
