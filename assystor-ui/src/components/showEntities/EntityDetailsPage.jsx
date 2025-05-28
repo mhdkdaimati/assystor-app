@@ -48,7 +48,7 @@ export default function EntityDetailsPage({ entity, customers, onBack }) {
             selector: row => row.customer_name || row.customer_id,
             sortable: true,
             width: "200px",
-        }, 
+        },
         // {
         //     name: "Customer contact number",
         //     selector: row => row.customer_contact_number || row.customer_id,
@@ -56,11 +56,33 @@ export default function EntityDetailsPage({ entity, customers, onBack }) {
         //     width: "200px",
         // },
         ...entity.fields.map(field => ({
-            name: field.label,
-            selector: row => row[field.name] ?? "-",
-            sortable: true,
-            width: "180px",
-        })),
+    name: field.label,
+    selector: row => {
+      let value = row[field.name];
+      // إذا كان نوع الحقل checkbox
+      if (field.type === "checkbox") {
+        let arr = [];
+        try {
+          arr = JSON.parse(value);
+        } catch {
+          arr = typeof value === "string" ? [value] : [];
+        }
+        if (Array.isArray(arr) && arr.length > 0) {
+          return (
+            <ul style={{ margin: 0, paddingLeft: 18 }}>
+              {arr.map((v, i) => <li key={i}>{v}</li>)}
+            </ul>
+          );
+        } else {
+          return <span className="text-muted">-</span>;
+        }
+      }
+      // باقي الأنواع
+      return value || <span className="text-muted">-</span>;
+    },
+    sortable: true,
+    width: "180px",
+  }))
     ];
 
     // مكون الفلاتر المتزامن مع الأعمدة باستخدام CSS Grid
@@ -224,6 +246,28 @@ export default function EntityDetailsPage({ entity, customers, onBack }) {
                                             <option key={opt.id} value={opt.name}>{opt.name}</option>
                                         ))}
                                     </Form.Select>
+                                ) : field.type === "checkbox" ? (
+                                    <div>
+                                        {field.options.map(opt => (
+                                            <Form.Check
+                                                key={opt.id}
+                                                type="checkbox"
+                                                label={opt.name}
+                                                value={opt.name}
+                                                checked={Array.isArray(fieldValues[field.id]) && fieldValues[field.id].includes(opt.name)}
+                                                onChange={e => {
+                                                    const checked = e.target.checked;
+                                                    const prev = Array.isArray(fieldValues[field.id]) ? fieldValues[field.id] : [];
+                                                    setFieldValues({
+                                                        ...fieldValues,
+                                                        [field.id]: checked
+                                                            ? [...prev, opt.name]
+                                                            : prev.filter(v => v !== opt.name)
+                                                    });
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
                                 ) : (
                                     <Form.Control
                                         type={field.type}

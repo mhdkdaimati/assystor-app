@@ -27,6 +27,15 @@ const Sidebar = () => {
         {authRole === 'admin' && (
           <>
             <hr />
+            <li><b>Customers</b></li>
+
+            <Link
+              to="/view-customer"
+              style={location.pathname === '/view-customer' ? activeLinkStyle : linkStyle}
+            >
+              Customers
+            </Link>
+
             <li>
               <Link
                 to="/customer-group-page"
@@ -68,13 +77,6 @@ const Sidebar = () => {
               style={location.pathname === '/entity-tabs' ? activeLinkStyle : linkStyle}
             >
               All customer entities
-            </Link>
-            <li><b>Customers</b></li>
-            <Link
-              to="/view-customer"
-              style={location.pathname === '/view-customer' ? activeLinkStyle : linkStyle}
-            >
-              All customers details
             </Link>
 
           </>

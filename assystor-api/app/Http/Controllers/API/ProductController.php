@@ -198,15 +198,15 @@ class ProductController extends Controller
         $pendingProducts = CustomerProduct::where('status', 'pending')
             ->with([
                 'customer' => function ($query) {
-                    $query->with('company'); // جلب تفاصيل الشركة المرتبطة بالزبون
+                    $query->with('company'); // Get company details associated with the customer
                 },
                 'product' => function ($query) {
-                    $query->with(['fields', 'fieldValues']); // جلب الحقول وقيم الحقول المرتبطة بالمنتج
+                    $query->with(['fields', 'fieldValues']); // Get fields and field values ​​associated with the product
                 },
-                'employee' // جلب تفاصيل الموظف المرتبط
+                'employee' // Get details of the associated employee
             ])
             ->get();
-    
+
         $data = $pendingProducts->map(function ($customerProduct) {
             return [
                 'product_name' => $customerProduct->product->name,
@@ -229,7 +229,7 @@ class ProductController extends Controller
                         ->where('product_field_id', $field->id)
                         ->where('customer_id', $customerProduct->customer_id)
                         ->first();
-    
+
                     return [
                         'field_name' => $field->name,
                         'value' => $fieldValue ? $fieldValue->value : null,
@@ -239,7 +239,7 @@ class ProductController extends Controller
                 }),
             ];
         });
-    
+
         return response()->json($data, 200);
     }
 
@@ -251,17 +251,17 @@ class ProductController extends Controller
         $validated = $request->validate([
             'comment' => 'nullable|string|max:255', // Optional comment
         ]);
-    
+
         try {
             // Find the record in the customer_product table
             $customerProduct = CustomerProduct::findOrFail($customer_product_id);
-    
+
             // Update the status and comment
             $customerProduct->update([
                 'status' => 'completed',
                 'comment' => $validated['comment'] ?? null,
             ]);
-    
+
             return response()->json([
                 'message' => 'Product status updated successfully',
                 'customer_product' => $customerProduct,
@@ -277,16 +277,16 @@ class ProductController extends Controller
     public function getAllCustomersProducts()
     {
         $customerProducts = CustomerProduct::with([
-                'customer' => function ($query) {
-                    $query->with('company'); // جلب تفاصيل الشركة المرتبطة بالزبون
-                },
-                'product' => function ($query) {
-                    $query->with(['fields', 'fieldValues']); // جلب الحقول وقيم الحقول المرتبطة بالمنتج
-                },
-                'employee' // جلب تفاصيل الموظف المرتبط
-            ])
+            'customer' => function ($query) {
+                $query->with('company'); // Get company details associated with the customer
+            },
+            'product' => function ($query) {
+                $query->with(['fields', 'fieldValues']); // Get fields and field values ​​associated with the product
+            },
+            'employee' // Get details of the associated employee
+        ])
             ->get();
-    
+
         $data = $customerProducts->map(function ($customerProduct) {
             return [
                 'product_name' => $customerProduct->product->name,
@@ -309,7 +309,7 @@ class ProductController extends Controller
                         ->where('product_field_id', $field->id)
                         ->where('customer_id', $customerProduct->customer_id)
                         ->first();
-    
+
                     return [
                         'field_name' => $field->name,
                         'value' => $fieldValue ? $fieldValue->value : null,
@@ -319,9 +319,7 @@ class ProductController extends Controller
                 }),
             ];
         });
-    
+
         return response()->json($data, 200);
     }
-
-
 }

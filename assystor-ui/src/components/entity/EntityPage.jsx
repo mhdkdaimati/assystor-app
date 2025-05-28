@@ -90,7 +90,7 @@ function EntityPage() {
       ...form,
       fields: fields.map(field => ({
         ...field,
-        options: (field.type === "select" || field.type === "radio") ? field.options : []
+        options: (field.type === "select" || field.type === "checkbox") ? field.options : []
       }))
     };
     if (editEntity) {
@@ -199,9 +199,8 @@ function EntityPage() {
                       <option value="number">Number</option>
                       <option value="select">Select</option>
                       <option value="date">Date</option>
-                      <option value="radio">Radio</option>
-                    </select>
-                  </div>
+                      <option value="checkbox">Checkbox</option>
+                    </select>                  </div>
                   <div className="col-md-2 d-flex align-items-center">
                     <Form.Check
                       type="checkbox"
@@ -223,7 +222,7 @@ function EntityPage() {
                     )}
                   </div>
                 </div>
-                {(field.type === "select" || field.type === "radio") && (
+                {(field.type === "select" || field.type === "radio" || field.type === "checkbox") && (
                   <div>
                     <div className="mb-2">
                       <button

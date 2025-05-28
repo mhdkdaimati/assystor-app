@@ -17,7 +17,7 @@ class EntityFieldValueController extends Controller
             return response()->json(['message' => 'entity_id is required'], 400);
         }
 
-        // جلب customer_entity المرتبطة بهذا الكيان
+        // Get the customer_entity associated with this entity
         $customerEntities = DB::table('customer_entity')
             ->where('entity_id', $entityId)
             ->get();
@@ -25,9 +25,9 @@ class EntityFieldValueController extends Controller
         $result = [];
 
         foreach ($customerEntities as $customerEntity) {
-            // جلب بيانات الزبون
+            // Fetch customer data
             $customer = \App\Models\Customer::find($customerEntity->customer_id);
-            // جلب القيم المدخلة لهذا الزبون وهذا الكيان
+            // Get the input values ​​for this customer and this entity
             $values = \App\Models\EntityFieldValue::where('customer_entity_id', $customerEntity->id)->get();
 
             $valuesArr = [];
@@ -54,7 +54,7 @@ class EntityFieldValueController extends Controller
             'customer_id'       => 'required|exists:customers,id',
             'entity_id'        => 'required|exists:entities,id',
             'fields'            => 'required|array',
-            'fields.*'          => 'nullable|string',
+            'fields.*'          => 'nullable',
         ]);
 
         $customerId = $data['customer_id'];
@@ -73,6 +73,10 @@ class EntityFieldValueController extends Controller
 
         // Save the values ​​in the entityFieldValue table
         foreach ($data['fields'] as $fieldId => $value) {
+            // إذا كانت القيمة مصفوفة (checkbox متعدد)، حولها إلى JSON
+            if (is_array($value)) {
+                $value = json_encode($value, JSON_UNESCAPED_UNICODE);
+            }
             EntityFieldValue::create([
                 'customer_entity_id' => $customerEntityId,
                 'customer_id'         => $customerId,
@@ -82,100 +86,98 @@ class EntityFieldValueController extends Controller
                 'value'               => $value,
             ]);
         }
-
         return response()->json([
             'message' => 'Field values and entity-customer relation saved successfully.',
         ], 200);
     }
 
 
-public function getEntityFieldValuesByEntity(Request $request)
-{
-    $entityId = $request->query('entity_id');
-    if (!$entityId) {
-        return response()->json(['message' => 'entity_id is required'], 400);
-    }
-
-    // جلب الحقول الخاصة بالكيان
-    $fields = \App\Models\EntityField::where('entity_id', $entityId)->get();
-
-    // جلب كل customer_entity لهذا الكيان (قد يكون هناك أكثر من واحد لنفس الزبون)
-    $customerEntities = DB::table('customer_entity')
-        ->where('entity_id', $entityId)
-        ->get();
-
-    $customers = \App\Models\Customer::whereIn('id', $customerEntities->pluck('customer_id'))->get()->keyBy('id');
-
-    $rows = [];
-    foreach ($customerEntities as $customerEntity) {
-        $row = [
-            'customer_entity_id' => $customerEntity->id,
-            'customer_id' => $customerEntity->customer_id,
-            'customer_name' => $customers[$customerEntity->customer_id]->first_name . ' ' . $customers[$customerEntity->customer_id]->last_name,
-            'customer_contact_number' => $customers[$customerEntity->customer_id]->contact_number
-        ];
-
-        // جلب القيم لهذا customer_entity
-        $values = \App\Models\EntityFieldValue::where('customer_entity_id', $customerEntity->id)->get()->keyBy('entity_field_id');
-
-        foreach ($fields as $field) {
-            $row[$field->name] = $values[$field->id]->value ?? null;
+    public function getEntityFieldValuesByEntity(Request $request)
+    {
+        $entityId = $request->query('entity_id');
+        if (!$entityId) {
+            return response()->json(['message' => 'entity_id is required'], 400);
         }
 
-        $rows[] = $row;
-    }
+        // Get the entity's fields
+        $fields = \App\Models\EntityField::where('entity_id', $entityId)->get();
 
-    return response()->json($rows);
-}
+        // Fetch all customer_entities for this entity (there may be more than one for the same customer)
+        $customerEntities = DB::table('customer_entity')
+            ->where('entity_id', $entityId)
+            ->get();
 
+        $customers = \App\Models\Customer::whereIn('id', $customerEntities->pluck('customer_id'))->get()->keyBy('id');
 
-public function getCustomerEntityFieldValues(Request $request)
-{
-    $customerId = $request->query('customer_id');
-    $entityId = $request->query('entity_id');
-
-    if (!$customerId || !$entityId) {
-        return response()->json(['message' => 'customer_id and entity_id are required'], 400);
-    }
-
-    // جلب كل customer_entity المناسبين
-    $customerEntities = \DB::table('customer_entity')
-        ->where('customer_id', $customerId)
-        ->where('entity_id', $entityId)
-        ->get();
-
-    if ($customerEntities->isEmpty()) {
-        return response()->json([]);
-    }
-
-    // جلب الحقول الخاصة بالكيان
-    $fields = \App\Models\EntityField::where('entity_id', $entityId)->get();
-
-    $results = [];
-    foreach ($customerEntities as $customerEntity) {
-        // جلب القيم من entity_field_values
-        $values = \App\Models\EntityFieldValue::where('customer_entity_id', $customerEntity->id)->get();
-
-        $row = [
-            'customer_entity_id' => $customerEntity->id,
-            'customer_id' => $customerId,
-            'entity_id' => $entityId,
-            'fields' => [],
-        ];
-
-        foreach ($fields as $field) {
-            $valueObj = $values->where('entity_field_id', $field->id)->first();
-            $row['fields'][] = [
-                'field_id' => $field->id,
-                'field_name' => $field->name,
-                'value' => $valueObj ? $valueObj->value : null,
+        $rows = [];
+        foreach ($customerEntities as $customerEntity) {
+            $row = [
+                'customer_entity_id' => $customerEntity->id,
+                'customer_id' => $customerEntity->customer_id,
+                'customer_name' => $customers[$customerEntity->customer_id]->first_name . ' ' . $customers[$customerEntity->customer_id]->last_name,
+                'customer_contact_number' => $customers[$customerEntity->customer_id]->contact_number
             ];
+
+            // Get values ​​for this customer_entity
+            $values = \App\Models\EntityFieldValue::where('customer_entity_id', $customerEntity->id)->get()->keyBy('entity_field_id');
+
+            foreach ($fields as $field) {
+                $row[$field->name] = $values[$field->id]->value ?? null;
+            }
+
+            $rows[] = $row;
         }
 
-        $results[] = $row;
+        return response()->json($rows);
     }
 
-    return response()->json($results);
-}
 
+    public function getCustomerEntityFieldValues(Request $request)
+    {
+        $customerId = $request->query('customer_id');
+        $entityId = $request->query('entity_id');
+
+        if (!$customerId || !$entityId) {
+            return response()->json(['message' => 'customer_id and entity_id are required'], 400);
+        }
+
+        // Get all the relevant customer_entities
+        $customerEntities = DB::table('customer_entity')
+            ->where('customer_id', $customerId)
+            ->where('entity_id', $entityId)
+            ->get();
+
+        if ($customerEntities->isEmpty()) {
+            return response()->json([]);
+        }
+
+        // Get the entity's fields
+        $fields = \App\Models\EntityField::where('entity_id', $entityId)->get();
+
+        $results = [];
+        foreach ($customerEntities as $customerEntity) {
+            // Get values ​​from entity_field_values
+            $values = \App\Models\EntityFieldValue::where('customer_entity_id', $customerEntity->id)->get();
+
+            $row = [
+                'customer_entity_id' => $customerEntity->id,
+                'customer_id' => $customerId,
+                'entity_id' => $entityId,
+                'fields' => [],
+            ];
+
+            foreach ($fields as $field) {
+                $valueObj = $values->where('entity_field_id', $field->id)->first();
+                $row['fields'][] = [
+                    'field_id' => $field->id,
+                    'field_name' => $field->name,
+                    'value' => $valueObj ? $valueObj->value : null,
+                ];
+            }
+
+            $results[] = $row;
+        }
+
+        return response()->json($results);
+    }
 }

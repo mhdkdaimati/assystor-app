@@ -109,7 +109,7 @@ const ProcessCustomerGroup = () => {
 
     const handleSaveProduct = async () => {
         if (!selectedProduct) return;
-// product-field-values/bulk
+        // product-field-values/bulk
         try {
             await axios.post(`/api/product-field-values/bulk`, {
                 customer_id: selectedCustomer,

@@ -217,8 +217,8 @@ const CustomerGroupsPage = () => {
                                 className={`list-group-item bg-danger text-white ${selectedGroup?.id === 'quarantine' ? 'border border-dark' : ''}`}
                                 style={{ cursor: "pointer" }}
                                 onClick={handleQuarantineTabClick}
-                            >
-                                Quarantine ({quarantinedCustomers.length})
+                            >Quarantine
+                                {/* Quarantine ({quarantinedCustomers.length}) */}
                             </li>                    </ul>
 
                         <ul className="list-group">
@@ -230,7 +230,9 @@ const CustomerGroupsPage = () => {
                                         onClick={() => handleGroupClick(group)}
                                         style={{ cursor: "pointer" }}
                                     >
-                                        {group.name} ({group.customers_count})<br />{group.status}
+                                        {group.name} 
+                                        {/* ({group.customers_count}) */}
+                                        <br />{group.status}
                                     </li>
                                 ))
                             ) : (
@@ -262,9 +264,9 @@ const CustomerGroupsPage = () => {
                                                             {customer.first_name} {customer.last_name}
                                                         </label>
                                                     </div>
-                                                    <p>Email: {customer.email}</p>
+                                                    {/* <p>Email: {customer.email}</p> */}
                                                     <p>Phone: {customer.contact_number}</p>
-                                                    <p>Company: {customer.company?.name || 'N/A'}</p>
+                                                    {/* <p>Company: {customer.company?.name || 'N/A'}</p> */}
                                                 </div>
                                             </div>
                                         ))}
@@ -282,9 +284,9 @@ const CustomerGroupsPage = () => {
                                         <tr>
                                             <th>Select</th>
                                             <th>Name</th>
-                                            <th>Email</th>
+                                            {/* <th>Email</th> */}
                                             <th>Phone</th>
-                                            <th>Company</th>
+                                            {/* <th>Company</th> */}
                                             <th>Reason</th>
                                             <th>Added By</th>
                                             <th>Created At</th>
@@ -302,9 +304,9 @@ const CustomerGroupsPage = () => {
                                                     />
                                                 </td>
                                                 <td>{q.first_name} {q.last_name}</td>
-                                                <td>{q.email}</td>
+                                                {/* <td>{q.email}</td> */}
                                                 <td>{q.contact_number}</td>
-                                                <td>{q.company?.name || 'N/A'}</td>
+                                                {/* <td>{q.company?.name || 'N/A'}</td> */}
                                                 <td>{q.reason || 'N/A'}</td>
                                                 <td>{q.added_by || 'N/A'}</td>
                                                 <td>{q.created_at ? new Date(q.created_at).toLocaleString() : 'N/A'}</td>
@@ -349,9 +351,9 @@ const CustomerGroupsPage = () => {
                                                                     {customer.first_name} {customer.last_name}
                                                                 </label>
                                                             </div>
-                                                            <p>Email: {customer.email}</p>
+                                                            {/* <p>Email: {customer.email}</p> */}
                                                             <p>Phone: {customer.contact_number}</p>
-                                                            <p>Company: {customer.company?.name || 'N/A'}</p>
+                                                            {/* <p>Company: {customer.company?.name || 'N/A'}</p> */}
                                                         </div>
                                                     </div>
                                                 ))}
@@ -369,9 +371,9 @@ const CustomerGroupsPage = () => {
                                             <tr>
                                                 <th>Select</th>
                                                 <th>Name</th>
-                                                <th>Email</th>
+                                                {/* <th>Email</th> */}
                                                 <th>Phone</th>
-                                                <th>Company</th>
+                                                {/* <th>Company</th> */}
                                                 <th>Status</th>
                                             </tr>
                                         </thead>
@@ -386,9 +388,9 @@ const CustomerGroupsPage = () => {
                                                             onChange={() => handleCheckboxChange(customer.id, "remove")} />
                                                     </td>
                                                     <td>{customer.first_name} {customer.last_name}</td>
-                                                    <td>{customer.email}</td>
+                                                    {/* <td>{customer.email}</td> */}
                                                     <td>{customer.contact_number}</td>
-                                                    <td>{customer.company?.name || 'N/A'}</td>
+                                                    {/* <td>{customer.company?.name || 'N/A'}</td> */}
                                                     <td>{customer.status || 'N/A'}</td>
                                                 </tr>
                                             ))}

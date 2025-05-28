@@ -46,15 +46,15 @@ class EntityController extends Controller
                     'required' => $fieldData['required'] ?? false,
                 ]);
                 if (
-                    in_array($fieldData['type'], ['select', 'radio'])
+                    in_array($fieldData['type'], ['select', 'checkbox'])
                     && isset($fieldData['options'])
                     && is_array($fieldData['options'])
                 ) {
                     foreach ($fieldData['options'] as $option) {
                         $field->options()->create([
                             'name' => $option['name'],
-                            'description' => $option['description'] ?? null,
-                            'extra_info' => $option['extra_info'] ?? null,
+                            // 'description' => $option['description'] ?? null,
+                            // 'extra_info' => $option['extra_info'] ?? null,
                         ]);
                     }
                 }
@@ -99,16 +99,16 @@ class EntityController extends Controller
                             'type' => $fieldData['type'],
                             'required' => $fieldData['required'] ?? false,
                         ]);
-                        // Update options if field type is select or radio
-                        if (in_array($fieldData['type'], ['select', 'radio']) && isset($fieldData['options']) && is_array($fieldData['options'])) {
+                        // Update options if field type is select or checkbox
+                        if (in_array($fieldData['type'], ['select', 'checkbox']) && isset($fieldData['options']) && is_array($fieldData['options'])) {
                             // Delete old options
                             $field->options()->delete();
                             // Add new options
                             foreach ($fieldData['options'] as $option) {
                                 $field->options()->create([
                                     'name' => $option['name'],
-                                    'description' => $option['description'] ?? null,
-                                    'extra_info' => $option['extra_info'] ?? null,
+                                    // 'description' => $option['description'] ?? null,
+                                    // 'extra_info' => $option['extra_info'] ?? null,
                                 ]);
                             }
                         }
@@ -122,12 +122,12 @@ class EntityController extends Controller
                         'type' => $fieldData['type'],
                         'required' => $fieldData['required'] ?? false,
                     ]);
-                    if (in_array($fieldData['type'], ['select', 'radio']) && isset($fieldData['options']) && is_array($fieldData['options'])) {
+                    if (in_array($fieldData['type'], ['select', 'checkbox']) && isset($fieldData['options']) && is_array($fieldData['options'])) {
                         foreach ($fieldData['options'] as $option) {
                             $field->options()->create([
                                 'name' => $option['name'],
-                                'description' => $option['description'] ?? null,
-                                'extra_info' => $option['extra_info'] ?? null,
+                                // 'description' => $option['description'] ?? null,
+                                // 'extra_info' => $option['extra_info'] ?? null,
                             ]);
                         }
                     }

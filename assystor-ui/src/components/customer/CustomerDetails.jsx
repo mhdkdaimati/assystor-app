@@ -328,33 +328,55 @@ const CustomerDetails = () => {
                             {loadingTab ? (
                                 <div>Loading...</div>
                             ) : entityData[entity.name] && entityData[entity.name].length > 0 ? (
-                                entityData[entity.name].map((row, idx) => (
-                                    <table key={row.customer_entity_id} className="table table-bordered w-auto mb-4">
-                                        <thead>
+                                <div style={{ overflowX: "auto" }}>
+                                    <table className="table table-bordered table-sm align-middle" style={{ minWidth: 500, background: "#fff" }}>
+                                        <thead className="table-light">
                                             <tr>
-                                                <th colSpan={2}>Record #{idx + 1}</th>
-                                            </tr>
-                                            <tr>
-                                                <th>Field</th>
-                                                <th>Value</th>
+                                                <th>#</th>
+                                                {entityData[entity.name][0].fields.map(field => (
+                                                    <th key={field.field_id}>{field.field_name}</th>
+                                                ))}
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {row.fields.map(field => (
-                                                <tr key={field.field_id}>
-                                                    <td>{field.field_name}</td>
-                                                    <td>{field.value}</td>
+                                            {entityData[entity.name].map((row, idx) => (
+                                                <tr key={row.customer_entity_id}>
+                                                    <td>{idx + 1}</td>
+                                                    {row.fields.map(field => {
+                                                        let value = field.value;
+                                                        let isJson = false;
+                                                        let arr = [];
+                                                        try {
+                                                            const parsed = JSON.parse(value);
+                                                            if (Array.isArray(parsed)) {
+                                                                isJson = true;
+                                                                arr = parsed;
+                                                            }
+                                                        } catch { /* ليست جيسون */ }
+                                                        return (
+                                                            <td key={field.field_id}>
+                                                                {isJson ? (
+                                                                    <ul style={{ margin: 0, paddingLeft: 18 }}>
+                                                                        {arr.map((v, i) => <li key={i}>{v}</li>)}
+                                                                    </ul>
+                                                                ) : (
+                                                                    value
+                                                                )}
+                                                            </td>
+                                                        );
+                                                    })}
                                                 </tr>
                                             ))}
                                         </tbody>
                                     </table>
-                                ))
+                                </div>
                             ) : (
                                 <div className="text-muted">No data found for this entity.</div>
                             )}
                         </div>
                     )
                 ))}
+
             </div>
         </div>
     );
