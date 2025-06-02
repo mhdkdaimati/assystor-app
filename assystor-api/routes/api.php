@@ -115,6 +115,12 @@ Route::delete('delete-customer-group/{id}', [CustomerGroupController::class, 'de
 Route::get('customer-groups/{id}/customers', [CustomerGroupController::class, 'getCustomersInGroup']);
 //set customers in the group
 Route::post('customer-groups/{id}/assign-customers', [CustomerGroupController::class, 'assignCustomersToGroup']);
+
+Route::post('/customer-groups/{id}/add-customer', [CustomerGroupController::class, 'addCustomerToGroup']);
+Route::post('/customer-groups/{id}/remove-customer', [CustomerGroupController::class, 'removeCustomerFromGroup']);
+
+
+
 Route::get('customer-groups/incomplete', [CustomerGroupController::class, 'getIncompleteGroups']);
 Route::get('customer-groups/{id}/customers/incomplete', [CustomerGroupController::class, 'getIncompleteCustomersInGroup']);
 
@@ -154,3 +160,7 @@ Route::get('/quarantines/check/{customer_id}', [QuarantineController::class, 'ch
 
 
 Route::get('customer-entity-field-values', [\App\Http\Controllers\API\EntityFieldValueController::class, 'getCustomerEntityFieldValues']);
+Route::get('customer-entities/{customer_id}/{entity_id}', [CustomerController::class, 'getCustomerEntityValues']);
+
+
+Route::put('update-customer-entity-status/{customer_entity_id}', [EntityController::class, 'updateCustomerEntityStatus']);

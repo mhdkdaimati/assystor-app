@@ -106,15 +106,15 @@ class QuarantineController extends Controller
     public function bulkDestroy(Request $request)
     {
         $request->validate([
-            'quarantine_ids' => 'required|array',
-            'quarantine_ids.*' => 'exists:quarantines,id',
+            'customer_ids' => 'required|array',
+            'customer_ids.*' => 'exists:customers,id',
         ]);
         $deleted = [];
-        foreach ($request->quarantine_ids as $id) {
-            $quarantine = Quarantine::find($id);
+        foreach ($request->customer_ids as $customerId) {
+            $quarantine = \App\Models\Quarantine::where('customer_id', $customerId)->first();
             if ($quarantine) {
                 $quarantine->delete();
-                $deleted[] = $id;
+                $deleted[] = $customerId;
             }
         }
         return response()->json([

@@ -49,18 +49,15 @@ const CustomerGroupsPage = () => {
 
     // Save changes button (add and remove in batch)
     const processQuarantineChanges = async (reason) => {
-        // إضافة زبائن دفعة واحدة مع السبب
+        // Add customers at once with reason
         if (selectedToQuarantine.length > 0) {
             await axios.post('/api/quarantines/bulk', { customer_ids: selectedToQuarantine, reason });
         }
-        // حذف زبائن دفعة واحدة
-        const quarantineIdsToRemove = quarantinedCustomers
-            .filter(c => selectedToRemoveFromQuarantine.includes(c.id))
-            .map(c => c.quarantine_id);
-
-        if (quarantineIdsToRemove.length > 0) {
-            await axios.post('/api/quarantines/bulk-delete', { quarantine_ids: quarantineIdsToRemove });
+        // Delete customers in bulk
+        if (selectedToRemoveFromQuarantine.length > 0) {
+            await axios.post('/api/quarantines/bulk-delete', { customer_ids: selectedToRemoveFromQuarantine });
         }
+
 
         swal("Success", "Changes saved!", "success");
         fetchQuarantinedCustomers();

@@ -245,34 +245,36 @@ class ProductController extends Controller
 
 
 
-    public function updateCustomerProductStatus(Request $request, $customer_product_id)
-    {
-        // Validate the incoming request
-        $validated = $request->validate([
-            'comment' => 'nullable|string|max:255', // Optional comment
+public function updateCustomerProductStatus(Request $request, $customer_product_id)
+{
+    // Validate the incoming request
+    $validated = $request->validate([
+        'comment' => 'nullable|string|max:255', // Optional comment
+        'status' => 'required|in:approved,rejected', // status must be approved or rejected
+    ]);
+
+    try {
+        // Find the record in the customer_product table
+        $customerProduct = CustomerProduct::findOrFail($customer_product_id);
+
+        // Update the status and comment
+        $customerProduct->update([
+            'status' => $validated['status'],
+            'comment' => $validated['comment'] ?? null,
         ]);
 
-        try {
-            // Find the record in the customer_product table
-            $customerProduct = CustomerProduct::findOrFail($customer_product_id);
-
-            // Update the status and comment
-            $customerProduct->update([
-                'status' => 'completed',
-                'comment' => $validated['comment'] ?? null,
-            ]);
-
-            return response()->json([
-                'message' => 'Product status updated successfully',
-                'customer_product' => $customerProduct,
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Failed to update product status',
-                'details' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Product status updated successfully',
+            'customer_product' => $customerProduct,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to update product status',
+            'details' => $e->getMessage(),
+        ], 500);
     }
+}
+
     //getAllCustomersProducts
     public function getAllCustomersProducts()
     {

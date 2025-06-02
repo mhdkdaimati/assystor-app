@@ -161,4 +161,32 @@ class EntityController extends Controller
         $entity = \App\Models\Entity::with('fields.options')->findOrFail($id);
         return $entity;
     }
+
+
+public function updateCustomerEntityStatus(Request $request, $customer_entity_id)
+{
+    $validated = $request->validate([
+        'comment' => 'nullable|string|max:255',
+        'status' => 'required|in:approved,rejected',
+    ]);
+
+    try {
+        $customerEntity = \App\Models\CustomerEntity::findOrFail($customer_entity_id);
+
+        $customerEntity->update([
+            'status' => $validated['status'],
+            'comment' => $validated['comment'] ?? null,
+        ]);
+
+        return response()->json([
+            'message' => 'Entity status updated successfully',
+            'customer_entity' => $customerEntity,
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to update entity status',
+            'details' => $e->getMessage(),
+        ], 500);
+    }
+}
 }

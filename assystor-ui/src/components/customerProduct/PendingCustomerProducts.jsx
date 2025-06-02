@@ -10,6 +10,7 @@ const PendingCustomerProducts = () => {
   const [openModal, setOpenModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [comment, setComment] = useState("");
+  const [status, setStatus] = useState("");
 
   // Fetch data from API
   const fetchData = () => {
@@ -56,6 +57,7 @@ const PendingCustomerProducts = () => {
     axios
       .put(`api/update-customer-product-status/${selectedRow.customer_product_id}`, {
         comment,
+        status, 
       })
       .then((response) => {
         console.log("Comment submitted:", response.data);
@@ -145,6 +147,14 @@ const PendingCustomerProducts = () => {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               />
+            </Form.Group>
+            <Form.Group controlId="status">
+              <Form.Label>Status</Form.Label>
+              <Form.Select value={status} onChange={e => setStatus(e.target.value)} required>
+                <option value="">Select...</option>
+                <option value="approved">Approve</option>
+                <option value="rejected">Reject</option>
+              </Form.Select>
             </Form.Group>
           </Form>
         </Modal.Body>

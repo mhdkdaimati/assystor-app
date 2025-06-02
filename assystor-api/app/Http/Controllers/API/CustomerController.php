@@ -223,11 +223,14 @@ class CustomerController extends Controller
             $fieldValues = $customerProduct->fieldValues->keyBy('product_field_id');
 
             $productData = [
+                'customer_product_id'=> $customerProduct->id,
+
                 'customer_id' => $customerId,
                 'product_id' => $product->id,
                 'product_name' => $product->name,
                 'product_description' => $product->description,
                 'status' => $customerProduct->status,
+                'comment'=> $customerProduct->comment,
                 'added_user' => $customerProduct->employee_id,
                 'created_at' => $customerProduct->created_at,
                 'updated_at' => $customerProduct->updated_at,
@@ -296,4 +299,54 @@ class CustomerController extends Controller
             }),
         ]);
     }
+
+
+public function getCustomerEntityValues($customerId, $entityId)
+{
+    // جلب كل CustomerEntity المرتبطة بالزبون والانتيتي المطلوب
+    $customerEntities = \App\Models\CustomerEntity::with([
+        'entity.fields.options', // جلب الحقول وخياراتها
+        'employee', // إذا أردت معرفة من أضاف القيمة
+    ])
+    ->where('customer_id', $customerId)
+    ->where('entity_id', $entityId)
+    ->get();
+
+    $data = [];
+
+    foreach ($customerEntities as $customerEntity) {
+        $entity = $customerEntity->entity;
+        $fields = $entity->fields;
+
+        // جلب القيم الفعلية للحقول لهذا الـ CustomerEntity
+        $fieldValues = \App\Models\EntityFieldValue::where('customer_entity_id', $customerEntity->id)->get()->keyBy('entity_field_id');
+
+        $row = [
+            'customer_entity_id' => $customerEntity->id,
+            'entity_id' => $entity->id,
+            'entity_name' => $entity->name,
+            'status' => $customerEntity->status,
+            'comment' => $customerEntity->comment,
+            'added_user' => $customerEntity->employee_id,
+            'created_at' => $customerEntity->created_at,
+            'updated_at' => $customerEntity->updated_at,
+            'fields' => []
+        ];
+
+        foreach ($fields as $field) {
+            $value = $fieldValues->get($field->id);
+            $row['fields'][] = [
+                'field_id' => $field->id,
+                'field_name' => $field->name,
+                'value' => $value?->value,
+                'created_at' => $value?->created_at,
+                'updated_at' => $value?->updated_at,
+            ];
+        }
+
+        $data[] = $row;
+    }
+
+    return response()->json($data);
+}
 }

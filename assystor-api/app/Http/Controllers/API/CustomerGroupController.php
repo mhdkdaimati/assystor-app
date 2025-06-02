@@ -148,43 +148,103 @@ class CustomerGroupController extends Controller
 
         return response()->json($customers);
     }
+    public function addCustomerToGroup(Request $request, $groupId)
+    {
+        $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+        ]);
 
+        $customerId = $request->input('customer_id');
+
+        // Check if customer is in quarantine
+        if (Quarantine::where('customer_id', $customerId)->exists()) {
+            return response()->json([
+                'message' => 'Customer is quarantined and cannot be added to the group',
+                'quarantined_customer' => $customerId,
+            ], 403);
+        }
+
+        $group = CustomerGroup::findOrFail($groupId);
+
+        // Attach customer if not already in group
+        if (!$group->customers()->where('customer_id', $customerId)->exists()) {
+            $group->customers()->attach($customerId, ['status' => 'incomplete']);
+        }
+
+        // تحديث حالة المجموعة
+        $incompleteCount = $group->customers()->wherePivot('status', 'incomplete')->count();
+        if ($incompleteCount > 0) {
+            $group->update(['status' => 'incomplete']);
+        } else {
+            $group->update(['status' => 'complete']);
+        }
+
+        return response()->json(['message' => 'Customer added to group successfully.']);
+    }
+
+    public function removeCustomerFromGroup(Request $request, $groupId)
+    {
+        $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+        ]);
+
+        $customerId = $request->input('customer_id');
+        $group = CustomerGroup::findOrFail($groupId);
+
+        // Detach customer from group
+        $group->customers()->detach($customerId);
+
+        // تحديث حالة المجموعة
+        $incompleteCount = $group->customers()->wherePivot('status', 'incomplete')->count();
+        if ($incompleteCount > 0) {
+            $group->update(['status' => 'incomplete']);
+        } else {
+            $group->update(['status' => 'complete']);
+        }
+
+        return response()->json(['message' => 'Customer removed from group successfully.']);
+    }
+
+
+
+
+    
     public function assignCustomersToGroup(Request $request, $id)
     {
         $request->validate([
             'customer_ids' => 'nullable|array',
             'customer_ids.*' => 'exists:customers,id',
         ]);
-    
+
         $customerIds = $request->input('customer_ids', []);
-    
+
         // Check if any customer is in quarantine
         $quarantinedCustomers = Quarantine::whereIn('customer_id', $customerIds)->pluck('customer_id');
-    
+
         if ($quarantinedCustomers->isNotEmpty()) {
             return response()->json([
                 'message' => 'Some customers are quarantined and cannot be added to the group',
                 'quarantined_customers' => $quarantinedCustomers,
             ], 403);
         }
-    
+
         $group = CustomerGroup::findOrFail($id);
-    
+
         // Sync customers with the group
         $group->customers()->sync($customerIds);
-    
+
         // Check the status of customers in the group
         $incompleteCount = $group->customers()
             ->wherePivot('status', 'incomplete')
             ->count();
-    
+
         // Update group status based on customer status
         if ($incompleteCount > 0) {
             $group->update(['status' => 'incomplete']);
         } else {
             $group->update(['status' => 'complete']);
         }
-    
+
         return response()->json(['message' => 'Customers assigned to group successfully.']);
     }
 

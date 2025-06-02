@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CustomerEntity extends Model
 {
+protected $table = 'customer_entity'; // Make sure the name is 100% identical
 
     protected $fillable = [
         'customer_id',
